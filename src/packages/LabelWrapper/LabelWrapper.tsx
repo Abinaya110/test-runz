@@ -12,34 +12,36 @@ type Props = {
   required?: boolean;
   children?: import("react").ReactNode;
   label?: string;
-  bold?: boolean;
-  isFocus?: boolean;
   error?: boolean;
-  labelColor?: textColorsType;
+  message?: string;
 };
 
-const LabelWrapper = ({ required, children, label }: Props) => {
-  let requiredErrorColor: textColorsType;
-  let labelErrorColor: textColorsType;
+const LabelWrapper = ({ required, children, label, error, message }: Props) => {
+  let messageColor: textColorsType = "error";
 
-  labelErrorColor = "primary";
-  requiredErrorColor = "theme";
-
+  if (error) {
+    messageColor = "error";
+  }
   return !isEmpty(label) ? (
     <Flex className={cx("overAll")}>
-      <Flex row className={cx("labelConatiner")}>
-        <Text
-          color={labelErrorColor}
-          className={cx("labelText")}
-          type="captionBold"
-        >
-          {label}
-        </Text>
-        {required && (
-          <Text type="captionBold" color={requiredErrorColor}>
-            *
+      <Flex between row className={cx("labelConatiner")}>
+        <Flex row>
+          <Text
+            color={"primary"}
+            className={cx("labelText")}
+            type="captionBold"
+          >
+            {label}
           </Text>
-        )}
+          {required && (
+            <Text type="captionBold" color={"theme"}>
+              *
+            </Text>
+          )}
+        </Flex>
+        <Text type="captionRegular" color={messageColor}>
+          {message}
+        </Text>
       </Flex>
       {children}
     </Flex>

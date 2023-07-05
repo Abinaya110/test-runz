@@ -8,7 +8,6 @@ import {
 } from "../../theme/colors";
 import LabelWrapper from "../LabelWrapper/LabelWrapper";
 import { CSSProperties } from "react";
-import { InputStatus } from "antd/es/_util/statusUtils";
 
 type Props = {
   placeholder?: string;
@@ -25,11 +24,12 @@ type Props = {
   onKeyPress?: (a: any) => void;
   style?: CSSProperties;
   password?: boolean;
-  status?: InputStatus;
+  message?: string;
 };
-const InputText = ({ onChange, status, label, password, required }: Props) => {
+
+const InputText = ({ onChange, label, password, required, message }: Props) => {
   return (
-    <LabelWrapper label={label} required={required}>
+    <LabelWrapper label={label} required={required} message={message}>
       <ConfigProvider
         theme={{
           components: {
@@ -44,11 +44,7 @@ const InputText = ({ onChange, status, label, password, required }: Props) => {
           },
         }}
       >
-        {password ? (
-          <Input.Password status={status} size="large" onChange={onChange} />
-        ) : (
-          <Input status={status} size="large" onChange={onChange} />
-        )}
+        <Input size="large" onChange={onChange} />
       </ConfigProvider>
     </LabelWrapper>
   );
