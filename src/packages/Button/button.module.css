@@ -1,0 +1,46 @@
+.common {
+  cursor: pointer;
+  position: relative;
+  box-sizing: border-box !important;
+  border: none;
+  background-color: transparent;
+}
+
+.height-small {
+  padding: 8px 16px 8px 16px;
+  border-radius: 4px;
+}
+
+.height-medium {
+  padding: 10px 24px 10px 24px;
+  border-radius: 6px;
+}
+.height-large {
+  padding: 12px 26px 12px 26px;
+  border-radius: 8px;
+}
+
+.buttonTypes-primary {
+  background-color: var(--color-primary-shade-1);
+}
+
+.buttonTypes-secondary {
+  border: 2px solid var(--color-primary-shade-1);
+}
+
+.buttonTypes-tertiary {
+  background-color: var(--color-primary-shade-4);
+}
+
+.buttonTypes-tertiary-1 {
+  border: 2px solid var(--color-text-shade-1);
+}
+
+.buttonTypes-link {
+  padding: 0;
+  width: fit-content;
+}
+.buttonTypes-link-1 {
+  padding: 0;
+  width: fit-content;
+}

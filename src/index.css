@@ -1,13 +1,36 @@
-body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+@font-face {
+  font-family: "Poppins-Regular";
+  src: url("../public/assets/fonts/Poppins-Regular.ttf");
+}
+@font-face {
+  font-family: "Poppins-Bold";
+  src: url("../public/assets/fonts/Poppins-Bold.ttf");
+}
+@font-face {
+  font-family: "Poppins-Italic";
+  src: url("../public/assets/fonts/Poppins-Italic.ttf");
+}
+@font-face {
+  font-family: "Poppins-Black";
+  src: url("../public/assets/fonts/Poppins-Black.ttf");
+}
+@font-face {
+  font-family: "Poppins-SemiBold";
+  src: url("../public/assets/fonts/Poppins-SemiBold.ttf");
+}
+@font-face {
+  font-family: "Poppins-Light";
+  src: url("../public/assets/fonts/Poppins-Light.ttf");
+}
+@font-face {
+  font-family: "Poppins-Medium";
+  src: url("../public/assets/fonts/Poppins-Medium.ttf");
+}
+@font-face {
+  font-family: "Poppins-MediumItalic";
+  src: url("../public/assets/fonts/Poppins-MediumItalic.ttf");
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+body {
+  margin: 0;
 }

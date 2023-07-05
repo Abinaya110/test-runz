@@ -1,25 +1,23 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { routes } from "./routes/routesPath";
+import LoginScreen from "./modules/LoginModule/LoginScreen";
+import ProtectedRoutes from "./utils/ProtectedRoutes";
+import MyPageScreen from "./modules/MyPageModule/MyPageScreen";
+import PageNotFound from "./utils/PageNotFound";
+import SignUpScreen from "./modules/LoginModule/SignUpScreen";
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Router>
+      <Routes>
+        <Route path={routes.LOGIN} element={<LoginScreen />} />
+        <Route path={routes.SIGNUP} element={<SignUpScreen />} />
+        <Route element={<ProtectedRoutes />}>
+          <Route path={routes.MY_PAGE} element={<MyPageScreen />} />
+          <Route path="*" element={<PageNotFound />} />
+        </Route>
+      </Routes>
+    </Router>
   );
 }
 
