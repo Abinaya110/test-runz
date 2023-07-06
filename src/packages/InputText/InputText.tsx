@@ -25,7 +25,7 @@ type Props = {
   actionLeft?: Function;
   message?: string;
   white?: boolean;
-  status?: "error" | "success";
+  status?: "error" | "success" | "";
 };
 
 const InputText = ({
@@ -70,7 +70,7 @@ const InputText = ({
     <LabelWrapper
       label={label}
       required={required}
-      error={status === "error"}
+      status={status}
       message={message}
     >
       <div className={cx("inputDiv", inputClassName)}>

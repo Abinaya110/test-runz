@@ -12,15 +12,23 @@ type Props = {
   required?: boolean;
   children?: import("react").ReactNode;
   label?: string;
-  error?: boolean;
+  status?: "error" | "success" | "";
   message?: string;
 };
 
-const LabelWrapper = ({ required, children, label, error, message }: Props) => {
+const LabelWrapper = ({
+  required,
+  children,
+  label,
+  status,
+  message,
+}: Props) => {
   let messageColor: textColorsType = "error";
 
-  if (error) {
+  if (status === "error") {
     messageColor = "error";
+  } else if (status === "success") {
+    messageColor = "success";
   }
   return !isEmpty(label) ? (
     <Flex className={cx("overAll")}>
@@ -39,9 +47,11 @@ const LabelWrapper = ({ required, children, label, error, message }: Props) => {
             </Text>
           )}
         </Flex>
-        <Text type="captionRegular" color={messageColor}>
-          {message}
-        </Text>
+        {!isEmpty(status) && (
+          <Text type="captionRegular" color={messageColor}>
+            {message}
+          </Text>
+        )}
       </Flex>
       {children}
     </Flex>
