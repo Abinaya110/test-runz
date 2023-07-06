@@ -1,6 +1,6 @@
 import classNames from "classnames/bind";
 import styles from "./text.module.css";
-import { ReactNode } from "react";
+import { CSSProperties, ReactNode } from "react";
 import {
   textAlignType,
   textBoldType,
@@ -28,7 +28,7 @@ type Props = {
   align?: textAlignType;
   transform?: textTransform;
   type?: textType;
-  style?: any;
+  style?: CSSProperties;
 } & typeof defaultProps;
 
 const Text = ({

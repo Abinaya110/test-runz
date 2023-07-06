@@ -11,7 +11,10 @@ export type textColorsType =
   | "shade-3"
   | "tertiary-shade-1"
   | "tertiary-shade-2"
-  | "tertiary-shade-3";
+  | "tertiary-shade-3"
+  | "secondary-shade-1"
+  | "secondary-shade-2"
+  | "secondary-shade-3";
 
 export type textAlignType =
   | "start"

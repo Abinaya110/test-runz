@@ -21,6 +21,16 @@
 .color-tertiary-shade-3 {
   color: var(--color-tertiary-shade-3);
 }
+
+.color-secondary-shade-1 {
+  color: var(--color-secondary-shade-1);
+}
+.color-secondary-shade-2 {
+  color: var(--color-secondary-shade-2);
+}
+.color-secondary-shade-3 {
+  color: var(--color-secondary-shade-3);
+}
 .color-theme {
   color: var(--color-primary-shade-1);
 }
@@ -145,6 +155,7 @@
 
 .text-h1 {
   font-size: 96px;
+  line-height: 1;
 }
 .text-h2 {
   font-size: 64px;

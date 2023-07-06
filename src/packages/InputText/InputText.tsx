@@ -1,14 +1,10 @@
-import { Input, ConfigProvider } from "antd";
-import {
-  error,
-  gray3,
-  white,
-  primaryShade1,
-  primaryShade3,
-} from "../../theme/colors";
+import classNames from "classnames/bind";
+import { CSSProperties, useState } from "react";
+import styles from "./inputtext.module.css";
+import { keyBoardProps } from "./inputTextTypes";
 import LabelWrapper from "../LabelWrapper/LabelWrapper";
-import { CSSProperties } from "react";
 
+const cx = classNames.bind(styles);
 type Props = {
   placeholder?: string;
   autoComplete?: string;
@@ -22,30 +18,87 @@ type Props = {
   maxLength?: number;
   minLength?: number;
   onKeyPress?: (a: any) => void;
+  keyboardType?: keyBoardProps;
   style?: CSSProperties;
-  password?: boolean;
+  actionRight?: Function;
+  autoFocus?: boolean;
+  actionLeft?: Function;
   message?: string;
+  white?: boolean;
+  status?: "error" | "success";
 };
 
-const InputText = ({ onChange, label, password, required, message }: Props) => {
+const InputText = ({
+  placeholder,
+  autoComplete,
+  className,
+  name,
+  label,
+  required,
+  value,
+  disabled,
+  keyboardType,
+  onChange,
+  onKeyPress,
+  maxLength,
+  minLength,
+  style,
+  actionRight,
+  autoFocus,
+  actionLeft,
+  message,
+  white,
+  status,
+}: Props) => {
+  const [isFocus, setFocus] = useState(false);
+
+  const inputClassName = cx(className, styles.common, {
+    [`status-${status}`]: status,
+    white,
+    ["primaryFocus"]: isFocus,
+  });
+
+  const handleFocus = () => {
+    setFocus(true);
+  };
+
+  const handleBlur = (e: any) => {
+    setFocus(false);
+  };
+
   return (
-    <LabelWrapper label={label} required={required} message={message}>
-      <ConfigProvider
-        theme={{
-          components: {
-            Input: {
-              colorBorder: gray3,
-              colorBgContainer: white,
-              colorError: error,
-              colorPrimaryActive: primaryShade1,
-              colorPrimaryHover: primaryShade3,
-              borderRadius: 10,
-            },
-          },
-        }}
-      >
-        <Input size="large" onChange={onChange} />
-      </ConfigProvider>
+    <LabelWrapper
+      label={label}
+      required={required}
+      error={status === "error"}
+      message={message}
+    >
+      <div className={cx("inputDiv", inputClassName)}>
+        {typeof actionLeft === "function" && (
+          <div className={styles.actionLeftStyle}>{actionLeft()}</div>
+        )}
+        <input
+          autoFocus={autoFocus}
+          maxLength={maxLength}
+          minLength={minLength}
+          name={name}
+          onKeyPress={onKeyPress}
+          disabled={disabled}
+          type={keyboardType}
+          onChange={onChange}
+          autoComplete={autoComplete}
+          value={value}
+          onFocus={handleFocus}
+          onBlur={handleBlur}
+          placeholder={placeholder}
+          className={styles.inputStyle}
+          style={style}
+        />
+
+        {typeof actionRight === "function" && (
+          <div className={styles.actionRightStyle}>{actionRight()}</div>
+        )}
+      </div>
     </LabelWrapper>
   );
 };
