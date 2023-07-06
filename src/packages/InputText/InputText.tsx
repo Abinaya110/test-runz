@@ -1,7 +1,7 @@
 import classNames from "classnames/bind";
 import { CSSProperties, useState } from "react";
 import styles from "./inputtext.module.css";
-import { keyBoardProps } from "./inputTextTypes";
+import { keyBoardProps, statusType } from "./inputTextTypes";
 import LabelWrapper from "../LabelWrapper/LabelWrapper";
 
 const cx = classNames.bind(styles);
@@ -25,7 +25,7 @@ type Props = {
   actionLeft?: Function;
   message?: string;
   white?: boolean;
-  status?: "error" | "success" | "";
+  status?: statusType;
 };
 
 const InputText = ({

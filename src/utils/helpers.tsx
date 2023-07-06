@@ -46,3 +46,23 @@ export const useVisibilityIcon = () => {
 
   return { visibleIcon, isVisible, visibleIconOne, isVisibleOne };
 };
+
+export const getPasswordStrength = (password: string) => {
+  if (
+    password.length >= 8 &&
+    /[a-z]/.test(password) &&
+    /[A-Z]/.test(password) &&
+    /\d/.test(password) &&
+    /[!@#$%^&*]/.test(password)
+  ) {
+    return "Strong strength";
+  } else if (
+    password.length >= 6 &&
+    /[a-zA-Z]/.test(password) &&
+    (/\d/.test(password) || /[!@#$%^&*]/.test(password))
+  ) {
+    return "Medium strength";
+  } else {
+    return "Weak strength";
+  }
+};

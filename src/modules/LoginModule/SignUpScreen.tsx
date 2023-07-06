@@ -1,19 +1,20 @@
 import { useNavigate } from "react-router-dom";
+import { useFormik } from "formik";
 import SvgGoogle from "../../icons/SvgGoogle";
 import Button from "../../packages/Button/Button";
 import CheckBox from "../../packages/CheckBox/CheckBox";
 import Flex from "../../packages/Flex/Flex";
 import Text from "../../packages/Text/Text";
-import styles from "./loginscreen.module.css";
 import { routes } from "../../routes/routesPath";
 import SvgMicrosoft from "../../icons/SvgMicrosoft";
 import SvgLinkedIn from "../../icons/SvgLinkedIn";
 import InputText from "../../packages/InputText/InputText";
+import { getPasswordStrength, useVisibilityIcon } from "../../utils/helpers";
+import { isEmpty, isValidEmail } from "../../utils/validators";
+import { statusType } from "../../packages/InputText/inputTextTypes";
 import LoginFrame from "./LoginFrame";
 import HelpAndTerms from "./HelpAndTerms";
-import { useVisibilityIcon } from "../../utils/helpers";
-import { isEmpty, isValidEmail } from "../../utils/validators";
-import { useFormik } from "formik";
+import styles from "./loginscreen.module.css";
 
 type formType = {
   email: string;
@@ -42,10 +43,20 @@ const validate = (values: formType) => {
   }
   if (isEmpty(values.password)) {
     errors.password = "Password field is required";
+  } else if (getPasswordStrength(values.password) !== "Strong strength") {
+    errors.password = getPasswordStrength(values.password);
   }
+
   if (isEmpty(values.confirmPassword)) {
     errors.confirmPassword = "Password field is required";
+  } else if (
+    values.password.length !== 0 &&
+    values.confirmPassword.length !== 0 &&
+    values.password !== values.confirmPassword
+  ) {
+    errors.confirmPassword = "Password not matched";
   }
+
   return errors;
 };
 
@@ -61,6 +72,40 @@ const SignUpScreen = () => {
     onSubmit: () => {},
     validate,
   });
+
+  let passwordMessage: statusType = "";
+  if (getPasswordStrength(formik.values.password) === "Weak strength") {
+    passwordMessage = "error";
+  } else if (
+    getPasswordStrength(formik.values.password) === "Medium strength"
+  ) {
+    passwordMessage = "theme";
+  } else if (
+    getPasswordStrength(formik.values.password) === "Strong strength"
+  ) {
+    passwordMessage = "success";
+  } else {
+    passwordMessage = "";
+  }
+
+  let confirmPasswordStatus: statusType = "";
+  let confirmPasswordMessage = "";
+  if (
+    formik.values.password.length !== 0 &&
+    formik.values.password === formik.values.confirmPassword
+  ) {
+    confirmPasswordStatus = "success";
+    confirmPasswordMessage = "Password matched";
+  } else if (
+    formik.values.password.length !== 0 &&
+    formik.values.confirmPassword.length !== 0 &&
+    formik.values.password !== formik.values.confirmPassword
+  ) {
+    confirmPasswordStatus = "error";
+  } else {
+    confirmPasswordStatus = "";
+    confirmPasswordMessage = "";
+  }
 
   return (
     <LoginFrame
@@ -133,9 +178,14 @@ const SignUpScreen = () => {
             label={"Password"}
             keyboardType={isVisible ? "text" : "password"}
             actionRight={visibleIcon}
-            message={formik.errors.password}
+            message={
+              formik.errors.password ||
+              getPasswordStrength(formik.values.password)
+            }
             status={
-              formik.touched.password && formik.errors.password ? "error" : ""
+              formik.touched.password && formik.errors.password
+                ? "error"
+                : passwordMessage
             }
           />
           <div style={{ marginTop: 12, marginBottom: 8 }}>
@@ -145,11 +195,11 @@ const SignUpScreen = () => {
               label={"Confirm password"}
               keyboardType={isVisibleOne ? "text" : "password"}
               actionRight={visibleIconOne}
-              message={formik.errors.confirmPassword}
+              message={formik.errors.confirmPassword || confirmPasswordMessage}
               status={
                 formik.touched.confirmPassword && formik.errors.confirmPassword
                   ? "error"
-                  : ""
+                  : confirmPasswordStatus
               }
             />
           </div>

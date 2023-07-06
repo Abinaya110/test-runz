@@ -5,6 +5,7 @@ import Text from "../Text/Text";
 import styles from "./labelwarpper.module.css";
 import { isEmpty } from "../../utils/validators";
 import { textColorsType } from "../Text/textTypes";
+import { statusType } from "../InputText/inputTextTypes";
 
 const cx = classNames.bind(styles);
 
@@ -12,7 +13,7 @@ type Props = {
   required?: boolean;
   children?: import("react").ReactNode;
   label?: string;
-  status?: "error" | "success" | "";
+  status?: statusType;
   message?: string;
 };
 
@@ -29,6 +30,8 @@ const LabelWrapper = ({
     messageColor = "error";
   } else if (status === "success") {
     messageColor = "success";
+  } else if (status === "theme") {
+    messageColor = "theme";
   }
   return !isEmpty(label) ? (
     <Flex className={cx("overAll")}>
