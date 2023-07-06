@@ -1,6 +1,5 @@
 import { useNavigate } from "react-router-dom";
 import { useFormik } from "formik";
-import SvgGoogle from "../../icons/SvgGoogle";
 import Button from "../../packages/Button/Button";
 import CheckBox from "../../packages/CheckBox/CheckBox";
 import Flex from "../../packages/Flex/Flex";
@@ -12,9 +11,12 @@ import InputText from "../../packages/InputText/InputText";
 import { getPasswordStrength, useVisibilityIcon } from "../../utils/helpers";
 import { isEmpty, isValidEmail } from "../../utils/validators";
 import { statusType } from "../../packages/InputText/inputTextTypes";
+import GoogleSignIn from "../../packages/GoogleSignIn/GoogleSignIn";
 import LoginFrame from "./LoginFrame";
 import HelpAndTerms from "./HelpAndTerms";
 import styles from "./loginscreen.module.css";
+import MicrosoftSignIn from "../../packages/MicrosoftSignIn/MicrosoftSignIn";
+import LinkedinSignIn from "../../packages/LinkedinSignIn/LinkedinSignIn";
 
 type formType = {
   email: string;
@@ -118,30 +120,10 @@ const SignUpScreen = () => {
               <Text type="title" color={"tertiary-shade-2"}>
                 Sign up via
               </Text>
-              <Button className={styles.signUpBtn} style={{ marginTop: 20 }}>
-                <Flex row center>
-                  <SvgGoogle />
-                  <Text type="bodyBold" className={styles.marginLeft}>
-                    Sign up with Google
-                  </Text>
-                </Flex>
-              </Button>
-              <Button className={styles.signUpBtn} style={{ margin: "16px 0" }}>
-                <Flex row center>
-                  <SvgMicrosoft />
-                  <Text type="bodyBold" className={styles.marginLeft}>
-                    Sign up with Microsoft
-                  </Text>
-                </Flex>
-              </Button>
-              <Button className={styles.signUpBtn}>
-                <Flex row center>
-                  <SvgLinkedIn />
-                  <Text type="bodyBold" className={styles.marginLeft}>
-                    Sign up with Linkedin
-                  </Text>
-                </Flex>
-              </Button>
+              <GoogleSignIn />
+
+              <MicrosoftSignIn />
+              <LinkedinSignIn />
             </Flex>
           </Flex>
 
