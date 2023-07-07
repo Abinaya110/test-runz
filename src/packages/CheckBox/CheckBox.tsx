@@ -4,17 +4,20 @@ import styles from "./checkbox.module.css";
 import SvgCheckBox from "../../icons/SvgCheckBox";
 import SvgCheckBoxOutline from "../../icons/SvgCheckBoxOutline";
 import { textColorsType } from "../Text/textTypes";
+import { primaryShade1, textShade1 } from "../../theme/colors";
 
 type DefaultPropsTypes = {
   name?: string;
   size?: number;
   labelColor?: textColorsType;
+  type?: "theme" | "black";
 };
 
 const defaultProps: DefaultPropsTypes = {
   size: 24,
   name: "",
   labelColor: "shade-3",
+  type: "theme",
 };
 
 export type CheckBoxEventType = {
@@ -43,6 +46,7 @@ const CheckBox = ({
   labelColor,
   name,
   value,
+  type,
 }: Props) => {
   const handleOnClick = useCallback(
     (e: any) => {
@@ -64,6 +68,12 @@ const CheckBox = ({
     [onClick]
   );
 
+  let checkBoxTheme = primaryShade1;
+  if (type === "black") {
+    checkBoxTheme = textShade1;
+  } else {
+    checkBoxTheme = primaryShade1;
+  }
   return (
     <div
       role={"button"}
@@ -73,9 +83,9 @@ const CheckBox = ({
       className={styles.container}
     >
       {checked ? (
-        <SvgCheckBox width={size} height={size} />
+        <SvgCheckBox width={size} height={size} fill={checkBoxTheme} />
       ) : (
-        <SvgCheckBoxOutline width={size} height={size} />
+        <SvgCheckBoxOutline width={size} height={size} fill={checkBoxTheme} />
       )}
       <CheckboxLabel label={label} labelColor={labelColor} />
     </div>

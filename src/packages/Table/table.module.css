@@ -1,0 +1,14 @@
+.overAll-none {
+  border: none;
+}
+
+.rowScroll {
+  overflow: auto;
+}
+
+.rowPonter {
+  cursor: pointer;
+}
+.overAll {
+  background-color: var(--color-white);
+}
