@@ -7,6 +7,12 @@ import PageNotFound from "./utils/PageNotFound";
 import SignUpScreen from "./modules/LoginModule/SignUpScreen";
 import ForgotPasswordScreen from "./modules/LoginModule/ForgotPasswordScreen";
 import Layout from "./common/Layout/Layout";
+import RunzScreen from "./modules/RunzModule/RunzScreen";
+import ProceduresScreen from "./modules/ProceduresModule/ProceduresScreen";
+import ProjectsScreen from "./modules/ProjectsModule/ProjectsScreen";
+import AssetsScreen from "./modules/AssetsModule/AssetsScreen";
+import SettingsScreen from "./modules/SettingsModule/SettingsScreen";
+import BillingScreen from "./modules/BillingModule/BillingScreen";
 
 function App() {
   return (
@@ -21,6 +27,13 @@ function App() {
           />
           <Route element={<ProtectedRoutes />}>
             <Route path={routes.MY_PAGE} element={<MyPageScreen />} />
+            <Route path={routes.RUNZ} element={<RunzScreen />} />
+            <Route path={routes.PROCEDURES} element={<ProceduresScreen />} />
+            <Route path={routes.PROJECTS} element={<ProjectsScreen />} />
+            <Route path={routes.ASSETS} element={<AssetsScreen />} />
+            <Route path={routes.SETTINGS} element={<SettingsScreen />} />
+            <Route path={routes.BILLING} element={<BillingScreen />} />
+
             <Route path="*" element={<PageNotFound />} />
           </Route>
         </Routes>

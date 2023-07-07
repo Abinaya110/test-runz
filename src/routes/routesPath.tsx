@@ -1,6 +1,12 @@
 export const routes = {
   LOGIN: "/login",
-  MY_PAGE: "/",
   SIGNUP: "/signup",
   FORGOT_PASSWORD: "/forgot-password",
+  MY_PAGE: "/",
+  RUNZ: "/runz",
+  PROCEDURES: "/procedures",
+  PROJECTS: "/projects",
+  ASSETS: "/assets",
+  SETTINGS: "/settings",
+  BILLING: "/billing",
 };
