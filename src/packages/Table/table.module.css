@@ -12,3 +12,9 @@
 .overAll {
   background-color: var(--color-white);
 }
+
+.headerContainer {
+  background-color: var(--color-primary-shade-4);
+  padding: 20px;
+  margin-top: 24px;
+}

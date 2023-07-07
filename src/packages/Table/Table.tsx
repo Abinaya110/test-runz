@@ -4,6 +4,9 @@ import Rows, { ColumnItem } from "./Rows";
 import TableTitle from "./TableTitle";
 import Text from "../Text/Text";
 import styles from "./table.module.css";
+import TableActions from "./TableActions";
+import { ReactChild } from "react";
+import InputText from "../InputText/InputText";
 
 const cx = classNames.bind(styles);
 
@@ -27,6 +30,7 @@ type Props = {
   rowSelection?: Function;
   disableMultiSelect?: boolean;
   fixedHeight?: number | string;
+  customHeader?: ReactChild;
 } & typeof defaultProps;
 
 const Table = ({
@@ -38,11 +42,16 @@ const Table = ({
   disableMultiSelect,
   fixedHeight,
   showHeader,
+  customHeader,
 }: Props) => {
   const totalRows = dataSource.length;
 
   return (
     <Flex className={cx("overAll")}>
+      <TableActions />
+      {customHeader && (
+        <Flex className={styles.headerContainer}>{customHeader}</Flex>
+      )}
       {showHeader && (
         <TableTitle
           rowSelection={rowSelection}

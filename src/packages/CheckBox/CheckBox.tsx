@@ -4,13 +4,13 @@ import styles from "./checkbox.module.css";
 import SvgCheckBox from "../../icons/SvgCheckBox";
 import SvgCheckBoxOutline from "../../icons/SvgCheckBoxOutline";
 import { textColorsType } from "../Text/textTypes";
-import { primaryShade1, textShade1 } from "../../theme/colors";
+import { primaryShade1, textShade1, textShade2 } from "../../theme/colors";
 
 type DefaultPropsTypes = {
   name?: string;
   size?: number;
   labelColor?: textColorsType;
-  type?: "theme" | "black";
+  type?: "theme" | "black" | "text-shade-2";
 };
 
 const defaultProps: DefaultPropsTypes = {
@@ -71,6 +71,8 @@ const CheckBox = ({
   let checkBoxTheme = primaryShade1;
   if (type === "black") {
     checkBoxTheme = textShade1;
+  } else if (type === "text-shade-2") {
+    checkBoxTheme = textShade2;
   } else {
     checkBoxTheme = primaryShade1;
   }

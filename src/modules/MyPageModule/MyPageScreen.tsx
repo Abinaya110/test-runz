@@ -7,6 +7,9 @@ import {
   TABLE_ROW_DATA,
 } from "../../packages/Table/tabelMock";
 import { isEmpty } from "../../utils/validators";
+import Text from "../../packages/Text/Text";
+import InputText from "../../packages/InputText/InputText";
+import SvgSort from "../../icons/SvgSort";
 
 export const ACTIVE_BACKING_BOARD = [
   {
@@ -164,6 +167,59 @@ const MyPageScreen = () => {
   return (
     <Flex>
       <Table
+        showHeader={false}
+        customHeader={
+          <Flex row between>
+            <Flex>
+              <Flex row center>
+                <Text
+                  style={{ marginRight: 8 }}
+                  type="bodyBold"
+                  color="shade-3"
+                >
+                  Procedure details
+                </Text>
+                <SvgSort />
+              </Flex>
+              <Flex row center>
+                <InputText placeholder="ID" />
+                <InputText placeholder="Department" />
+                <InputText placeholder="Lab" />
+                <InputText placeholder="Procedure" />
+              </Flex>
+            </Flex>
+            <Flex row center>
+              <Flex>
+                <Flex row center>
+                  <Text
+                    style={{ marginRight: 8 }}
+                    type="bodyBold"
+                    color="shade-3"
+                  >
+                    Created on
+                  </Text>
+                  <SvgSort />
+                </Flex>
+
+                <InputText placeholder="DD/MM/YYYY" />
+              </Flex>
+              <Flex>
+                <Flex row center>
+                  <Text
+                    style={{ marginRight: 8 }}
+                    type="bodyBold"
+                    color="shade-3"
+                  >
+                    Created by
+                  </Text>
+                  <SvgSort />
+                </Flex>
+
+                <InputText placeholder="ID" />
+              </Flex>
+            </Flex>
+          </Flex>
+        }
         rowSelection={handleSelections}
         dataSource={ACTIVE_BACKING_BOARD}
         columns={columns}

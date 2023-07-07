@@ -115,9 +115,11 @@ const Layout = ({ children }: Props) => {
             },
           ]}
         />
-        <Flex center className={styles.seePlansDiv}>
-          <SvgSeePlans />
-        </Flex>
+        {!collapsed && (
+          <Flex center className={styles.seePlansDiv}>
+            <SvgSeePlans />
+          </Flex>
+        )}
       </Sider>
       <LayoutAntd className={styles.backgroundColor}>
         <Header className={styles.headerContainer}>
