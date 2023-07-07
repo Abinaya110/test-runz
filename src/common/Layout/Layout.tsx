@@ -22,6 +22,7 @@ import SvgBell from "../../icons/SvgBell";
 import Text from "../../packages/Text/Text";
 import SvgUserProfile from "../../icons/SvgUserProfile";
 import SvgSearch from "../../icons/SvgSearch";
+import SvgSeePlans from "../../icons/SvgSeePlans";
 
 const cx = classNames.bind(styles);
 
@@ -114,6 +115,9 @@ const Layout = ({ children }: Props) => {
             },
           ]}
         />
+        <Flex center className={styles.seePlansDiv}>
+          <SvgSeePlans />
+        </Flex>
       </Sider>
       <LayoutAntd className={styles.backgroundColor}>
         <Header className={styles.headerContainer}>

@@ -12,6 +12,7 @@
   padding-top: 80px;
   background-color: var(--color-white) !important;
   height: 100vh !important;
+  overflow-y: scroll;
 }
 .sideWidth {
   max-width: 350px !important;
@@ -31,4 +32,8 @@
 }
 .svgProfile {
   margin-right: 20px;
+}
+.seePlansDiv {
+  margin-top: 30px;
+  padding-bottom: 30px;
 }
