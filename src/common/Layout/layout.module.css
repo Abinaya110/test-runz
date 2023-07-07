@@ -1,0 +1,25 @@
+.headerContainer {
+  box-shadow: 0px 1px 3px 0px #0000000d;
+  height: 80px;
+  background-color: var(--color-white);
+  position: absolute;
+  left: 0;
+  top: 0;
+  right: 0;
+  padding: 0;
+}
+.sideBarContainer {
+  padding-top: 80px;
+  background-color: var(--color-white) !important;
+  height: 100vh !important;
+}
+.sideWidth {
+  max-width: 350px !important;
+  min-width: 350px !important;
+}
+.backgroundColor {
+  background-color: var(--color-gray-2) !important;
+}
+.content {
+  margin-top: 80px;
+}

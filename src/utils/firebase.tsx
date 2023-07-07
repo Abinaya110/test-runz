@@ -1,7 +1,7 @@
 import firebase from "firebase/compat/app";
 import "firebase/compat/auth";
 import "firebase/compat/firestore";
-import { GoogleAuthProvider } from "firebase/auth";
+import { GoogleAuthProvider, OAuthProvider } from "firebase/auth";
 
 const FIREBASE_CONFIG = {
   apiKey: "AIzaSyA72za0r_67Y5dfyUXYZQNOFl3qx7j_0cI",
@@ -18,5 +18,6 @@ const firebaseApp = firebase.initializeApp(firebaseConfig);
 firebaseApp.firestore();
 const auth = firebase.auth();
 const provider = new GoogleAuthProvider();
+const microProvider = new OAuthProvider("microsoft.com");
 
-export { auth, provider };
+export { auth, provider, microProvider };
