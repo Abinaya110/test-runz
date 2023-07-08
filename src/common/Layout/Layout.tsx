@@ -46,6 +46,11 @@ const Layout = ({ children }: Props) => {
   const settings = window.location.pathname === routes.SETTINGS;
   const billing = window.location.pathname === routes.BILLING;
 
+  const hideLayout =
+    window.location.pathname === routes.LOGIN ||
+    window.location.pathname === routes.FORGOT_PASSWORD ||
+    window.location.pathname === routes.SIGNUP;
+
   const menuNavigate = (value: string) => {
     switch (value) {
       case "1":
@@ -64,6 +69,10 @@ const Layout = ({ children }: Props) => {
         return navigate(routes.BILLING);
     }
   };
+
+  if (hideLayout) {
+    return children;
+  }
   return (
     <LayoutAntd>
       <Sider

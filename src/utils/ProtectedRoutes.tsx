@@ -1,6 +1,7 @@
 import { Navigate, Outlet, useLocation } from "react-router-dom";
 import { routes } from "../routes/routesPath";
 import { AUTH_TOKEN } from "./localStoreConst";
+
 const useAuth = () => {
   const user = localStorage.getItem(AUTH_TOKEN) !== null ? true : false;
   return user && user;
