@@ -48,7 +48,13 @@ const LoginScreen = () => {
     validate,
   });
   return (
-    <SelectTag />
+    <SelectTag
+      options={[
+        { label: "11", value: "333" },
+        { label: "121", value: "0333" },
+        { label: "121", value: "0333" },
+      ]}
+    />
 
     // <LoginFrame
     //   leftChild={

@@ -8,7 +8,7 @@ import InputText from "../../packages/InputText/InputText";
 import SvgSort from "../../icons/SvgSort";
 import styles from "./mypagescreen.module.css";
 import Badge from "../../packages/Badge/Badge";
-import SelectTag from "../../packages/SelectTag/SelectTag";
+import SelectTag from "../../packages/Select/SelectTag";
 
 export const ACTIVE_BACKING_BOARD = [
   {
