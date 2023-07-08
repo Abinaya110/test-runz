@@ -19,7 +19,9 @@ export const buttonHelper = (types?: buttonTypes, disabled?: boolean) => {
     textColor = "primary";
   }
 
-  if (disabled && types === "secondary") {
+  if (disabled && types === "primary") {
+    textColor = "shade-2";
+  } else if (disabled && types === "secondary") {
     textColor = "theme";
   } else if (disabled && types !== "secondary") {
     textColor = "white";

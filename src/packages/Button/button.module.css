@@ -44,3 +44,7 @@
   padding: 0;
   width: fit-content;
 }
+
+.disabled-primary {
+  background-color: var(--color-text-shade-3);
+}

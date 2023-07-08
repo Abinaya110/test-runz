@@ -2,14 +2,12 @@ import { useMemo, useState } from "react";
 import CheckBox from "../../packages/CheckBox/CheckBox";
 import Flex from "../../packages/Flex/Flex";
 import Table from "../../packages/Table/Table";
-import {
-  TABLE_COLUMN_DATA,
-  TABLE_ROW_DATA,
-} from "../../packages/Table/tabelMock";
 import { isEmpty } from "../../utils/validators";
 import Text from "../../packages/Text/Text";
 import InputText from "../../packages/InputText/InputText";
 import SvgSort from "../../icons/SvgSort";
+import styles from "./mypagescreen.module.css";
+import Badge from "../../packages/Badge/Badge";
 
 export const ACTIVE_BACKING_BOARD = [
   {
@@ -171,7 +169,7 @@ const MyPageScreen = () => {
         customHeader={
           <Flex row between>
             <Flex>
-              <Flex row center>
+              <Flex row center className={styles.sortTitleFlex}>
                 <Text
                   style={{ marginRight: 8 }}
                   type="bodyBold"
@@ -182,15 +180,19 @@ const MyPageScreen = () => {
                 <SvgSort />
               </Flex>
               <Flex row center>
-                <InputText placeholder="ID" />
-                <InputText placeholder="Department" />
-                <InputText placeholder="Lab" />
-                <InputText placeholder="Procedure" />
+                <InputText size="small" placeholder="ID" />
+                <div className={styles.inputMargin}>
+                  <InputText size="small" placeholder="Department" />
+                </div>
+                <InputText size="small" placeholder="Lab" />
+                <div className={styles.inputMargin}>
+                  <InputText size="small" placeholder="Procedure" />
+                </div>
               </Flex>
             </Flex>
             <Flex row center>
-              <Flex>
-                <Flex row center>
+              <Flex className={styles.createdFlex}>
+                <Flex row center className={styles.sortTitleFlex}>
                   <Text
                     style={{ marginRight: 8 }}
                     type="bodyBold"
@@ -201,10 +203,10 @@ const MyPageScreen = () => {
                   <SvgSort />
                 </Flex>
 
-                <InputText placeholder="DD/MM/YYYY" />
+                <InputText size="small" placeholder="DD/MM/YYYY" />
               </Flex>
               <Flex>
-                <Flex row center>
+                <Flex row center className={styles.sortTitleFlex}>
                   <Text
                     style={{ marginRight: 8 }}
                     type="bodyBold"
@@ -215,7 +217,7 @@ const MyPageScreen = () => {
                   <SvgSort />
                 </Flex>
 
-                <InputText placeholder="ID" />
+                <InputText size="small" placeholder="ID" />
               </Flex>
             </Flex>
           </Flex>

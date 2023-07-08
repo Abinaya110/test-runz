@@ -2,6 +2,7 @@ import classNames from "classnames/bind";
 import Text from "../Text/Text";
 import styles from "./button.module.css";
 import { buttonHelper, buttonTypes } from "./buttonHelper";
+import { textColorsType } from "../Text/textTypes";
 
 const cx = classNames.bind(styles);
 
@@ -17,6 +18,7 @@ type Props = {
   id?: string;
   type?: "button" | "submit" | "reset";
   height?: "small" | "medium" | "large";
+  textColors?: textColorsType;
 };
 
 const Button = ({
@@ -31,6 +33,7 @@ const Button = ({
   id,
   type,
   height,
+  textColors,
 }: Props) => {
   const buttonClassName = cx(
     {
@@ -66,7 +69,7 @@ const Button = ({
         <Text
           bold={height === "large" ? "bold" : "semiBold"}
           size={textSize || size}
-          color={textColor}
+          color={textColors ? textColors : textColor}
         >
           {children}
         </Text>

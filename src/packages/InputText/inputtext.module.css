@@ -1,7 +1,6 @@
 .common {
   border: 1px solid var(--color-text-shade-3);
   box-sizing: border-box;
-  border-radius: 10px;
 }
 .inputStyle {
   width: 100%;
@@ -12,6 +11,20 @@
   border: none;
 }
 
+.size-small {
+  padding: 6px 12px;
+  border-radius: 5px;
+}
+.size-medium {
+  padding: 10px 12px;
+  border-radius: 5px;
+}
+.sizeRadius-small {
+  border-radius: 5px;
+}
+.sizeRadius-medium {
+  border-radius: 5px;
+}
 .actionDiv {
   display: flex;
   flex-direction: row;

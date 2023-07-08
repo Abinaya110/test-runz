@@ -13,3 +13,9 @@
 .titleContainer {
   height: 90px;
 }
+.actionHeight {
+  height: 45px;
+}
+.hideActions {
+  display: none;
+}

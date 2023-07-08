@@ -5,6 +5,7 @@ import { keyBoardProps, statusType } from "./inputTextTypes";
 import LabelWrapper from "../LabelWrapper/LabelWrapper";
 
 const cx = classNames.bind(styles);
+
 type Props = {
   placeholder?: string;
   autoComplete?: string;
@@ -26,6 +27,7 @@ type Props = {
   message?: string;
   white?: boolean;
   status?: statusType;
+  size?: "small" | "medium";
 };
 
 const InputText = ({
@@ -49,6 +51,7 @@ const InputText = ({
   message,
   white,
   status,
+  size,
 }: Props) => {
   const [isFocus, setFocus] = useState(false);
 
@@ -56,6 +59,7 @@ const InputText = ({
     [`status-${status}`]: status,
     white,
     ["primaryFocus"]: isFocus,
+    [`sizeRadius-${size}`]: size,
   });
 
   const handleFocus = () => {
@@ -91,7 +95,7 @@ const InputText = ({
           onFocus={handleFocus}
           onBlur={handleBlur}
           placeholder={placeholder}
-          className={styles.inputStyle}
+          className={cx("inputStyle", { [`size-${size}`]: size })}
           style={style}
         />
 
@@ -102,5 +106,11 @@ const InputText = ({
     </LabelWrapper>
   );
 };
+
+const defaultProps = {
+  size: "medium",
+};
+
+InputText.defaultProps = defaultProps;
 
 export default InputText;

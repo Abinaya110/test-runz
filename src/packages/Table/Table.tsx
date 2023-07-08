@@ -1,12 +1,12 @@
 import classNames from "classnames/bind";
+import { ReactChild, SetStateAction, useState } from "react";
 import Flex from "../Flex/Flex";
-import Rows, { ColumnItem } from "./Rows";
-import TableTitle from "./TableTitle";
 import Text from "../Text/Text";
+import Pagination from "../Pagination/Pagination";
 import styles from "./table.module.css";
 import TableActions from "./TableActions";
-import { ReactChild } from "react";
-import InputText from "../InputText/InputText";
+import Rows, { ColumnItem } from "./Rows";
+import TableTitle from "./TableTitle";
 
 const cx = classNames.bind(styles);
 
@@ -45,56 +45,69 @@ const Table = ({
   customHeader,
 }: Props) => {
   const totalRows = dataSource.length;
-
+  const [currentPage, setCurrentPage] = useState(1);
+  const totalPages = 20;
+  const handlePageChange = (page: SetStateAction<number>) => {
+    setCurrentPage(page);
+  };
   return (
-    <Flex className={cx("overAll")}>
+    <Flex>
       <TableActions />
       {customHeader && (
         <Flex className={styles.headerContainer}>{customHeader}</Flex>
       )}
-      {showHeader && (
-        <TableTitle
-          rowSelection={rowSelection}
-          columns={columns}
-          dataSource={dataSource}
-          disableMultiSelect={disableMultiSelect}
-        />
-      )}
-
-      <div
-        style={{
-          height: fixedHeight ? fixedHeight : "100%",
-        }}
-        className={cx({ rowScroll: scrollHeight || fixedHeight })}
-      >
-        {dataSource.length ? (
-          dataSource.map((item, index) => (
-            <div
-              key={index}
-              className={cx("rowHover", {
-                rowPointer: rowPointer,
-              })}
-            >
-              <Rows
-                key={index}
-                item={item}
-                columns={columns}
-                rowIndex={index}
-                scrollHeight={scrollHeight}
-                totalRows={totalRows}
-                rowSelection={rowSelection}
-                disableMultiSelect={disableMultiSelect}
-              />
-            </div>
-          ))
-        ) : (
-          <Flex center>
-            <Text color="error" bold="bold">
-              No Records to display!!
-            </Text>
-          </Flex>
+      <Flex className={cx("overAll")}>
+        {showHeader && (
+          <TableTitle
+            rowSelection={rowSelection}
+            columns={columns}
+            dataSource={dataSource}
+            disableMultiSelect={disableMultiSelect}
+          />
         )}
-      </div>
+
+        <div
+          style={{
+            height: fixedHeight ? fixedHeight : "100%",
+          }}
+          className={cx({ rowScroll: scrollHeight || fixedHeight })}
+        >
+          {dataSource.length ? (
+            dataSource.map((item, index) => (
+              <div
+                key={index}
+                className={cx("rowHover", {
+                  rowPointer: rowPointer,
+                })}
+              >
+                <Rows
+                  key={index}
+                  item={item}
+                  columns={columns}
+                  rowIndex={index}
+                  scrollHeight={scrollHeight}
+                  totalRows={totalRows}
+                  rowSelection={rowSelection}
+                  disableMultiSelect={disableMultiSelect}
+                />
+              </div>
+            ))
+          ) : (
+            <Flex center>
+              <Text color="error" bold="bold">
+                No Records to display!!
+              </Text>
+            </Flex>
+          )}
+        </div>
+        <div className={styles.pagination}>
+          <Pagination
+            currentPage={currentPage}
+            totalPages={totalPages}
+            onPageChange={handlePageChange}
+          />
+        </div>
+      </Flex>
     </Flex>
   );
 };
