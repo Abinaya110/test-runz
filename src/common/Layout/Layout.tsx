@@ -25,6 +25,7 @@ import SvgSearch from "../../icons/SvgSearch";
 import SvgSeePlans from "../../icons/SvgSeePlans";
 import ProfileDrawer from "./ProfileDrawer";
 import NotificationDrawer from "./NotificationDrawer";
+import { AUTH_TOKEN } from "../../utils/localStoreConst";
 
 const cx = classNames.bind(styles);
 
@@ -75,12 +76,22 @@ const Layout = ({ children }: Props) => {
     }
   };
 
+  const handleLogout = () => {
+    navigate(routes.LOGIN);
+    localStorage.removeItem(AUTH_TOKEN);
+    setDrawer(false);
+  };
+
   if (hideLayout) {
     return children;
   }
   return (
     <>
-      <ProfileDrawer onClose={() => setDrawer(false)} open={isDrawer} />
+      <ProfileDrawer
+        onClose={() => setDrawer(false)}
+        open={isDrawer}
+        handleLogout={handleLogout}
+      />
       <NotificationDrawer onClose={() => setNoti(false)} open={isNoti} />
 
       <LayoutAntd>

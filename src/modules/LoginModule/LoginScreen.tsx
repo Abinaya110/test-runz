@@ -11,6 +11,7 @@ import LoginFrame from "./LoginFrame";
 import HelpAndTerms from "./HelpAndTerms";
 import { isEmpty, isValidEmail } from "../../utils/validators";
 import { useVisibilityIcon } from "../../utils/helpers";
+import { AUTH_TOKEN } from "../../utils/localStoreConst";
 
 type formType = {
   email: string;
@@ -43,7 +44,10 @@ const LoginScreen = () => {
 
   const formik = useFormik({
     initialValues,
-    onSubmit: () => {},
+    onSubmit: () => {
+      localStorage.setItem(AUTH_TOKEN, "cool");
+      navigate(routes.MY_PAGE);
+    },
     validate,
   });
   return (
