@@ -61,3 +61,6 @@
 .white {
   background-color: var(--color-white);
 }
+.disabled {
+  background-color: var(--color-gray-2);
+}

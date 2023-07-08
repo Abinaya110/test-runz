@@ -6,6 +6,7 @@ const useAuth = () => {
   const user = localStorage.getItem(AUTH_TOKEN) !== null ? true : false;
   return user && user;
 };
+
 const ProtectedRoutes = () => {
   const location = useLocation();
   const isAuth = useAuth();

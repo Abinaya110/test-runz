@@ -1,4 +1,5 @@
 import { useMemo, useState } from "react";
+import Calendar from "react-calendar";
 import CheckBox from "../../packages/CheckBox/CheckBox";
 import Flex from "../../packages/Flex/Flex";
 import Table from "../../packages/Table/Table";
@@ -9,224 +10,157 @@ import SvgSort from "../../icons/SvgSort";
 import styles from "./mypagescreen.module.css";
 import Badge from "../../packages/Badge/Badge";
 import SelectTag from "../../packages/Select/SelectTag";
+import SvgWelcomeTester from "../../icons/SvgWelcomeTester";
+import SvgWelcomeRequester from "../../icons/SvgWelcomeRequester";
+import SvgNoTaskCard from "../../icons/SvgNoTaskCard";
+import MyPageTableHeader from "./MyPageTableHeader";
+import SvgChevronLeft from "../../icons/SvgChevronLeft";
+import SvgChevronRight from "../../icons/SvgChevronRight";
+import SvgNoTask from "../../icons/SvgNoTask";
 
 export const ACTIVE_BACKING_BOARD = [
   {
-    eventType: "Poker",
-    eventName: "WSOP",
-    amount: "$35.00",
-    amountAvailable: "$35.00",
-    time: "00 Days 10:22",
-    potentialWin: "$1M",
-    status: "Not Started",
-    id: "1",
-    name: "John Smith",
-    winnings: "NA",
+    task: "Thickness of a paper by vernier calliperse",
+    des: "Dept- Physics / Lab- Mechanical / ID05828ADN",
+    Username: "Username",
+    date: "02/05/2022",
   },
   {
-    eventType: "Poker",
-    eventName: "Organization B",
-    amount: "$35.00",
-    amountAvailable: "$35.00",
-    time: "00 Days 00:00 ",
-    potentialWin: "$1M",
-    status: "In progress",
-    id: "2",
-    name: "Elon Musk",
-    winnings: "NA",
+    task: "Demonstrate that carbon dioxide is released during the process of respiration.",
+    des: "Dept- Physics / Lab- Mechanical / ID05828ADN",
+    Username: "Username",
+    date: "02/05/2022",
   },
   {
-    eventType: "Poker",
-    eventName: "Organization C",
-    amount: "$1500.00",
-    amountAvailable: "$1500.00",
-    time: "Completed",
-    potentialWin: "$1M",
-    status: "Lost",
-    id: "3",
-    name: "Mike Angelo",
-    winnings: "$0",
-  },
-  {
-    eventType: "Poker",
-    eventName: "Organization A",
-    amount: "$165.00",
-    amountAvailable: "$165.00",
-    time: "Completed",
-    potentialWin: "$500k",
-    status: "Success",
-    id: "4",
-    name: "Sarah Whitmore",
-    winnings: "$12,000",
+    task: "Qualitative analysis for Cu, Zn, Fe, Al",
+    des: "Dept- Physics / Lab- Mechanical / ID05828ADN",
+    Username: "Username",
+    date: "02/05/2022",
   },
 ];
 
 export const activeBackingBoard = () => [
   {
-    title: "Event Type",
-    dataIndex: "eventType",
-    key: "eventType",
+    title: "",
+    dataIndex: "task",
+    key: "task",
+    flex: 5.5,
+    render: (value: any, data: any) => {
+      return (
+        <Flex>
+          <Text type="captionBold" color="shade-3">
+            {data.des}
+          </Text>
+          <Text type="bodyBold">{value}</Text>
+        </Flex>
+      );
+    },
   },
   {
-    title: "Event Name",
-    dataIndex: "eventName",
-    key: "eventName",
+    title: "",
+    dataIndex: "Username",
+    key: "Username",
     flex: 1.5,
-  },
-  {
-    title: "Amount Backed",
-    dataIndex: "amount",
-    key: "amount",
-  },
-  {
-    title: "Backing Amount Available",
-    dataIndex: "amountAvailable",
-    key: "amountAvailable",
-  },
-  {
-    title: "Time Remaining",
-    dataIndex: "time",
-    key: "time",
-  },
-  {
-    title: "Potential Win",
-    dataIndex: "potentialWin",
-    key: "potentialWin",
-  },
-  {
-    title: "Winnings",
-    dataIndex: "winnings",
-    key: "winnings",
-  },
-  {
-    title: "Status",
-    dataIndex: "status",
-    key: "status",
+    Flex: 2.5,
     align: "center",
+  },
+  {
+    title: "A",
+    dataIndex: "date",
+    key: "date",
+    flex: 2,
+    align: "center",
+  },
+  {
+    title: "",
+    dataIndex: "action",
+    key: "action",
+    flex: 2,
+    align: "center",
+    render: () => {
+      return <Badge>aa</Badge>;
+    },
   },
 ];
 
 const MyPageScreen = () => {
-  const [selectedRows, setSelectedRows] = useState<any[]>([]);
   const columns = useMemo(() => activeBackingBoard(), []);
+  const [selectedDates, setSelectedDates] = useState<any>([]);
 
-  const isAllRowChecked = (
-    selected: any[],
-    data: any,
-    perPage: number
-  ): boolean => {
-    let count = 0;
-    if (Array.isArray(data) && data.length > 0) {
-      data.forEach((d) => {
-        const isSelected = selected.some((r) => r.unique_key === d.unique_key);
-        if (isSelected) {
-          count += 1;
-        }
-      });
-    }
-    return count === perPage;
-  };
-
-  const handleChecked = (row: {
-    id: any;
-    filter: (arg0: (r: any) => boolean) => any[];
-    length: number;
-  }) => {
-    if (!Array.isArray(row)) {
-      if (selectedRows.includes(row.id)) {
-        const updatedRow = selectedRows.filter((s) => s !== row.id);
-        setSelectedRows(updatedRow);
-      } else {
-        setSelectedRows([...selectedRows, row.id]);
-      }
-    } else if (Array.isArray(row)) {
-      const orderNumbers = row.filter((r) => !isEmpty(r.id)).map((r) => r.id);
-      if (isAllRowChecked(selectedRows, row, row.length)) {
-        setSelectedRows([]);
-      } else {
-        setSelectedRows([...selectedRows, ...orderNumbers]);
-      }
-    }
-  };
-
-  const handleSelections = (row: any) => {
-    const isChecked = !Array.isArray(row)
-      ? selectedRows.includes(row.id)
-      : isAllRowChecked(selectedRows, row, row.length);
-    return (
-      <Flex>
-        <CheckBox
-          type="black"
-          checked={isChecked}
-          onClick={() => handleChecked(row)}
-        />
-      </Flex>
+  const handleDateChange = (date: any) => {
+    const selectedDateIndex = selectedDates.findIndex((d: any) =>
+      areDatesEqual(d, date)
     );
+
+    if (selectedDateIndex > -1) {
+      // If the date is already selected, remove it from the selection
+      setSelectedDates((prevDates: any) => [
+        ...prevDates.slice(0, selectedDateIndex),
+        ...prevDates.slice(selectedDateIndex + 1),
+      ]);
+    } else {
+      // If the date is not selected, add it to the selection
+      setSelectedDates((prevDates: any) => [...prevDates, date]);
+    }
   };
+
+  const areDatesEqual = (dateA: any, dateB: any) =>
+    dateA.getDate() === dateB.getDate() &&
+    dateA.getMonth() === dateB.getMonth() &&
+    dateA.getFullYear() === dateB.getFullYear();
+
+  const mark = ["04-03-2020", "03-03-2020", "05-03-2020"];
   return (
     <Flex>
       <Table
+        customHeader={<MyPageTableHeader />}
         showHeader={false}
-        customHeader={
-          <Flex row between>
-            <Flex>
-              <Flex row center className={styles.sortTitleFlex}>
-                <Text
-                  style={{ marginRight: 8 }}
-                  type="bodyBold"
-                  color="shade-3"
-                >
-                  Procedure details
-                </Text>
-                <SvgSort />
-              </Flex>
-              <Flex row center>
-                <InputText size="small" placeholder="ID" />
-                <div className={styles.inputMargin}>
-                  <InputText size="small" placeholder="Department" />
-                </div>
-                <InputText size="small" placeholder="Lab" />
-                <div className={styles.inputMargin}>
-                  <InputText size="small" placeholder="Procedure" />
-                </div>
-              </Flex>
-            </Flex>
-            <Flex row center>
-              <Flex className={styles.createdFlex}>
-                <Flex row center className={styles.sortTitleFlex}>
-                  <Text
-                    style={{ marginRight: 8 }}
-                    type="bodyBold"
-                    color="shade-3"
-                  >
-                    Created on
-                  </Text>
-                  <SvgSort />
-                </Flex>
-
-                <InputText size="small" placeholder="DD/MM/YYYY" />
-              </Flex>
-              <Flex>
-                <Flex row center className={styles.sortTitleFlex}>
-                  <Text
-                    style={{ marginRight: 8 }}
-                    type="bodyBold"
-                    color="shade-3"
-                  >
-                    Created by
-                  </Text>
-                  <SvgSort />
-                </Flex>
-
-                <InputText size="small" placeholder="ID" />
-              </Flex>
-            </Flex>
-          </Flex>
-        }
-        rowSelection={handleSelections}
         dataSource={ACTIVE_BACKING_BOARD}
         columns={columns}
       />
+      <Flex row className={styles.notificationsContainer}>
+        <Flex flex={1}>
+          <Table
+            customHeader={
+              <Text type="bodyBold" color="shade-2">
+                Notifications
+              </Text>
+            }
+            showHeader={false}
+            dataSource={ACTIVE_BACKING_BOARD}
+            columns={columns}
+          />
+        </Flex>
+        <Flex className={styles.calendarFlex}>
+          <Calendar
+            prev2Label={""}
+            next2Label={""}
+            prevLabel={<SvgChevronLeft />}
+            nextLabel={<SvgChevronRight />}
+            onChange={handleDateChange}
+            value={selectedDates}
+            tileClassName={({ date }) =>
+              selectedDates.some((d: any) => areDatesEqual(d, date))
+                ? styles.selected
+                : null
+            }
+          />
+          <Flex flex={1} middle center className={styles.remainders}>
+            <SvgNoTask height={70} width={70} />
+            <Text type="smallBold" color="shade-3">
+              No remainders found
+            </Text>
+          </Flex>
+          {/* <div>
+            Selected Dates:
+            {selectedDates.map((date: any) => (
+              <span key={date.toString()}>{date.toDateString()}, </span>
+            ))}
+          </div> */}
+        </Flex>
+      </Flex>
+      {/* <SvgWelcomeRequester width={"100%"} />
+      <SvgNoTaskCard width={"100%"} /> */}
     </Flex>
   );
 };

@@ -52,9 +52,11 @@ const Table = ({
   };
   return (
     <Flex>
-      <TableActions />
+      {typeof rowSelection === "function" && <TableActions />}
       {customHeader && (
-        <Flex className={styles.headerContainer}>{customHeader}</Flex>
+        <Flex className={cx("headerContainer", { headerMargin: rowSelection })}>
+          {customHeader}
+        </Flex>
       )}
       <Flex className={cx("overAll")}>
         {showHeader && (

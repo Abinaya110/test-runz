@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Layout as LayoutAntd, Menu } from "antd";
+import { Layout as LayoutAntd, Menu, Drawer } from "antd";
 import styles from "./layout.module.css";
 import SvgMenu from "../../icons/SvgMenu";
 import Button from "../../packages/Button/Button";
@@ -23,6 +23,8 @@ import Text from "../../packages/Text/Text";
 import SvgUserProfile from "../../icons/SvgUserProfile";
 import SvgSearch from "../../icons/SvgSearch";
 import SvgSeePlans from "../../icons/SvgSeePlans";
+import ProfileDrawer from "./ProfileDrawer";
+import NotificationDrawer from "./NotificationDrawer";
 
 const cx = classNames.bind(styles);
 
@@ -38,6 +40,9 @@ const svgFill = (value: boolean) => {
 const Layout = ({ children }: Props) => {
   const [collapsed, setCollapsed] = useState(false);
   const navigate = useNavigate();
+  const [isDrawer, setDrawer] = useState(false);
+  const [isNoti, setNoti] = useState(false);
+
   const myPage = window.location.pathname === routes.MY_PAGE;
   const runz = window.location.pathname === routes.RUNZ;
   const procedures = window.location.pathname === routes.PROCEDURES;
@@ -74,97 +79,111 @@ const Layout = ({ children }: Props) => {
     return children;
   }
   return (
-    <LayoutAntd>
-      <Sider
-        className={cx("sideBarContainer", { sideWidth: !collapsed })}
-        trigger={null}
-        collapsible
-        collapsed={collapsed}
-      >
-        <Menu
-          onClick={(a) => {
-            menuNavigate(a.key);
-          }}
-          mode="inline"
-          items={[
-            {
-              key: "1",
-              icon: <SvgMypage fill={svgFill(myPage)} />,
-              label: collapsed ? "" : "My page",
-            },
-            {
-              key: "2",
-              icon: <SvgRunz fill={svgFill(runz)} />,
-              label: collapsed ? "" : "Runs",
-            },
-            {
-              key: "3",
-              icon: <SvgProcedures fill={svgFill(procedures)} />,
-              label: collapsed ? "" : "Procedures",
-            },
-            {
-              key: "4",
-              icon: <SvgProjects fill={svgFill(projects)} />,
-              label: collapsed ? "" : "Projects",
-            },
-            {
-              key: "5",
-              icon: <SvgAssets fill={svgFill(assets)} />,
-              label: collapsed ? "" : "Assets",
-            },
-            {
-              key: "6",
-              icon: <SvgSettings fill={svgFill(settings)} />,
-              label: collapsed ? "" : "Settings",
-            },
-            {
-              key: "7",
-              icon: <SvgDoller fill={svgFill(billing)} />,
-              label: collapsed ? "" : "Billing and subscriptions",
-            },
-          ]}
-        />
-        {!collapsed && (
-          <Flex center className={styles.seePlansDiv}>
-            <SvgSeePlans />
-          </Flex>
-        )}
-      </Sider>
-      <LayoutAntd className={styles.backgroundColor}>
-        <Header className={styles.headerContainer}>
-          <Flex row center between>
-            <Flex row center>
-              <Button
-                className={styles.svgMenu}
-                types="link"
-                onClick={() => setCollapsed(!collapsed)}
-              >
-                <SvgMenu />
-              </Button>
-              <SvgTestRunz />
-            </Flex>
-            <Flex row center>
-              <InputText
-                placeholder="Search"
-                actionRight={() => <SvgSearch />}
-              />
-              <Button types="link" className={styles.svgQuestion}>
-                <SvgQuestionRound />
-              </Button>
-              <Button types="link">
-                <SvgBell />
-              </Button>
+    <>
+      <ProfileDrawer onClose={() => setDrawer(false)} open={isDrawer} />
+      <NotificationDrawer onClose={() => setNoti(false)} open={isNoti} />
 
-              <Text className={styles.svgQuestion}>Arul</Text>
-              <Button className={styles.svgProfile} types="link">
-                <SvgUserProfile />
-              </Button>
+      <LayoutAntd>
+        <Sider
+          className={cx("sideBarContainer", { sideWidth: !collapsed })}
+          trigger={null}
+          collapsible
+          collapsed={collapsed}
+        >
+          <Menu
+            onClick={(a) => {
+              menuNavigate(a.key);
+            }}
+            mode="inline"
+            items={[
+              {
+                key: "1",
+                icon: <SvgMypage fill={svgFill(myPage)} />,
+                label: collapsed ? "" : "My page",
+              },
+              {
+                key: "2",
+                icon: <SvgRunz fill={svgFill(runz)} />,
+                label: collapsed ? "" : "Runs",
+              },
+              {
+                key: "3",
+                icon: <SvgProcedures fill={svgFill(procedures)} />,
+                label: collapsed ? "" : "Procedures",
+              },
+              {
+                key: "4",
+                icon: <SvgProjects fill={svgFill(projects)} />,
+                label: collapsed ? "" : "Projects",
+              },
+              {
+                key: "5",
+                icon: <SvgAssets fill={svgFill(assets)} />,
+                label: collapsed ? "" : "Assets",
+              },
+              {
+                key: "6",
+                icon: <SvgSettings fill={svgFill(settings)} />,
+                label: collapsed ? "" : "Settings",
+              },
+              {
+                key: "7",
+                icon: <SvgDoller fill={svgFill(billing)} />,
+                label: collapsed ? "" : "Billing and subscriptions",
+              },
+            ]}
+          />
+          {!collapsed && (
+            <Flex center className={styles.seePlansDiv}>
+              <SvgSeePlans />
             </Flex>
-          </Flex>
-        </Header>
-        <Content className={styles.content}>{children}</Content>
+          )}
+        </Sider>
+        <LayoutAntd className={styles.backgroundColor}>
+          <Header className={styles.headerContainer}>
+            <Flex row center between>
+              <Flex row center>
+                <Button
+                  className={styles.svgMenu}
+                  types="link"
+                  onClick={() => setCollapsed(!collapsed)}
+                >
+                  <SvgMenu />
+                </Button>
+                <SvgTestRunz />
+              </Flex>
+              <Flex row center>
+                <InputText
+                  placeholder="Search"
+                  actionRight={() => <SvgSearch />}
+                />
+                <Button types="link" className={styles.svgQuestion}>
+                  <SvgQuestionRound />
+                </Button>
+                <Button types="link" onClick={() => setNoti(true)}>
+                  <SvgBell />
+                </Button>
+
+                <Text className={styles.svgQuestion}>Arul</Text>
+                <Button
+                  onClick={() => setDrawer(true)}
+                  className={styles.svgProfile}
+                  types="link"
+                >
+                  <SvgUserProfile />
+                </Button>
+              </Flex>
+            </Flex>
+          </Header>
+          <Content
+            className={styles.content}
+            style={{ height: window.innerHeight - 90 }}
+          >
+            {children}
+          </Content>
+        </LayoutAntd>
       </LayoutAntd>
-    </LayoutAntd>
+    </>
   );
 };
 

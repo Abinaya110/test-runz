@@ -60,6 +60,7 @@ const InputText = ({
     white,
     ["primaryFocus"]: isFocus,
     [`sizeRadius-${size}`]: size,
+    disabled,
   });
 
   const handleFocus = () => {

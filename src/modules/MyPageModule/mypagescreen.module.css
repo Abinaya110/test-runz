@@ -1,9 +1,17 @@
-.inputMargin {
-  margin: 0px 8px;
+.notificationsContainer {
+  margin-top: 20px;
 }
-.createdFlex {
-  margin-right: 8px;
+.selected {
+  border-bottom: 4px solid var(--color-primary-shade-1) !important;
 }
-.sortTitleFlex {
-  margin-bottom: 10px;
+.calendarFlex {
+  margin-left: 20px;
+  background-color: var(--color-white);
+  /* height: fit-content; */
+}
+.remainders {
+  margin-top: 8px;
+  border-top: 1px solid var(--color-primary-shade-4);
+  padding: 20px;
+  background-color: var(--color-white);
 }
