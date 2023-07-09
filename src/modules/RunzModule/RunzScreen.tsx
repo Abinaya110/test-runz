@@ -4,7 +4,6 @@ import CheckBox from "../../packages/CheckBox/CheckBox";
 import { isEmpty } from "../../utils/validators";
 import { ACTIVE_BACKING_BOARD, activeBackingBoard } from "./mock";
 import Table from "../../packages/Table/Table";
-import Text from "../../packages/Text/Text";
 import RunzCustomHeader from "./RunzCustomHeader";
 import Button from "../../packages/Button/Button";
 import LableWithIcon from "../../common/LableWithIcon";
@@ -12,10 +11,9 @@ import SvgPlus from "../../icons/SvgPlus";
 import YesOrNo from "../../common/YesOrNo";
 import SvgDelete1 from "../../icons/SvgDelete1";
 import SvgSubmitReport from "../../icons/SvgSubmitReport";
-import Loader from "../../packages/Loader/Loader";
-import Toast from "../../packages/Toast/Toast";
 import Alert from "../../packages/Alert/Alert";
 import ShareRunzModal from "./ShareRunzModal";
+import CreateNewRunzModal from "./CreateNewRunzModal";
 
 const RunzScreen = () => {
   const [selectedRows, setSelectedRows] = useState<any[]>([]);
@@ -24,6 +22,7 @@ const RunzScreen = () => {
   const [deleteModal, setDeleteModal] = useState(false);
   const [submitModal, setSubmitModal] = useState(false);
   const [shareModal, setShareModal] = useState(false);
+  const [createNewRunz, setCreateNewRunz] = useState(false);
 
   const isAllRowChecked = (
     selected: any[],
@@ -126,6 +125,16 @@ const RunzScreen = () => {
   const handleShareOpen = () => setShareModal(true);
   return (
     <Flex>
+      <CreateNewRunzModal
+        open={createNewRunz}
+        cancelClick={() => {
+          setCreateNewRunz(false);
+        }}
+        suubmit={() => {
+          Alert("Runz created successfully.");
+          setCreateNewRunz(false);
+        }}
+      />
       <ShareRunzModal
         open={shareModal}
         shareOnClick={() => {
@@ -168,7 +177,7 @@ const RunzScreen = () => {
         hideActions={selectedRows.length === 0}
         actionTitle="Runz"
         actionTitleBtn={() => (
-          <Button>
+          <Button onClick={() => setCreateNewRunz(true)}>
             <LableWithIcon label="Create runz" actionLeft={() => <SvgPlus />} />
           </Button>
         )}

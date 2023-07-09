@@ -36,7 +36,6 @@ type Props = {
   name?: string;
   required?: boolean;
   label?: string;
-  selectContainerClass?: string;
   defaultValue?: { label: string; value: string | number | any };
   components?: Partial<SelectComponents<any, boolean, GroupBase<any>>>;
   id?: string;
@@ -68,7 +67,6 @@ const SelectTag = (
     name,
     required,
     label,
-    selectContainerClass,
     defaultValue,
     components,
     id,
@@ -81,7 +79,7 @@ const SelectTag = (
     autoFocus,
     inputId,
     inputColor = "white",
-    inputHeight = 45,
+    inputHeight = 43,
   }: Props,
   ref: Ref<any> | undefined
 ) => {
@@ -124,6 +122,7 @@ const SelectTag = (
             boxShadow: state.isFocused ? null : null,
             boxSizing: "border-box",
             borderColor: textShade3,
+            flex: 1,
           }),
           valueContainer: (provided: any) => ({
             ...provided,
