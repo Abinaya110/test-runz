@@ -9,10 +9,20 @@ import Text from "../Text/Text";
 
 const cx = classNames.bind(styles);
 
-const Pagination = ({ currentPage, totalPages, onPageChange }: any) => {
+type Props = {
+  maxPages: number;
+  currentPage: number;
+  totalPages: number;
+  onPageChange: (a: any) => void;
+};
+const Pagination = ({
+  currentPage,
+  totalPages,
+  onPageChange,
+  maxPages,
+}: Props) => {
   // Calculate the range of page numbers to display
   const range = [];
-  const maxPages = 10; // Maximum number of page numbers to show
   const ellipsis = "...";
   const pageSize = 10; // Number of items per page
 
@@ -125,5 +135,14 @@ const Pagination = ({ currentPage, totalPages, onPageChange }: any) => {
     </Flex>
   );
 };
+
+const defaultProps = {
+  maxPages: 10,
+  currentPage: 0,
+  totalPages: 0,
+  onPageChange: () => {},
+};
+
+Pagination.defaultProps = defaultProps;
 
 export default Pagination;

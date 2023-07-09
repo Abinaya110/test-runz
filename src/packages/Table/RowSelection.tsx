@@ -1,4 +1,4 @@
-import React, { memo, ReactNode } from "react";
+import { memo, ReactNode } from "react";
 
 type Props = {
   rowSelection?: Function;
@@ -13,15 +13,17 @@ const RowSelection = ({ rowSelection, disableMultiSelect, item }: Props) => {
     <>
       {typeof rowSelection === "function" && !disableMultiSelect && (
         <div
-          style={{
-            paddingRight: 20,
-            paddingLeft: 16,
-            width: 32,
-            justifyContent: "flex-end",
-            alignItems: "center",
-            display: "flex",
-            flexDirection: "column",
-          }}
+          style={
+            {
+              // paddingRight: 20,
+              // paddingLeft: 16,
+              // width: 32,
+              // justifyContent: "flex-end",
+              // alignItems: "center",
+              // display: "flex",
+              // flexDirection: "column",
+            }
+          }
         >
           {rowSelection(item)}
         </div>

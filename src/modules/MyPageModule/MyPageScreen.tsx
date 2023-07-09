@@ -39,7 +39,7 @@ export const ACTIVE_BACKING_BOARD = [
   },
 ];
 
-export const activeBackingBoard = () => [
+const activeBackingBoard = () => [
   {
     title: "",
     dataIndex: "task",

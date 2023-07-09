@@ -8,24 +8,40 @@ import Flex from "../Flex/Flex";
 import InputText from "../InputText/InputText";
 import Text from "../Text/Text";
 import styles from "./tableactions.module.css";
+import RowSelection from "./RowSelection";
 
 const cx = classNames.bind(styles);
 
 type Props = {
   hideActions?: boolean;
+  actionTitle?: string;
+  actionTitleBtn?: Function;
+  rowUnSelectAll?: Function;
+  dataSource: { [key: string]: any }[];
+  rowSelection?: Function;
+  disableMultiSelect?: boolean;
 };
-const TableActions = ({ hideActions }: Props) => {
+
+const TableActions = ({
+  hideActions,
+  actionTitle,
+  actionTitleBtn,
+  dataSource,
+  rowSelection,
+  disableMultiSelect,
+  rowUnSelectAll,
+}: Props) => {
   return (
     <Flex>
       <Flex row between center className={styles.titleContainer}>
         <Text type="title" color="shade-2">
-          Procedures
+          {actionTitle}
         </Text>
-        <Button disabled>Create procedure</Button>
+        {typeof actionTitleBtn === "function" && <>{actionTitleBtn()}</>}
       </Flex>
-      <div className={styles.actionHeight}>
-        <Flex row center between className={cx({ hideActions })}>
-          <Flex row center>
+      <Flex between className={styles.actionHeight}>
+        <Flex row center between>
+          <Flex row center className={cx({ hideActions })}>
             <Button className={styles.closeAction}>
               <Flex row center>
                 <SvgClose />
@@ -40,17 +56,17 @@ const TableActions = ({ hideActions }: Props) => {
               </Flex>
             </Button>
             <div className={styles.actionMargin}>
-              <CheckBox
-                type="text-shade-2"
-                label="Select all"
-                labelColor="shade-2"
+              <RowSelection
+                rowSelection={rowSelection}
+                disableMultiSelect={disableMultiSelect}
+                item={dataSource}
               />
             </div>
             <div className={styles.actionMargin}>
-              <CheckBox
-                type="text-shade-2"
-                label="Deselect all"
-                labelColor="shade-2"
+              <RowSelection
+                rowSelection={rowUnSelectAll}
+                disableMultiSelect={disableMultiSelect}
+                item={dataSource}
               />
             </div>
             <Button types="link">
@@ -66,13 +82,14 @@ const TableActions = ({ hideActions }: Props) => {
               </Flex>
             </Button>
           </Flex>
+          {hideActions && <div />}
           <InputText
             white
             placeholder="Search"
             actionRight={() => <SvgSearch />}
           />
         </Flex>
-      </div>
+      </Flex>
     </Flex>
   );
 };

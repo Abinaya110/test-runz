@@ -11,7 +11,12 @@ import { FilterOptionOption } from "react-select/dist/declarations/src/filters";
 import Flex from "../Flex/Flex";
 import { selectTagTheme } from "./selectHelper";
 import LabelWrapper from "../LabelWrapper/LabelWrapper";
-import { primaryShade1, textShade1, white } from "../../theme/colors";
+import {
+  primaryShade1,
+  textShade1,
+  textShade3,
+  white,
+} from "../../theme/colors";
 
 export type inputColors = "white" | "theme";
 
@@ -31,7 +36,6 @@ type Props = {
   name?: string;
   required?: boolean;
   label?: string;
-  labelBold?: boolean;
   selectContainerClass?: string;
   defaultValue?: { label: string; value: string | number | any };
   components?: Partial<SelectComponents<any, boolean, GroupBase<any>>>;
@@ -64,7 +68,6 @@ const SelectTag = (
     name,
     required,
     label,
-    labelBold,
     selectContainerClass,
     defaultValue,
     components,
@@ -93,107 +96,106 @@ const SelectTag = (
   }, [inputColor]);
 
   return (
-    <Flex className={selectContainerClass}>
-      <LabelWrapper required={required} label={label}>
-        <Select
-          inputId={inputId}
-          ref={ref}
-          id={id}
-          defaultValue={defaultValue}
-          value={value}
-          name={name}
-          isLoading={isLoading}
-          isDisabled={isDisabled}
-          isSearchable={isSearchable}
-          isClearable={isClearable}
-          options={options}
-          placeholder={placeholder}
-          onChange={onChange}
-          styles={{
-            option: (provided: any, state: any) => ({
-              ...provided,
+    <LabelWrapper required={required} label={label}>
+      <Select
+        inputId={inputId}
+        ref={ref}
+        id={id}
+        defaultValue={defaultValue}
+        value={value}
+        name={name}
+        isLoading={isLoading}
+        isDisabled={isDisabled}
+        isSearchable={isSearchable}
+        isClearable={isClearable}
+        options={options}
+        placeholder={placeholder}
+        onChange={onChange}
+        styles={{
+          option: (provided: any, state: any) => ({
+            ...provided,
+            fontSize: 14,
+            color: state.isSelected ? white : textShade1,
+          }),
+          control: (provided: any, state: { isFocused: any }) => ({
+            ...provided,
+            minHeight: inputHeight,
+            height: inputHeight,
+            boxShadow: state.isFocused ? null : null,
+            boxSizing: "border-box",
+            borderColor: textShade3,
+          }),
+          valueContainer: (provided: any) => ({
+            ...provided,
+            height: inputHeight,
+            padding: "0 8px",
+            fontSize: 14,
+            color: textShade1,
+          }),
+          input: (provided: any) => ({
+            ...provided,
+            margin: "0px",
+            fontSize: 14,
+            fontFamily: `Poppins`,
+            boxSizing: "border-box",
+            color: isInputValueColor,
+          }),
+          indicatorsContainer: (provided: any) => ({
+            ...provided,
+            height: inputHeight,
+            cursor: "pointer",
+            boxSizing: "border-box",
+          }),
+          clearIndicator: (provided: any) => ({
+            ...provided,
+            cursor: "pointer",
+          }),
+          placeholder: (defaultStyles: any) => {
+            return {
+              ...defaultStyles,
+              color: textShade3,
               fontSize: 14,
-              color: state.isSelected ? white : textShade1,
-            }),
-            control: (provided: any, state: { isFocused: any }) => ({
-              ...provided,
-              minHeight: inputHeight,
-              height: inputHeight,
-              boxShadow: state.isFocused ? null : null,
-              boxSizing: "border-box",
-            }),
-            valueContainer: (provided: any) => ({
-              ...provided,
-              height: inputHeight,
-              padding: "0 8px",
-              fontSize: 14,
-              color: textShade1,
-            }),
-            input: (provided: any) => ({
-              ...provided,
-              margin: "0px",
-              fontSize: 14,
-              fontFamily: `Poppins`,
-              boxSizing: "border-box",
-              color: isInputValueColor,
-            }),
-            indicatorsContainer: (provided: any) => ({
-              ...provided,
-              height: inputHeight,
-              cursor: "pointer",
-              boxSizing: "border-box",
-            }),
-            clearIndicator: (provided: any) => ({
-              ...provided,
-              cursor: "pointer",
-            }),
-            placeholder: (defaultStyles: any) => {
-              return {
-                ...defaultStyles,
-                color: isInputValueColor,
-                fontSize: 14,
-                whiteSpace: "nowrap",
-                overflow: "hidden",
-                textOverflow: "ellipsis",
-                fontWeight: "500",
-              };
-            },
-            menu: (provided: any) => ({
-              ...provided,
-              margin: 0,
-              borderBottomLeftRadius: 4,
-              borderBottomRightRadius: 4,
-              borderTopLeftRadius: 0,
-              borderTopRightRadius: 0,
-              boxSizing: "border-box",
-              backgroundColor: white,
-              zIndex: 12,
-            }),
-            singleValue: (provided: any) => ({
-              ...provided,
-              color: isInputValueColor,
-              fontWeight: "500",
-            }),
-            menuList: (provided: any) => ({
-              ...provided,
-              overflow: "overlay",
-              maxHeight: 200,
-              scrollbarWidth: "thin",
-              padding: 0,
-            }),
-          }}
-          theme={(theme) => selectTagTheme(theme, isInputColor)}
-          components={components}
-          isOptionSelected={isOptionSelected}
-          onInputChange={onInputChange}
-          filterOption={filterOption}
-          getOptionLabel={getOptionLabel}
-          getOptionValue={getOptionValue}
-          noOptionsMessage={noOptionsMessage}
-          autoFocus={autoFocus}
-        />
-      </LabelWrapper>
-    </Flex>
+              whiteSpace: "nowrap",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              fontFamily: "Poppins-Regular",
+            };
+          },
+          menu: (provided: any) => ({
+            ...provided,
+            margin: 0,
+            borderBottomLeftRadius: 4,
+            borderBottomRightRadius: 4,
+            borderTopLeftRadius: 0,
+            borderTopRightRadius: 0,
+            boxSizing: "border-box",
+            backgroundColor: white,
+            zIndex: 12,
+          }),
+          singleValue: (provided: any) => ({
+            ...provided,
+            color: isInputValueColor,
+            fontWeight: "500",
+          }),
+          menuList: (provided: any) => ({
+            ...provided,
+            overflow: "overlay",
+            maxHeight: 200,
+            scrollbarWidth: "thin",
+            padding: 0,
+          }),
+        }}
+        theme={(theme) => selectTagTheme(theme, isInputColor)}
+        components={components}
+        isOptionSelected={isOptionSelected}
+        onInputChange={onInputChange}
+        filterOption={filterOption}
+        getOptionLabel={getOptionLabel}
+        getOptionValue={getOptionValue}
+        noOptionsMessage={noOptionsMessage}
+        autoFocus={autoFocus}
+      />
+    </LabelWrapper>
   );
 };
 

@@ -1,5 +1,5 @@
 import classNames from "classnames/bind";
-import { ReactChild, SetStateAction, useState } from "react";
+import { ReactChild } from "react";
 import Flex from "../Flex/Flex";
 import Text from "../Text/Text";
 import Pagination from "../Pagination/Pagination";
@@ -17,20 +17,30 @@ type DefaultProps = {
   dataSource: { [key: string]: any }[];
   rowPointer?: boolean;
   showHeader?: boolean;
+  itemsPerPage?: number;
+  onPageChange: (a: any) => void;
 };
 
 const defaultProps: DefaultProps = {
   columns: [],
   dataSource: [],
   showHeader: true,
+  itemsPerPage: 10,
+  onPageChange: () => {},
 };
 
 type Props = {
   scrollHeight?: number;
   rowSelection?: Function;
+  rowSelectionAll?: Function;
   disableMultiSelect?: boolean;
   fixedHeight?: number | string;
   customHeader?: ReactChild;
+  actionTitle?: string;
+  actionTitleBtn?: Function;
+  hideActions?: boolean;
+  currentPage?: number;
+  rowUnSelectAll?: Function;
 } & typeof defaultProps;
 
 const Table = ({
@@ -43,27 +53,49 @@ const Table = ({
   fixedHeight,
   showHeader,
   customHeader,
+  actionTitleBtn,
+  actionTitle,
+  hideActions,
+  currentPage,
+  onPageChange,
+  itemsPerPage,
+  rowSelectionAll,
+  rowUnSelectAll,
 }: Props) => {
   const totalRows = dataSource.length;
-  const [currentPage, setCurrentPage] = useState(1);
-  const totalPages = 20;
-  const handlePageChange = (page: SetStateAction<number>) => {
-    setCurrentPage(page);
-  };
+
+  // Calculate the starting and ending indices for the current page
+  const indexOfLastItem = Number(currentPage) * Number(itemsPerPage);
+  const indexOfFirstItem = indexOfLastItem - Number(itemsPerPage);
+
+  // Slice the array of items to display only the items for the current page
+  const currentItems = dataSource.slice(indexOfFirstItem, indexOfLastItem);
+
+  // Calculate the number of pages
+  const totalPages = Math.ceil(totalRows / Number(itemsPerPage));
+
   return (
     <Flex>
-      {typeof rowSelection === "function" && <TableActions />}
+      {typeof rowSelection === "function" && (
+        <TableActions
+          actionTitle={actionTitle}
+          actionTitleBtn={actionTitleBtn}
+          hideActions={hideActions}
+          dataSource={currentItems}
+          disableMultiSelect={disableMultiSelect}
+          rowSelection={rowSelectionAll}
+          rowUnSelectAll={rowUnSelectAll}
+        />
+      )}
       {customHeader && (
-        <Flex className={cx("headerContainer", { headerMargin: rowSelection })}>
-          {customHeader}
-        </Flex>
+        <Flex className={cx("headerContainer")}>{customHeader}</Flex>
       )}
       <Flex className={cx("overAll")}>
         {showHeader && (
           <TableTitle
             rowSelection={rowSelection}
             columns={columns}
-            dataSource={dataSource}
+            dataSource={currentItems}
             disableMultiSelect={disableMultiSelect}
           />
         )}
@@ -74,8 +106,8 @@ const Table = ({
           }}
           className={cx({ rowScroll: scrollHeight || fixedHeight })}
         >
-          {dataSource.length ? (
-            dataSource.map((item, index) => (
+          {currentItems.length ? (
+            currentItems.map((item, index) => (
               <div
                 key={index}
                 className={cx("rowHover", {
@@ -106,7 +138,8 @@ const Table = ({
           <Pagination
             currentPage={currentPage}
             totalPages={totalPages}
-            onPageChange={handlePageChange}
+            onPageChange={onPageChange}
+            maxPages={itemsPerPage}
           />
         </div>
       </Flex>

@@ -180,7 +180,8 @@ const ForgotPasswordScreen = () => {
   let passwordMessage: statusType = "";
   if (
     getPasswordStrength(formikRestPassword.values.newPassword) ===
-    "Weak strength"
+      "Weak strength" &&
+    formikRestPassword.values.newPassword.length > 0
   ) {
     passwordMessage = "error";
   } else if (
@@ -313,56 +314,60 @@ const ForgotPasswordScreen = () => {
           )}
 
           {getType === "reset-password" && (
-            <Flex>
-              <InputText
-                label="Registered email-id"
-                value={formikRestPassword.values.email}
-                onChange={formikRestPassword.handleChange("email")}
-              />
-              <div className={styles.inputMargin}>
+            <form autoComplete="off">
+              <Flex>
                 <InputText
-                  label="New Password"
-                  value={formikRestPassword.values.newPassword}
-                  onChange={formikRestPassword.handleChange("newPassword")}
+                  autoComplete="off"
+                  label="Registered email-id"
+                  value={formikRestPassword.values.email}
+                  onChange={formikRestPassword.handleChange("email")}
+                />
+                <div className={styles.inputMargin}>
+                  <InputText
+                    autoComplete="new-password"
+                    label="New Password"
+                    value={formikRestPassword.values.newPassword}
+                    onChange={formikRestPassword.handleChange("newPassword")}
+                    message={
+                      formikRestPassword.errors.newPassword ||
+                      getPasswordStrength(formikRestPassword.values.newPassword)
+                    }
+                    status={
+                      formikRestPassword.touched.newPassword &&
+                      formikRestPassword.errors.newPassword
+                        ? "error"
+                        : passwordMessage
+                    }
+                    keyboardType={isVisible ? "text" : "password"}
+                    actionRight={visibleIcon}
+                  />
+                </div>
+
+                <InputText
+                  label="Confirm password"
+                  value={formikRestPassword.values.confirmPassword}
+                  onChange={formikRestPassword.handleChange("confirmPassword")}
                   message={
-                    formikRestPassword.errors.newPassword ||
-                    getPasswordStrength(formikRestPassword.values.newPassword)
+                    formikRestPassword.errors.confirmPassword ||
+                    confirmPasswordMessage
                   }
                   status={
-                    formikRestPassword.touched.newPassword &&
-                    formikRestPassword.errors.newPassword
+                    formikRestPassword.touched.confirmPassword &&
+                    formikRestPassword.errors.confirmPassword
                       ? "error"
-                      : passwordMessage
+                      : confirmPasswordStatus
                   }
-                  keyboardType={isVisible ? "text" : "password"}
-                  actionRight={visibleIcon}
+                  keyboardType={isVisibleOne ? "text" : "password"}
+                  actionRight={visibleIconOne}
                 />
-              </div>
-
-              <InputText
-                label="Confirm password"
-                value={formikRestPassword.values.confirmPassword}
-                onChange={formikRestPassword.handleChange("confirmPassword")}
-                message={
-                  formikRestPassword.errors.confirmPassword ||
-                  confirmPasswordMessage
-                }
-                status={
-                  formikRestPassword.touched.confirmPassword &&
-                  formikRestPassword.errors.confirmPassword
-                    ? "error"
-                    : confirmPasswordStatus
-                }
-                keyboardType={isVisibleOne ? "text" : "password"}
-                actionRight={visibleIconOne}
-              />
-              <Button
-                onClick={formikRestPassword.handleSubmit}
-                className={styles.inputMargin}
-              >
-                Reset
-              </Button>
-            </Flex>
+                <Button
+                  onClick={formikRestPassword.handleSubmit}
+                  className={styles.inputMargin}
+                >
+                  Reset
+                </Button>
+              </Flex>
+            </form>
           )}
 
           <Flex row>

@@ -1,4 +1,5 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { Provider } from "react-redux";
 import { routes } from "./routes/routesPath";
 import LoginScreen from "./modules/LoginModule/LoginScreen";
 import ProtectedRoutes from "./utils/ProtectedRoutes";
@@ -13,32 +14,35 @@ import ProjectsScreen from "./modules/ProjectsModule/ProjectsScreen";
 import AssetsScreen from "./modules/AssetsModule/AssetsScreen";
 import SettingsScreen from "./modules/SettingsModule/SettingsScreen";
 import BillingScreen from "./modules/BillingModule/BillingScreen";
+import store from "./redux/store";
 
 function App() {
   return (
-    <Router>
-      <Layout>
-        <Routes>
-          <Route path={routes.LOGIN} element={<LoginScreen />} />
-          <Route path={routes.SIGNUP} element={<SignUpScreen />} />
-          <Route
-            path={routes.FORGOT_PASSWORD}
-            element={<ForgotPasswordScreen />}
-          />
-          <Route element={<ProtectedRoutes />}>
-            <Route path={routes.MY_PAGE} element={<MyPageScreen />} />
-            <Route path={routes.RUNZ} element={<RunzScreen />} />
-            <Route path={routes.PROCEDURES} element={<ProceduresScreen />} />
-            <Route path={routes.PROJECTS} element={<ProjectsScreen />} />
-            <Route path={routes.ASSETS} element={<AssetsScreen />} />
-            <Route path={routes.SETTINGS} element={<SettingsScreen />} />
-            <Route path={routes.BILLING} element={<BillingScreen />} />
+    <Provider store={store}>
+      <Router>
+        <Layout>
+          <Routes>
+            <Route path={routes.LOGIN} element={<LoginScreen />} />
+            <Route path={routes.SIGNUP} element={<SignUpScreen />} />
+            <Route
+              path={routes.FORGOT_PASSWORD}
+              element={<ForgotPasswordScreen />}
+            />
+            <Route element={<ProtectedRoutes />}>
+              <Route path={routes.MY_PAGE} element={<MyPageScreen />} />
+              <Route path={routes.RUNZ} element={<RunzScreen />} />
+              <Route path={routes.PROCEDURES} element={<ProceduresScreen />} />
+              <Route path={routes.PROJECTS} element={<ProjectsScreen />} />
+              <Route path={routes.ASSETS} element={<AssetsScreen />} />
+              <Route path={routes.SETTINGS} element={<SettingsScreen />} />
+              <Route path={routes.BILLING} element={<BillingScreen />} />
 
-            <Route path="*" element={<PageNotFound />} />
-          </Route>
-        </Routes>
-      </Layout>
-    </Router>
+              <Route path="*" element={<PageNotFound />} />
+            </Route>
+          </Routes>
+        </Layout>
+      </Router>
+    </Provider>
   );
 }
 

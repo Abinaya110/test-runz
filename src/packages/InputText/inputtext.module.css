@@ -9,8 +9,14 @@
   padding: 10px 12px;
   border-radius: 10px;
   border: none;
+  font-family: "Poppins-Regular";
+  font-size: 14px;
 }
-
+.inputStyle::placeholder {
+  color: var(--color-text-shade-3);
+  font-family: "Poppins-Regular";
+  font-size: 14px;
+}
 .size-small {
   padding: 6px 12px;
   border-radius: 5px;
