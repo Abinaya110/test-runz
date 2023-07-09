@@ -63,50 +63,58 @@ const LoginScreen = () => {
         </Flex>
       }
       rightChild={
-        <Flex>
-          <Text type="title" className={styles.loginTitle}>
-            Log in to your Test Runz account
-          </Text>
-          <InputText
-            value={formik.values.email}
-            onChange={formik.handleChange("email")}
-            white
-            label={"E-mail"}
-            message={formik.errors.email}
-            status={formik.touched.email && formik.errors.email ? "error" : ""}
-          />
-          <div style={{ marginTop: 16, marginBottom: 8 }}>
+        <form autoComplete="off">
+          <Flex>
+            <Text type="title" className={styles.loginTitle}>
+              Log in to your Test Runz account
+            </Text>
             <InputText
-              value={formik.values.password}
-              onChange={formik.handleChange("password")}
+              autoComplete="off"
+              value={formik.values.email}
+              onChange={formik.handleChange("email")}
               white
-              label={"Password"}
-              message={formik.errors.password}
+              label={"E-mail"}
+              message={formik.errors.email}
               status={
-                formik.touched.password && formik.errors.password ? "error" : ""
+                formik.touched.email && formik.errors.email ? "error" : ""
               }
-              keyboardType={isVisible ? "text" : "password"}
-              actionRight={visibleIcon}
             />
-          </div>
-          <Flex row center between>
-            <CheckBox label={"Remember me"} />
-            <Button onClick={handleForgot} types="link">
-              <Text color="shade-3">Forget your password?</Text>
+            <div style={{ marginTop: 16, marginBottom: 8 }}>
+              <InputText
+                autoComplete="new-password"
+                value={formik.values.password}
+                onChange={formik.handleChange("password")}
+                white
+                label={"Password"}
+                message={formik.errors.password}
+                status={
+                  formik.touched.password && formik.errors.password
+                    ? "error"
+                    : ""
+                }
+                keyboardType={isVisible ? "text" : "password"}
+                actionRight={visibleIcon}
+              />
+            </div>
+            <Flex row center between>
+              <CheckBox label={"Remember me"} />
+              <Button onClick={handleForgot} types="link">
+                <Text color="shade-3">Forget your password?</Text>
+              </Button>
+            </Flex>
+            <Button className={styles.btnStyle} onClick={formik.handleSubmit}>
+              Log in
             </Button>
+            <Flex row center>
+              <Text type="captionRegular">Don’t have an account yet? </Text>
+              <Button onClick={handleSignUp} types="link">
+                <Text type="captionBold" className={styles.signUpText}>
+                  Click here to Sign up!
+                </Text>
+              </Button>
+            </Flex>
           </Flex>
-          <Button className={styles.btnStyle} onClick={formik.handleSubmit}>
-            Log in
-          </Button>
-          <Flex row center>
-            <Text type="captionRegular">Don’t have an account yet? </Text>
-            <Button onClick={handleSignUp} types="link">
-              <Text type="captionBold" className={styles.signUpText}>
-                Click here to Sign up!
-              </Text>
-            </Button>
-          </Flex>
-        </Flex>
+        </form>
       }
     />
   );

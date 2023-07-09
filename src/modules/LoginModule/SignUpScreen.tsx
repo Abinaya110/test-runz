@@ -76,7 +76,10 @@ const SignUpScreen = () => {
   });
 
   let passwordMessage: statusType = "";
-  if (getPasswordStrength(formik.values.password) === "Weak strength") {
+  if (
+    getPasswordStrength(formik.values.password) === "Weak strength" &&
+    formik.values.password.length > 0
+  ) {
     passwordMessage = "error";
   } else if (
     getPasswordStrength(formik.values.password) === "Medium strength"
@@ -131,82 +134,89 @@ const SignUpScreen = () => {
         </Flex>
       }
       rightChild={
-        <Flex>
-          <Text type="title" className={styles.loginTitle}>
-            Sign up for a free Test Runz account
-          </Text>
-
-          <InputText
-            value={formik.values.name}
-            onChange={formik.handleChange("name")}
-            label={"Full name"}
-            message={formik.errors.name}
-            status={formik.touched.name && formik.errors.name ? "error" : ""}
-          />
-          <div style={{ marginTop: 12, marginBottom: 12 }}>
-            <InputText
-              label={"E-mail"}
-              value={formik.values.email}
-              onChange={formik.handleChange("email")}
-              message={formik.errors.email}
-              status={
-                formik.touched.email && formik.errors.email ? "error" : ""
-              }
-            />
-          </div>
-          <InputText
-            value={formik.values.password}
-            onChange={formik.handleChange("password")}
-            label={"Password"}
-            keyboardType={isVisible ? "text" : "password"}
-            actionRight={visibleIcon}
-            message={
-              formik.errors.password ||
-              getPasswordStrength(formik.values.password)
-            }
-            status={
-              formik.touched.password && formik.errors.password
-                ? "error"
-                : passwordMessage
-            }
-          />
-          <div style={{ marginTop: 12, marginBottom: 8 }}>
-            <InputText
-              value={formik.values.confirmPassword}
-              onChange={formik.handleChange("confirmPassword")}
-              label={"Confirm password"}
-              keyboardType={isVisibleOne ? "text" : "password"}
-              actionRight={visibleIconOne}
-              message={formik.errors.confirmPassword || confirmPasswordMessage}
-              status={
-                formik.touched.confirmPassword && formik.errors.confirmPassword
-                  ? "error"
-                  : confirmPasswordStatus
-              }
-            />
-          </div>
-
-          {/* <CheckBox label={"Remember me"} /> */}
-          <Flex row className={styles.readTextContainer}>
-            <CheckBox />
-            <Text type="captionRegular" className={styles.readText}>
-              I have read and understood and agree with terms of service and
-              Privacy policy of Test Runz
+        <form autoComplete="off">
+          <Flex>
+            <Text type="title" className={styles.loginTitle}>
+              Sign up for a free Test Runz account
             </Text>
-          </Flex>
 
-          <Button className={styles.btnStyle} onClick={formik.handleSubmit}>
-            Signup for free
-          </Button>
-          <Flex row center>
-            <Text type="captionRegular">Already have an account? </Text>
-            <Button onClick={handleLogin} types="link">
-              <Text type="captionBold" className={styles.signUpText}>
-                Click here to log in.
+            <InputText
+              value={formik.values.name}
+              onChange={formik.handleChange("name")}
+              label={"Full name"}
+              message={formik.errors.name}
+              status={formik.touched.name && formik.errors.name ? "error" : ""}
+            />
+            <div style={{ marginTop: 12, marginBottom: 12 }}>
+              <InputText
+                autoComplete="off"
+                label={"E-mail"}
+                value={formik.values.email}
+                onChange={formik.handleChange("email")}
+                message={formik.errors.email}
+                status={
+                  formik.touched.email && formik.errors.email ? "error" : ""
+                }
+              />
+            </div>
+            <InputText
+              autoComplete="new-password"
+              value={formik.values.password}
+              onChange={formik.handleChange("password")}
+              label={"Password"}
+              keyboardType={isVisible ? "text" : "password"}
+              actionRight={visibleIcon}
+              message={
+                formik.errors.password ||
+                getPasswordStrength(formik.values.password)
+              }
+              status={
+                formik.touched.password && formik.errors.password
+                  ? "error"
+                  : passwordMessage
+              }
+            />
+            <div style={{ marginTop: 12, marginBottom: 8 }}>
+              <InputText
+                value={formik.values.confirmPassword}
+                onChange={formik.handleChange("confirmPassword")}
+                label={"Confirm password"}
+                keyboardType={isVisibleOne ? "text" : "password"}
+                actionRight={visibleIconOne}
+                message={
+                  formik.errors.confirmPassword || confirmPasswordMessage
+                }
+                status={
+                  formik.touched.confirmPassword &&
+                  formik.errors.confirmPassword
+                    ? "error"
+                    : confirmPasswordStatus
+                }
+              />
+            </div>
+
+            {/* <CheckBox label={"Remember me"} /> */}
+            <Flex row className={styles.readTextContainer}>
+              <CheckBox />
+              <Text type="captionRegular" className={styles.readText}>
+                I have read and understood and agree with terms of service and
+                Privacy policy of Test Runz
               </Text>
+            </Flex>
+
+            <Button className={styles.btnStyle} onClick={formik.handleSubmit}>
+              Signup for free
             </Button>
+            <Flex row center>
+              <Text type="captionRegular">Already have an account? </Text>
+              <Button onClick={handleLogin} types="link">
+                <Text type="captionBold" className={styles.signUpText}>
+                  Click here to log in.
+                </Text>
+              </Button>
+            </Flex>
           </Flex>
-        </Flex>
+        </form>
       }
     />
   );
