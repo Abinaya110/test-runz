@@ -17,12 +17,17 @@ import HelpAndTerms from "./HelpAndTerms";
 import styles from "./loginscreen.module.css";
 import MicrosoftSignIn from "../../packages/MicrosoftSignIn/MicrosoftSignIn";
 import LinkedinSignIn from "../../packages/LinkedinSignIn/LinkedinSignIn";
+import { useDispatch } from "react-redux";
+import { AppDispatch } from "../../redux/store";
+import { signUpMiddleWare } from "./store/loginMiddleware";
+import Toast from "../../packages/Toast/Toast";
 
 type formType = {
   email: string;
   password: string;
   confirmPassword: string;
   name: string;
+  agree: string;
 };
 
 const initialValues: formType = {
@@ -30,6 +35,7 @@ const initialValues: formType = {
   password: "",
   name: "",
   confirmPassword: "",
+  agree: "",
 };
 
 const validate = (values: formType) => {
@@ -59,19 +65,39 @@ const validate = (values: formType) => {
     errors.confirmPassword = "Password not matched";
   }
 
+  if (isEmpty(values.agree)) {
+    errors.agree = "Please read privacy policy";
+  }
+
   return errors;
 };
 
 const SignUpScreen = () => {
   const navigate = useNavigate();
+  const dispatch: AppDispatch = useDispatch();
   const { visibleIcon, isVisible, isVisibleOne, visibleIconOne } =
     useVisibilityIcon();
 
   const handleLogin = () => navigate(routes.LOGIN);
 
+  const handleSubmit = (values: formType) => {
+    dispatch(
+      signUpMiddleWare({
+        email: values.email,
+        password: values.password,
+        name: values.name,
+      })
+    )
+      .then((res: any) => {
+        if (res?.error?.message === "Rejected") {
+          Toast(res.payload.message, "LONG", "error");
+        }
+      })
+      .catch((err) => {});
+  };
   const formik = useFormik({
     initialValues,
-    onSubmit: () => {},
+    onSubmit: handleSubmit,
     validate,
   });
 
@@ -124,7 +150,6 @@ const SignUpScreen = () => {
                 Sign up via
               </Text>
               <GoogleSignIn />
-
               <MicrosoftSignIn />
               <LinkedinSignIn />
             </Flex>
@@ -195,13 +220,22 @@ const SignUpScreen = () => {
               />
             </div>
 
-            {/* <CheckBox label={"Remember me"} /> */}
-            <Flex row className={styles.readTextContainer}>
-              <CheckBox />
-              <Text type="captionRegular" className={styles.readText}>
-                I have read and understood and agree with terms of service and
-                Privacy policy of Test Runz
-              </Text>
+            <Flex className={styles.readTextContainer}>
+              <Flex row>
+                <CheckBox
+                  checked={!isEmpty(formik.values.agree)}
+                  onClick={() => formik.setFieldValue("agree", "1")}
+                />
+                <Text type="captionRegular" className={styles.readText}>
+                  I have read and understood and agree with terms of service and
+                  Privacy policy of Test Runz
+                </Text>
+              </Flex>
+              {formik.touched.agree && formik.errors.agree && (
+                <Text type="captionRegular" color="error">
+                  {formik.errors.agree}
+                </Text>
+              )}
             </Flex>
 
             <Button className={styles.btnStyle} onClick={formik.handleSubmit}>

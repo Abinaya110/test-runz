@@ -1,7 +1,7 @@
 import { isEmpty } from "../../utils/validators";
 
 type DurationTypes = "SHORT" | "LONG";
-type colors = "error" | "success" | "warning" | "info";
+type colors = "error" | "success" | "warning";
 /* eslint-disable */
 const handleSetDuration = (duration: DurationTypes) => {
   switch (duration) {

@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import { useFormik } from "formik";
+import { FormikHelpers, useFormik } from "formik";
 import Button from "../../packages/Button/Button";
 import CheckBox from "../../packages/CheckBox/CheckBox";
 import Flex from "../../packages/Flex/Flex";
@@ -12,6 +12,7 @@ import HelpAndTerms from "./HelpAndTerms";
 import { isEmpty, isValidEmail } from "../../utils/validators";
 import { useVisibilityIcon } from "../../utils/helpers";
 import { AUTH_TOKEN } from "../../utils/localStoreConst";
+import { auth } from "../../utils/firebase";
 
 type formType = {
   email: string;
@@ -41,13 +42,26 @@ const LoginScreen = () => {
   const { visibleIcon, isVisible } = useVisibilityIcon();
   const handleSignUp = () => navigate(routes.SIGNUP);
   const handleForgot = () => navigate(routes.FORGOT_PASSWORD);
-
+  const handleSubmit = (
+    values: formType,
+    formikHelpers: FormikHelpers<any>
+  ) => {
+    auth
+      .signInWithEmailAndPassword(values.email, values.password)
+      .then((res) => {
+        console.log("res", res);
+        // localStorage.setItem(AUTH_TOKEN, "cool");
+        // navigate(routes.MY_PAGE);
+      })
+      .catch((error) => {
+        if (error.code === "auth/user-not-found") {
+          formikHelpers.setFieldError("email", "Email is not found");
+        }
+      });
+  };
   const formik = useFormik({
     initialValues,
-    onSubmit: () => {
-      localStorage.setItem(AUTH_TOKEN, "cool");
-      navigate(routes.MY_PAGE);
-    },
+    onSubmit: handleSubmit,
     validate,
   });
   return (
