@@ -26,6 +26,7 @@ import SvgSeePlans from "../../icons/SvgSeePlans";
 import ProfileDrawer from "./ProfileDrawer";
 import NotificationDrawer from "./NotificationDrawer";
 import { AUTH_TOKEN } from "../../utils/localStoreConst";
+import InsideClickHandler from "./InsideClickHandler";
 
 const cx = classNames.bind(styles);
 
@@ -96,6 +97,7 @@ const Layout = ({ children }: Props) => {
 
       <LayoutAntd>
         <Sider
+          style={{ position: "absolute", zIndex: 11 }}
           className={cx("sideBarContainer", { sideWidth: !collapsed })}
           trigger={null}
           collapsible
@@ -157,41 +159,48 @@ const Layout = ({ children }: Props) => {
                 <Button
                   className={styles.svgMenu}
                   types="link"
-                  onClick={() => setCollapsed(!collapsed)}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setCollapsed(!collapsed);
+                  }}
                 >
                   <SvgMenu />
                 </Button>
                 <SvgTestRunz />
               </Flex>
-              <Flex row center>
-                <InputText
-                  placeholder="Search"
-                  actionRight={() => <SvgSearch />}
-                />
-                <Button types="link" className={styles.svgQuestion}>
-                  <SvgQuestionRound />
-                </Button>
-                <Button types="link" onClick={() => setNoti(true)}>
-                  <SvgBell />
-                </Button>
+              <InsideClickHandler onInsideClick={() => setCollapsed(true)}>
+                <Flex row center>
+                  <InputText
+                    placeholder="Search"
+                    actionRight={() => <SvgSearch />}
+                  />
+                  <Button types="link" className={styles.svgQuestion}>
+                    <SvgQuestionRound />
+                  </Button>
+                  <Button types="link" onClick={() => setNoti(true)}>
+                    <SvgBell />
+                  </Button>
 
-                <Text className={styles.svgQuestion}>Arul</Text>
-                <Button
-                  onClick={() => setDrawer(true)}
-                  className={styles.svgProfile}
-                  types="link"
-                >
-                  <SvgUserProfile />
-                </Button>
-              </Flex>
+                  <Text className={styles.svgQuestion}>Arul</Text>
+                  <Button
+                    onClick={() => setDrawer(true)}
+                    className={styles.svgProfile}
+                    types="link"
+                  >
+                    <SvgUserProfile />
+                  </Button>
+                </Flex>
+              </InsideClickHandler>
             </Flex>
           </Header>
-          <Content
-            className={styles.content}
-            style={{ height: window.innerHeight - 90 }}
-          >
-            {children}
-          </Content>
+          <InsideClickHandler onInsideClick={() => setCollapsed(true)}>
+            <Content
+              className={styles.content}
+              style={{ height: window.innerHeight - 90 }}
+            >
+              {children}
+            </Content>
+          </InsideClickHandler>
         </LayoutAntd>
       </LayoutAntd>
     </>

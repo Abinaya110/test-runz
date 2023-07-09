@@ -7,6 +7,7 @@
   top: 0;
   right: 0;
   padding: 0;
+  z-index: 12;
 }
 .sideBarContainer {
   padding-top: 80px;
@@ -25,6 +26,7 @@
   margin-top: 80px;
   padding: 20px;
   overflow-y: scroll;
+  padding-left: 80px;
 }
 .svgMenu {
   margin-right: 10px;

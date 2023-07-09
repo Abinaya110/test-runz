@@ -81,6 +81,10 @@ input:-webkit-autofill:focus {
   line-height: 60px;
   height: 60px;
   border-bottom: 1px solid var(--color-gray-2);
+  justify-content: center;
+  align-items: center;
+  display: flex;
+  flex-direction: column;
 }
 .ant-layout-header {
   line-height: 0;
