@@ -22,13 +22,13 @@ const LableWithIcon = ({
   return (
     <Flex className={containerClassName} row center>
       {typeof actionLeft === "function" && (
-        <div style={{ marginRight: 8 }}>{actionLeft()}</div>
+        <div style={{ marginRight: 4 }}>{actionLeft()}</div>
       )}
       <Text color={color} type={type}>
         {label}
       </Text>
       {typeof actitionRight === "function" && (
-        <div style={{ marginLeft: 8 }}>{actitionRight()}</div>
+        <div style={{ marginLeft: 4 }}>{actitionRight()}</div>
       )}
     </Flex>
   );

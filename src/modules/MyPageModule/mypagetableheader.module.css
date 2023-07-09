@@ -4,3 +4,6 @@
 .due {
   margin-left: 16px;
 }
+.container {
+  padding: 16px 20px !important;
+}

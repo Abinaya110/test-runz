@@ -4,7 +4,7 @@ import styles from "./mypagetableheader.module.css";
 
 const MyPageTableHeader = () => {
   return (
-    <Flex row center between>
+    <Flex row center between className={styles.container}>
       <Text type="bodyBold" color="shade-2">
         Current tasks
       </Text>

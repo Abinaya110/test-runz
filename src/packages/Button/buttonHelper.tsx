@@ -5,6 +5,7 @@ export type buttonTypes =
   | "secondary"
   | "link"
   | "tertiary"
+  | "tertiary-1"
   | "link-1";
 
 export const buttonHelper = (types?: buttonTypes, disabled?: boolean) => {

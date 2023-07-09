@@ -122,7 +122,11 @@ const MyPageScreen = () => {
         <Flex flex={1}>
           <Table
             customHeader={
-              <Text type="bodyBold" color="shade-2">
+              <Text
+                className={styles.notiHeader}
+                type="bodyBold"
+                color="shade-2"
+              >
                 Notifications
               </Text>
             }

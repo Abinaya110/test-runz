@@ -8,11 +8,22 @@ import Text from "../../packages/Text/Text";
 import RunzCustomHeader from "./RunzCustomHeader";
 import Button from "../../packages/Button/Button";
 import LableWithIcon from "../../common/LableWithIcon";
+import SvgPlus from "../../icons/SvgPlus";
+import YesOrNo from "../../common/YesOrNo";
+import SvgDelete1 from "../../icons/SvgDelete1";
+import SvgSubmitReport from "../../icons/SvgSubmitReport";
+import Loader from "../../packages/Loader/Loader";
+import Toast from "../../packages/Toast/Toast";
+import Alert from "../../packages/Alert/Alert";
+import ShareRunzModal from "./ShareRunzModal";
 
 const RunzScreen = () => {
   const [selectedRows, setSelectedRows] = useState<any[]>([]);
   const columns = useMemo(() => activeBackingBoard(), []);
   const [currentPage, setCurrentPage] = useState(1);
+  const [deleteModal, setDeleteModal] = useState(false);
+  const [submitModal, setSubmitModal] = useState(false);
+  const [shareModal, setShareModal] = useState(false);
 
   const isAllRowChecked = (
     selected: any[],
@@ -110,10 +121,47 @@ const RunzScreen = () => {
     setCurrentPage(page);
   };
 
-  console.log("selectedRows", selectedRows);
-
+  const handleDeleteOpen = () => setDeleteModal(true);
+  const handleSubmitOpen = () => setSubmitModal(true);
+  const handleShareOpen = () => setShareModal(true);
   return (
     <Flex>
+      <ShareRunzModal
+        open={shareModal}
+        shareOnClick={() => {
+          Alert("Runs shared successfully.");
+          setShareModal(false);
+        }}
+        cancelClick={() => {
+          setShareModal(false);
+        }}
+      />
+      <YesOrNo
+        title="Confirmation"
+        icon={<SvgDelete1 />}
+        open={deleteModal}
+        yesClick={() => {
+          Alert("Runs deleted sucessfully.");
+          setDeleteModal(false);
+        }}
+        noClick={() => {
+          setDeleteModal(false);
+        }}
+        description="Are you sure you want to delete the runs?"
+      />
+      <YesOrNo
+        title="Submit"
+        icon={<SvgSubmitReport />}
+        open={submitModal}
+        yesClick={() => {
+          Alert("Runs submitted successfully.");
+          setSubmitModal(false);
+        }}
+        noClick={() => {
+          setSubmitModal(false);
+        }}
+        description="Are you sure you want to submit the runs?"
+      />
       <Table
         onPageChange={handlePage}
         currentPage={currentPage}
@@ -121,10 +169,7 @@ const RunzScreen = () => {
         actionTitle="Runz"
         actionTitleBtn={() => (
           <Button>
-            <LableWithIcon
-              label="Create runz"
-              actionLeft={() => <Text>+</Text>}
-            />
+            <LableWithIcon label="Create runz" actionLeft={() => <SvgPlus />} />
           </Button>
         )}
         showHeader={false}
@@ -134,6 +179,9 @@ const RunzScreen = () => {
         dataSource={ACTIVE_BACKING_BOARD}
         columns={columns}
         rowUnSelectAll={handleAllUnSelections}
+        rowDeleteAction={handleDeleteOpen}
+        rowSubmitAction={handleSubmitOpen}
+        rowShareAction={handleShareOpen}
       />
     </Flex>
   );

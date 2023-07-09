@@ -5,11 +5,11 @@ import SvgSort from "../../icons/SvgSort";
 import Flex from "../../packages/Flex/Flex";
 import InputText from "../../packages/InputText/InputText";
 import SelectTag from "../../packages/SelectTag/SelectTag";
-import Text from "../../packages/Text/Text";
 import styles from "./runzcustomheader.module.css";
+
 const RunzCustomHeader = () => {
   return (
-    <Flex row flex={1}>
+    <Flex row flex={1} className={styles.container}>
       <Flex flex={1}>
         <LableWithIcon
           type="bodyBold"

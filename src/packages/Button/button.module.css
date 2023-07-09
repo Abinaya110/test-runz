@@ -33,8 +33,13 @@
 }
 
 .buttonTypes-tertiary-1 {
+  background-color: var(--color-white);
+  /* outline: 1px; */
   border: 2px solid var(--color-text-shade-1);
 }
+/* .buttonTypes-tertiary-1 {
+  border: 2px solid var(--color-text-shade-1);
+} */
 
 .buttonTypes-link {
   padding: 0;

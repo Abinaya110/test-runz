@@ -19,6 +19,7 @@ type DefaultProps = {
   showHeader?: boolean;
   itemsPerPage?: number;
   onPageChange: (a: any) => void;
+  isAction?: boolean;
 };
 
 const defaultProps: DefaultProps = {
@@ -27,6 +28,7 @@ const defaultProps: DefaultProps = {
   showHeader: true,
   itemsPerPage: 10,
   onPageChange: () => {},
+  isAction: true,
 };
 
 type Props = {
@@ -41,6 +43,11 @@ type Props = {
   hideActions?: boolean;
   currentPage?: number;
   rowUnSelectAll?: Function;
+  closeAction?: () => void;
+  rowDeleteAction?: () => void;
+  rowShareAction?: () => void;
+  rowSubmitAction?: () => void;
+  pagination?: boolean;
 } & typeof defaultProps;
 
 const Table = ({
@@ -61,6 +68,12 @@ const Table = ({
   itemsPerPage,
   rowSelectionAll,
   rowUnSelectAll,
+  closeAction,
+  rowDeleteAction,
+  rowShareAction,
+  rowSubmitAction,
+  pagination,
+  isAction,
 }: Props) => {
   const totalRows = dataSource.length;
 
@@ -74,17 +87,22 @@ const Table = ({
   // Calculate the number of pages
   const totalPages = Math.ceil(totalRows / Number(itemsPerPage));
 
+  const finalData = pagination ? currentItems : dataSource;
   return (
-    <Flex>
-      {typeof rowSelection === "function" && (
+    <Flex className={styles.overAllContainer}>
+      {typeof rowSelection === "function" && isAction && (
         <TableActions
           actionTitle={actionTitle}
           actionTitleBtn={actionTitleBtn}
           hideActions={hideActions}
-          dataSource={currentItems}
+          dataSource={finalData}
           disableMultiSelect={disableMultiSelect}
           rowSelection={rowSelectionAll}
           rowUnSelectAll={rowUnSelectAll}
+          closeAction={closeAction}
+          rowDeleteAction={rowDeleteAction}
+          rowShareAction={rowShareAction}
+          rowSubmitAction={rowSubmitAction}
         />
       )}
       {customHeader && (
@@ -95,7 +113,7 @@ const Table = ({
           <TableTitle
             rowSelection={rowSelection}
             columns={columns}
-            dataSource={currentItems}
+            dataSource={finalData}
             disableMultiSelect={disableMultiSelect}
           />
         )}
@@ -106,8 +124,8 @@ const Table = ({
           }}
           className={cx({ rowScroll: scrollHeight || fixedHeight })}
         >
-          {currentItems.length ? (
-            currentItems.map((item, index) => (
+          {finalData.length ? (
+            finalData.map((item, index) => (
               <div
                 key={index}
                 className={cx("rowHover", {
@@ -134,14 +152,16 @@ const Table = ({
             </Flex>
           )}
         </div>
-        <div className={styles.pagination}>
-          <Pagination
-            currentPage={currentPage}
-            totalPages={totalPages}
-            onPageChange={onPageChange}
-            maxPages={itemsPerPage}
-          />
-        </div>
+        {pagination && (
+          <div className={styles.pagination}>
+            <Pagination
+              currentPage={currentPage}
+              totalPages={totalPages}
+              onPageChange={onPageChange}
+              maxPages={itemsPerPage}
+            />
+          </div>
+        )}
       </Flex>
     </Flex>
   );

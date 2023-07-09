@@ -1,0 +1,12 @@
+.noBtn {
+  margin-right: 8px;
+  /* width: 80px; */
+}
+.yesBtn {
+  margin-left: 8px;
+  /* width: 80px; */
+}
+.desText {
+  margin-top: 10px;
+  margin-bottom: 20px;
+}

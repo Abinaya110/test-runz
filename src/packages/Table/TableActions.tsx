@@ -9,6 +9,9 @@ import InputText from "../InputText/InputText";
 import Text from "../Text/Text";
 import styles from "./tableactions.module.css";
 import RowSelection from "./RowSelection";
+import LableWithIcon from "../../common/LableWithIcon";
+import SvgSubmit from "../../icons/SvgSubmit";
+import SvgShare from "../../icons/SvgShare";
 
 const cx = classNames.bind(styles);
 
@@ -20,6 +23,10 @@ type Props = {
   dataSource: { [key: string]: any }[];
   rowSelection?: Function;
   disableMultiSelect?: boolean;
+  closeAction?: () => void;
+  rowDeleteAction?: () => void;
+  rowShareAction?: () => void;
+  rowSubmitAction?: () => void;
 };
 
 const TableActions = ({
@@ -30,6 +37,10 @@ const TableActions = ({
   rowSelection,
   disableMultiSelect,
   rowUnSelectAll,
+  closeAction,
+  rowDeleteAction,
+  rowShareAction,
+  rowSubmitAction,
 }: Props) => {
   return (
     <Flex>
@@ -42,45 +53,76 @@ const TableActions = ({
       <Flex between className={styles.actionHeight}>
         <Flex row center between>
           <Flex row center className={cx({ hideActions })}>
-            <Button className={styles.closeAction}>
-              <Flex row center>
-                <SvgClose />
-                <Text
-                  type={"captionBold"}
-                  className={styles.closeActionText}
-                  size={16}
+            {typeof closeAction === "function" && (
+              <Button className={styles.closeAction}>
+                <LableWithIcon
                   color="error"
-                >
-                  Close actions
-                </Text>
-              </Flex>
-            </Button>
-            <div className={styles.actionMargin}>
-              <RowSelection
-                rowSelection={rowSelection}
-                disableMultiSelect={disableMultiSelect}
-                item={dataSource}
-              />
-            </div>
-            <div className={styles.actionMargin}>
-              <RowSelection
-                rowSelection={rowUnSelectAll}
-                disableMultiSelect={disableMultiSelect}
-                item={dataSource}
-              />
-            </div>
-            <Button types="link">
-              <Flex row center>
-                <SvgDelete />
-                <Text
-                  className={styles.closeActionText}
+                  type="captionBold"
+                  label="Close actions"
+                  actionLeft={() => <SvgClose />}
+                />
+              </Button>
+            )}
+            {typeof rowSelection === "function" && (
+              <div className={styles.actionMargin}>
+                <RowSelection
+                  rowSelection={rowSelection}
+                  disableMultiSelect={disableMultiSelect}
+                  item={dataSource}
+                />
+              </div>
+            )}
+            {typeof rowUnSelectAll === "function" && (
+              <div className={styles.actionMargin}>
+                <RowSelection
+                  rowSelection={rowUnSelectAll}
+                  disableMultiSelect={disableMultiSelect}
+                  item={dataSource}
+                />
+              </div>
+            )}
+            {typeof rowDeleteAction === "function" && (
+              <Button
+                onClick={rowDeleteAction}
+                types="link"
+                className={styles.actionMargin}
+              >
+                <LableWithIcon
                   type={"captionBold"}
                   color="shade-2"
-                >
-                  Delete
-                </Text>
-              </Flex>
-            </Button>
+                  label="Delete"
+                  actionLeft={() => <SvgDelete />}
+                />
+              </Button>
+            )}
+            {typeof rowSubmitAction === "function" && (
+              <Button
+                onClick={rowSubmitAction}
+                types="link"
+                className={styles.actionMargin}
+              >
+                <LableWithIcon
+                  type={"captionBold"}
+                  color="shade-2"
+                  label="Submit"
+                  actionLeft={() => <SvgSubmit />}
+                />
+              </Button>
+            )}
+            {typeof rowShareAction === "function" && (
+              <Button
+                onClick={rowShareAction}
+                types="link"
+                className={styles.actionMargin}
+              >
+                <LableWithIcon
+                  type={"captionBold"}
+                  color="shade-2"
+                  label="Share"
+                  actionLeft={() => <SvgShare />}
+                />
+              </Button>
+            )}
           </Flex>
           {hideActions && <div />}
           <InputText
