@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Layout as LayoutAntd, Menu, Drawer } from "antd";
 import styles from "./layout.module.css";
 import SvgMenu from "../../icons/SvgMenu";
@@ -27,6 +27,9 @@ import ProfileDrawer from "./ProfileDrawer";
 import NotificationDrawer from "./NotificationDrawer";
 import { AUTH_TOKEN } from "../../utils/localStoreConst";
 import InsideClickHandler from "./InsideClickHandler";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "../../redux/store";
+import { authMeMiddleWare } from "../../modules/LoginModule/store/loginMiddleware";
 
 const cx = classNames.bind(styles);
 
@@ -40,10 +43,20 @@ const svgFill = (value: boolean) => {
   return value ? textShade1 : gray3;
 };
 const Layout = ({ children }: Props) => {
-  const [collapsed, setCollapsed] = useState(false);
+  const dispatch: AppDispatch = useDispatch();
+  const [collapsed, setCollapsed] = useState(true);
   const navigate = useNavigate();
   const [isDrawer, setDrawer] = useState(false);
   const [isNoti, setNoti] = useState(false);
+
+  useEffect(() => {
+    dispatch(authMeMiddleWare());
+  }, []);
+  const { data } = useSelector(({ authMeReducers }: RootState) => {
+    return {
+      data: authMeReducers.data,
+    };
+  });
 
   const myPage = window.location.pathname === routes.MY_PAGE;
   const runz = window.location.pathname === routes.RUNZ;
@@ -166,7 +179,9 @@ const Layout = ({ children }: Props) => {
                 >
                   <SvgMenu />
                 </Button>
-                <SvgTestRunz />
+                <InsideClickHandler onInsideClick={() => setCollapsed(true)}>
+                  <SvgTestRunz />
+                </InsideClickHandler>
               </Flex>
               <InsideClickHandler onInsideClick={() => setCollapsed(true)}>
                 <Flex row center>
@@ -181,7 +196,7 @@ const Layout = ({ children }: Props) => {
                     <SvgBell />
                   </Button>
 
-                  <Text className={styles.svgQuestion}>Arul</Text>
+                  <Text className={styles.svgQuestion}>{data.name}</Text>
                   <Button
                     onClick={() => setDrawer(true)}
                     className={styles.svgProfile}

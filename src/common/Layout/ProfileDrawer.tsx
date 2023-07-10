@@ -1,4 +1,3 @@
-import { useNavigate } from "react-router-dom";
 import SvgClose from "../../icons/SvgClose";
 import SvgDesignation from "../../icons/SvgDesignation";
 import SvgLogOut from "../../icons/SvgLogOut";
@@ -13,8 +12,6 @@ import Text from "../../packages/Text/Text";
 import { textShade1 } from "../../theme/colors";
 import LableWithIcon from "../LableWithIcon";
 import styles from "./profiledrawer.module.scss";
-import { routes } from "../../routes/routesPath";
-import { AUTH_TOKEN } from "../../utils/localStoreConst";
 
 const userFrame = require("../../images/userFrame.png");
 type Props = {
@@ -32,15 +29,13 @@ const ProfileDrawer = ({ open, onClose, handleLogout }: Props) => {
           <Button types="link" onClick={onClose}>
             <SvgClose fill={textShade1} />
           </Button>
-          <LableWithIcon
-            label="Logout"
-            type="bodyBold"
-            actitionRight={() => (
-              <Button types="link" onClick={handleLogout}>
-                <SvgLogOut />
-              </Button>
-            )}
-          />
+          <Button types="link" onClick={handleLogout}>
+            <LableWithIcon
+              label="Logout"
+              type="bodyBold"
+              actitionRight={() => <SvgLogOut />}
+            />
+          </Button>
         </Flex>
         <Flex center>
           <SvgProfileEdit />

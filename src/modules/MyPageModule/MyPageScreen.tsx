@@ -113,6 +113,8 @@ const MyPageScreen = () => {
   return (
     <Flex>
       <Table
+        pagination
+        currentPage={1}
         customHeader={<MyPageTableHeader />}
         showHeader={false}
         dataSource={ACTIVE_BACKING_BOARD}
@@ -121,6 +123,8 @@ const MyPageScreen = () => {
       <Flex row className={styles.notificationsContainer}>
         <Flex flex={1}>
           <Table
+            pagination
+            currentPage={1}
             customHeader={
               <Text
                 className={styles.notiHeader}
@@ -133,6 +137,7 @@ const MyPageScreen = () => {
             showHeader={false}
             dataSource={ACTIVE_BACKING_BOARD}
             columns={columns}
+            // pagination
           />
         </Flex>
         <Flex className={styles.calendarFlex}>

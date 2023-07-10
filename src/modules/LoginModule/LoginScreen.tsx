@@ -11,9 +11,9 @@ import LoginFrame from "./LoginFrame";
 import HelpAndTerms from "./HelpAndTerms";
 import { isEmpty, isValidEmail } from "../../utils/validators";
 import { useVisibilityIcon } from "../../utils/helpers";
-import { AUTH_TOKEN } from "../../utils/localStoreConst";
+import { AUTH_TOKEN, REMEMBER_ME } from "../../utils/localStoreConst";
 import { auth } from "../../utils/firebase";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Loader from "../../packages/Loader/Loader";
 import { setAuthorization } from "../../utils/apiConfig";
 import { useDispatch } from "react-redux";
@@ -23,11 +23,13 @@ import { authMeMiddleWare } from "./store/loginMiddleware";
 type formType = {
   email: string;
   password: string;
+  remember: string;
 };
 
 const initialValues: formType = {
   email: "",
   password: "",
+  remember: "",
 };
 
 const validate = (values: formType) => {
@@ -46,7 +48,7 @@ const validate = (values: formType) => {
 const LoginScreen = () => {
   const navigate = useNavigate();
   const [isLoader, setLoader] = useState(false);
-  const dipatch: AppDispatch = useDispatch();
+  const dispatch: AppDispatch = useDispatch();
 
   const { visibleIcon, isVisible } = useVisibilityIcon();
   const handleSignUp = () => navigate(routes.SIGNUP);
@@ -61,9 +63,14 @@ const LoginScreen = () => {
       .then((res: any) => {
         setLoader(false);
         if (res.user?._delegate?.accessToken) {
+          if (!isEmpty(formik.values.remember)) {
+            localStorage.setItem(REMEMBER_ME, JSON.stringify(formik.values));
+          } else {
+            localStorage.removeItem(REMEMBER_ME);
+          }
           setAuthorization(res.user?._delegate?.accessToken);
           localStorage.setItem(AUTH_TOKEN, res.user?._delegate?.accessToken);
-          dipatch(authMeMiddleWare());
+          dispatch(authMeMiddleWare());
 
           navigate(routes.MY_PAGE);
         }
@@ -80,6 +87,15 @@ const LoginScreen = () => {
     onSubmit: handleSubmit,
     validate,
   });
+
+  useEffect(() => {
+    let getRember: any = localStorage.getItem(REMEMBER_ME);
+    getRember = JSON.parse(getRember);
+    if (getRember) {
+      formik.setFieldValue("email", getRember.email);
+      formik.setFieldValue("password", getRember.password);
+    }
+  }, []);
   return (
     <>
       {isLoader && <Loader />}
@@ -129,7 +145,16 @@ const LoginScreen = () => {
                 />
               </div>
               <Flex row center between>
-                <CheckBox label={"Remember me"} />
+                <CheckBox
+                  checked={!isEmpty(formik.values.remember)}
+                  onClick={() =>
+                    formik.setFieldValue(
+                      "remember",
+                      formik.values.remember ? "" : "1"
+                    )
+                  }
+                  label={"Remember me"}
+                />
                 <Button onClick={handleForgot} types="link">
                   <Text color="shade-3">Forget your password?</Text>
                 </Button>

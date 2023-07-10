@@ -113,7 +113,7 @@ input:-webkit-autofill:focus {
 }
 .react-calendar__navigation {
   background-color: var(--color-primary-shade-4);
-  height: 56px !important;
+  height: 40px !important;
 }
 .react-calendar__navigation__label__labelText {
   color: #333333 !important;
