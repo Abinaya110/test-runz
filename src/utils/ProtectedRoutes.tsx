@@ -1,11 +1,15 @@
 import { Navigate, Outlet, useLocation } from "react-router-dom";
 import { routes } from "../routes/routesPath";
 import { AUTH_TOKEN } from "./localStoreConst";
+import axios from "axios";
 
 const useAuth = () => {
   const user = localStorage.getItem(AUTH_TOKEN) !== null ? true : false;
   return user && user;
 };
+
+const getToken = localStorage.getItem(AUTH_TOKEN);
+axios.defaults.headers.common["Authorization"] = `Bearer ${getToken}`;
 
 const ProtectedRoutes = () => {
   const location = useLocation();

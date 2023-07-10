@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { signUpMiddleWare } from "./loginMiddleware";
-import type { signUpReducerState } from "./login.types";
+import { authMeMiddleWare, signUpMiddleWare } from "./loginMiddleware";
+import type { AuthMeReducerState, signUpReducerState } from "./login.types";
 
 const signUpInitialState: signUpReducerState = {
   isLoading: false,
@@ -28,4 +28,43 @@ const signUpReducer = createSlice({
   },
 });
 
+const authMeInitialState: AuthMeReducerState = {
+  isLoading: false,
+  error: "",
+  data: {
+    name: "",
+    email: "",
+    firebaseId: "",
+    timeZone: "",
+    role: "",
+    created_at: "",
+    updated_at: "",
+    __v: 0,
+    _id: "",
+  },
+};
+
+const authMeReducer = createSlice({
+  name: "auth_me",
+  initialState: authMeInitialState,
+  reducers: {},
+  extraReducers: (builder) => {
+    builder.addCase(authMeMiddleWare.pending, (state) => {
+      state.isLoading = true;
+      state.error = "";
+    });
+    builder.addCase(authMeMiddleWare.fulfilled, (state, action) => {
+      state.isLoading = false;
+      state.data = action.payload;
+    });
+    builder.addCase(authMeMiddleWare.rejected, (state, action) => {
+      state.isLoading = false;
+      if (typeof action.payload === "string") {
+        state.error = action.payload;
+      }
+    });
+  },
+});
+
 export const signUpReducers = signUpReducer.reducer;
+export const authMeReducers = authMeReducer.reducer;

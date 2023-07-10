@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import { useFormik } from "formik";
+import { FormikHelpers, useFormik } from "formik";
 import Button from "../../packages/Button/Button";
 import CheckBox from "../../packages/CheckBox/CheckBox";
 import Flex from "../../packages/Flex/Flex";
@@ -19,8 +19,14 @@ import MicrosoftSignIn from "../../packages/MicrosoftSignIn/MicrosoftSignIn";
 import LinkedinSignIn from "../../packages/LinkedinSignIn/LinkedinSignIn";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "../../redux/store";
-import { signUpMiddleWare } from "./store/loginMiddleware";
+import {
+  googleLoginMiddleWare,
+  signUpMiddleWare,
+} from "./store/loginMiddleware";
 import Toast from "../../packages/Toast/Toast";
+import { useState } from "react";
+import Loader from "../../packages/Loader/Loader";
+import { auth, provider } from "../../utils/firebase";
 
 type formType = {
   email: string;
@@ -77,10 +83,14 @@ const SignUpScreen = () => {
   const dispatch: AppDispatch = useDispatch();
   const { visibleIcon, isVisible, isVisibleOne, visibleIconOne } =
     useVisibilityIcon();
-
+  const [isLoader, setLoader] = useState(false);
   const handleLogin = () => navigate(routes.LOGIN);
 
-  const handleSubmit = (values: formType) => {
+  const handleSubmit = (
+    values: formType,
+    formikHelpers: FormikHelpers<formType>
+  ) => {
+    setLoader(true);
     dispatch(
       signUpMiddleWare({
         email: values.email,
@@ -89,11 +99,27 @@ const SignUpScreen = () => {
       })
     )
       .then((res: any) => {
-        if (res?.error?.message === "Rejected") {
+        setLoader(false);
+        if (
+          res?.payload?.success ===
+          "Account created successfully. Please sign in."
+        ) {
+          formikHelpers.resetForm();
+          navigate(routes.LOGIN);
+          Toast(res?.payload?.success);
+        } else if (res?.payload?.response?.data?.error) {
+          formikHelpers.setFieldError(
+            "email",
+            res?.payload?.response?.data?.error
+          );
+          Toast(res?.payload?.response?.data?.error, "LONG", "error");
+        } else if (res?.error?.message === "Rejected") {
           Toast(res.payload.message, "LONG", "error");
         }
       })
-      .catch((err) => {});
+      .catch((err) => {
+        setLoader(false);
+      });
   };
   const formik = useFormik({
     initialValues,
@@ -138,121 +164,152 @@ const SignUpScreen = () => {
     confirmPasswordMessage = "";
   }
 
+  const handlerGoogleSignIn = (e: any) => {
+    e.preventDefault();
+    auth.signInWithPopup(provider).then((result: any) => {
+      setLoader(true);
+      dispatch(
+        googleLoginMiddleWare({
+          email: result.user?._delegate?.email,
+          name: result.user?._delegate?.displayName,
+          uid: result.user?._delegate?.uid,
+          timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+        })
+      )
+        .then((res: any) => {
+          setLoader(false);
+          if (res?.payload?.success) {
+            Toast(res.payload.success);
+            navigate(routes.LOGIN);
+            formik.resetForm();
+          } else {
+            Toast(res.payload.error, "LONG", "error");
+          }
+        })
+        .catch(() => setLoader(false));
+    });
+  };
+
   return (
-    <LoginFrame
-      leftChild={
-        <Flex between flex={1}>
-          <Flex>
-            <Text type={"h4"}>Welcome to</Text>
-            <Text type={"h2"}>Test Runz</Text>
-            <Flex className={styles.signUpVia}>
-              <Text type="title" color={"tertiary-shade-2"}>
-                Sign up via
-              </Text>
-              <GoogleSignIn />
-              <MicrosoftSignIn />
-              <LinkedinSignIn />
-            </Flex>
-          </Flex>
-
-          <HelpAndTerms />
-        </Flex>
-      }
-      rightChild={
-        <form autoComplete="off">
-          <Flex>
-            <Text type="title" className={styles.loginTitle}>
-              Sign up for a free Test Runz account
-            </Text>
-
-            <InputText
-              value={formik.values.name}
-              onChange={formik.handleChange("name")}
-              label={"Full name"}
-              message={formik.errors.name}
-              status={formik.touched.name && formik.errors.name ? "error" : ""}
-            />
-            <div style={{ marginTop: 12, marginBottom: 12 }}>
-              <InputText
-                autoComplete="off"
-                label={"E-mail"}
-                value={formik.values.email}
-                onChange={formik.handleChange("email")}
-                message={formik.errors.email}
-                status={
-                  formik.touched.email && formik.errors.email ? "error" : ""
-                }
-              />
-            </div>
-            <InputText
-              autoComplete="new-password"
-              value={formik.values.password}
-              onChange={formik.handleChange("password")}
-              label={"Password"}
-              keyboardType={isVisible ? "text" : "password"}
-              actionRight={visibleIcon}
-              message={
-                formik.errors.password ||
-                getPasswordStrength(formik.values.password)
-              }
-              status={
-                formik.touched.password && formik.errors.password
-                  ? "error"
-                  : passwordMessage
-              }
-            />
-            <div style={{ marginTop: 12, marginBottom: 8 }}>
-              <InputText
-                value={formik.values.confirmPassword}
-                onChange={formik.handleChange("confirmPassword")}
-                label={"Confirm password"}
-                keyboardType={isVisibleOne ? "text" : "password"}
-                actionRight={visibleIconOne}
-                message={
-                  formik.errors.confirmPassword || confirmPasswordMessage
-                }
-                status={
-                  formik.touched.confirmPassword &&
-                  formik.errors.confirmPassword
-                    ? "error"
-                    : confirmPasswordStatus
-                }
-              />
-            </div>
-
-            <Flex className={styles.readTextContainer}>
-              <Flex row>
-                <CheckBox
-                  checked={!isEmpty(formik.values.agree)}
-                  onClick={() => formik.setFieldValue("agree", "1")}
-                />
-                <Text type="captionRegular" className={styles.readText}>
-                  I have read and understood and agree with terms of service and
-                  Privacy policy of Test Runz
+    <>
+      {isLoader && <Loader />}
+      <LoginFrame
+        leftChild={
+          <Flex between flex={1}>
+            <Flex>
+              <Text type={"h4"}>Welcome to</Text>
+              <Text type={"h2"}>Test Runz</Text>
+              <Flex className={styles.signUpVia}>
+                <Text type="title" color={"tertiary-shade-2"}>
+                  Sign up via
                 </Text>
+                <GoogleSignIn onClick={handlerGoogleSignIn} />
+                <MicrosoftSignIn />
+                <LinkedinSignIn />
               </Flex>
-              {formik.touched.agree && formik.errors.agree && (
-                <Text type="captionRegular" color="error">
-                  {formik.errors.agree}
-                </Text>
-              )}
             </Flex>
 
-            <Button className={styles.btnStyle} onClick={formik.handleSubmit}>
-              Signup for free
-            </Button>
-            <Flex row center>
-              <Text type="captionRegular">Already have an account? </Text>
-              <Button onClick={handleLogin} types="link">
-                <Text type="captionBold" className={styles.signUpText}>
-                  Click here to log in.
-                </Text>
-              </Button>
-            </Flex>
+            <HelpAndTerms />
           </Flex>
-        </form>
-      }
-    />
+        }
+        rightChild={
+          <form autoComplete="off">
+            <Flex>
+              <Text type="title" className={styles.loginTitle}>
+                Sign up for a free Test Runz account
+              </Text>
+
+              <InputText
+                value={formik.values.name}
+                onChange={formik.handleChange("name")}
+                label={"Full name"}
+                message={formik.errors.name}
+                status={
+                  formik.touched.name && formik.errors.name ? "error" : ""
+                }
+              />
+              <div style={{ marginTop: 12, marginBottom: 12 }}>
+                <InputText
+                  autoComplete="off"
+                  label={"E-mail"}
+                  value={formik.values.email}
+                  onChange={formik.handleChange("email")}
+                  message={formik.errors.email}
+                  status={
+                    formik.touched.email && formik.errors.email ? "error" : ""
+                  }
+                />
+              </div>
+              <InputText
+                autoComplete="new-password"
+                value={formik.values.password}
+                onChange={formik.handleChange("password")}
+                label={"Password"}
+                keyboardType={isVisible ? "text" : "password"}
+                actionRight={visibleIcon}
+                message={
+                  formik.errors.password ||
+                  getPasswordStrength(formik.values.password)
+                }
+                status={
+                  formik.touched.password && formik.errors.password
+                    ? "error"
+                    : passwordMessage
+                }
+              />
+              <div style={{ marginTop: 12, marginBottom: 8 }}>
+                <InputText
+                  value={formik.values.confirmPassword}
+                  onChange={formik.handleChange("confirmPassword")}
+                  label={"Confirm password"}
+                  keyboardType={isVisibleOne ? "text" : "password"}
+                  actionRight={visibleIconOne}
+                  message={
+                    formik.errors.confirmPassword || confirmPasswordMessage
+                  }
+                  status={
+                    formik.touched.confirmPassword &&
+                    formik.errors.confirmPassword
+                      ? "error"
+                      : confirmPasswordStatus
+                  }
+                />
+              </div>
+
+              <Flex className={styles.readTextContainer}>
+                <Flex row>
+                  <CheckBox
+                    checked={!isEmpty(formik.values.agree)}
+                    onClick={() => formik.setFieldValue("agree", "1")}
+                  />
+                  <Text type="captionRegular" className={styles.readText}>
+                    I have read and understood and agree with terms of service
+                    and Privacy policy of Test Runz
+                  </Text>
+                </Flex>
+                {formik.touched.agree && formik.errors.agree && (
+                  <Text type="captionRegular" color="error">
+                    {formik.errors.agree}
+                  </Text>
+                )}
+              </Flex>
+
+              <Button className={styles.btnStyle} onClick={formik.handleSubmit}>
+                Signup for free
+              </Button>
+              <Flex row center>
+                <Text type="captionRegular">Already have an account? </Text>
+                <Button onClick={handleLogin} types="link">
+                  <Text type="captionBold" className={styles.signUpText}>
+                    Click here to log in.
+                  </Text>
+                </Button>
+              </Flex>
+            </Flex>
+          </form>
+        }
+      />
+    </>
   );
 };
 
