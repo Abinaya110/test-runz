@@ -1,0 +1,49 @@
+.leftOverall {
+  width: 20%;
+  height: 88vh;
+  border-right: 3px solid rgba(0, 0, 0, 0.09);
+}
+
+.rightOverall {
+  width: 80%;
+}
+
+.rightHead {
+  color: var(--color-text-shade-2);
+}
+
+.rightHeadFlex {
+  padding: 2% 1%;
+  height: 80px;
+  justify-content: center;
+}
+
+.rightListFlexStyle {
+  background-color: var(--color-primary-shade-2);
+  padding: 2% 0%;
+  height: 80px;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.rightListFlexStyleInactive {
+  padding: 2% 0%;
+  height: 80px;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.rightListInactive {
+  color: var(--color-text-shade-3);
+  justify-content: center;
+}
+
+.rightListActive {
+  color: var(--color-black);
+  justify-content: center;
+}
+
+.iconCenter {
+  margin-top: 7%;
+  margin-left: 2%;
+}
