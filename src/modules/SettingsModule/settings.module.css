@@ -4,6 +4,11 @@
   border-right: 3px solid rgba(0, 0, 0, 0.09);
 }
 
+.PrfileleftOverall {
+  width: 20%;
+  height: 88vh;
+}
+
 .rightOverall {
   width: 80%;
 }
@@ -18,6 +23,10 @@
 
 .marginTopToggel {
   margin-top: 0.5rem;
+}
+
+.marginTopDp {
+  margin-top: 50%;
 }
 
 .toggelLabel {
@@ -71,4 +80,26 @@
 .iconCenter {
   margin-top: 7%;
   margin-left: 2%;
+}
+
+.inputFlexMarginRight {
+  margin-right: 8px;
+  width: 40%;
+}
+.inputFlexMarginLeft {
+  margin-left: 8px;
+  width: 40%;
+}
+
+.mainFieldWidth {
+  margin: 10px 0;
+  width: 82%;
+}
+.marginVer {
+  margin: 16px 0;
+}
+
+.profileOverall {
+  position: relative;
+  padding: 20px;
 }
