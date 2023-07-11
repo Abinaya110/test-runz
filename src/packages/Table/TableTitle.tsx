@@ -50,11 +50,11 @@ const Title = ({
         titleBorderNone: borderNone,
       })}
     >
-      <RowSelection
+      {/* <RowSelection
         rowSelection={rowSelection}
         disableMultiSelect={disableMultiSelect}
         item={dataSource}
-      />
+      /> */}
       <TitleColumns columns={columns} />
     </div>
   );

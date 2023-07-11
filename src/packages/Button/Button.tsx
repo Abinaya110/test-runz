@@ -3,6 +3,7 @@ import Text from "../Text/Text";
 import styles from "./button.module.css";
 import { buttonHelper, buttonTypes } from "./buttonHelper";
 import { textColorsType } from "../Text/textTypes";
+import { CSSProperties } from "react";
 
 const cx = classNames.bind(styles);
 
@@ -12,7 +13,7 @@ type Props = {
   className?: string;
   disabled?: boolean;
   onClick?: (arg: any) => void;
-  style?: any;
+  style?: CSSProperties;
   onKeyDown?: (arg: any) => void;
   textSize?: number;
   id?: string;

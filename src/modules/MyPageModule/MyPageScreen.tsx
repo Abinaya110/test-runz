@@ -1,18 +1,10 @@
 import { useMemo, useState } from "react";
 import Calendar from "react-calendar";
-import CheckBox from "../../packages/CheckBox/CheckBox";
 import Flex from "../../packages/Flex/Flex";
 import Table from "../../packages/Table/Table";
-import { isEmpty } from "../../utils/validators";
 import Text from "../../packages/Text/Text";
-import InputText from "../../packages/InputText/InputText";
-import SvgSort from "../../icons/SvgSort";
 import styles from "./mypagescreen.module.css";
 import Badge from "../../packages/Badge/Badge";
-import SelectTag from "../../packages/Select/SelectTag";
-import SvgWelcomeTester from "../../icons/SvgWelcomeTester";
-import SvgWelcomeRequester from "../../icons/SvgWelcomeRequester";
-import SvgNoTaskCard from "../../icons/SvgNoTaskCard";
 import MyPageTableHeader from "./MyPageTableHeader";
 import SvgChevronLeft from "../../icons/SvgChevronLeft";
 import SvgChevronRight from "../../icons/SvgChevronRight";
@@ -137,7 +129,6 @@ const MyPageScreen = () => {
             showHeader={false}
             dataSource={ACTIVE_BACKING_BOARD}
             columns={columns}
-            // pagination
           />
         </Flex>
         <Flex className={styles.calendarFlex}>

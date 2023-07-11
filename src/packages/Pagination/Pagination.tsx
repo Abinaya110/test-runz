@@ -118,13 +118,14 @@ const Pagination = ({
           types="link"
           onClick={handlePrevClick}
           disabled={currentPage === 1}
+          style={{cursor:currentPage === 1?'not-allowed':'pointer' }}
         >
           <SvgBack fill={textShade3} fillOne={gray2} />
         </Button>
 
         {range}
         <Button
-          style={{ marginLeft: 4 }}
+          style={{ marginLeft: 4,cursor:currentPage === totalPages?'not-allowed':'pointer' }}
           types="link"
           onClick={handleNextClick}
           disabled={currentPage === totalPages}

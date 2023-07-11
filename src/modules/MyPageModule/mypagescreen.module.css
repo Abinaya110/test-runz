@@ -7,7 +7,6 @@
 .calendarFlex {
   margin-left: 20px;
   background-color: var(--color-white);
-  /* height: fit-content; */
 }
 .remainders {
   margin-top: 8px;
@@ -16,5 +15,5 @@
   background-color: var(--color-white);
 }
 .notiHeader {
-  padding: 8px 16px;
+  padding: 8px 20px;
 }

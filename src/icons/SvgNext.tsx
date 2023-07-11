@@ -1,8 +1,8 @@
 import React, { memo } from "react";
 
 const defaultProps = {
-  width: 51,
-  height: 51,
+  width: 50,
+  height: 50,
   fill: "#181818",
   fillOne: "#FFF4D0",
 };

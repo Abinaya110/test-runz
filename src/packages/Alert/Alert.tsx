@@ -16,7 +16,7 @@ const handleSetDuration = (duration: DurationTypes) => {
 const Alert = (
   message: string,
   duration: DurationTypes = "SHORT", // eslint-disable-line
-  color?: colors
+  color: colors='success'
 ) => {
   const choosenDuration = handleSetDuration(duration);
 
@@ -31,9 +31,9 @@ const Alert = (
     const alertbar = document.getElementById("alertbar");
 
     if (alertoverlay && alertbar && alertText) {
-      alertoverlay.setAttribute("class", `show-alert-anim alert-type-${color}`);
-      alertbar.setAttribute("class", `alert-box`);
-      alertText.setAttribute("class", `alert-text`);
+      alertoverlay.setAttribute("class", `show-alert-anim `);
+      alertbar.setAttribute("class", `alert-${color}-box`);
+      alertText.setAttribute("class", `alert-${color}-text`);
     }
 
     window.setTimeout(() => {
