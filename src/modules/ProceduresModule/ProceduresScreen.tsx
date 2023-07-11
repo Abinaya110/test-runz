@@ -41,9 +41,12 @@ const columns = [
     dataIndex: "eventType",
     key: "eventType",
     flex: 8,
+    rowOnClick: (a: any) => {
+      console.log("a", a);
+    },
     render: (value: string, row: any) => {
       return (
-        <Flex className={styles.rowww}>
+        <Flex>
           <Text color="shade-3" type="captionBold">
             {value}
           </Text>
@@ -59,6 +62,9 @@ const columns = [
     key: "date",
     flex: 2,
     align: "center",
+    rowOnClick: (a: any) => {
+      console.log("a", a);
+    },
   },
   {
     title: "",
@@ -67,6 +73,9 @@ const columns = [
     key: "Username",
     flex: 2,
     align: "center",
+    rowOnClick: (a: any) => {
+      console.log("a", a);
+    },
   },
 ];
 

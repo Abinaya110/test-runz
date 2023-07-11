@@ -4,6 +4,7 @@ import Flex from "../Flex/Flex";
 import RowText from "./RowText";
 import styles from "./rowcolumns.module.css";
 import { isEmpty } from "../../utils/validators";
+import Button from "../Button/Button";
 
 const cx = classNames.bind(styles);
 export interface ColumnItem {
@@ -20,6 +21,7 @@ export interface ColumnItem {
   ) => ReactNode;
   renderTitle?: (a: string) => ReactNode;
   align?: string;
+  rowOnClick?: (a: any) => void;
 }
 
 type Props = {
@@ -37,7 +39,31 @@ const RowColumns = ({ columns, item, rowIndex, scrollHeight }: Props) => {
         const columnData = !isEmpty(dataIndex) ? item[dataIndex] : "";
         const center = columnRestData.align === "center" ? true : false;
 
-        return (
+        return typeof column?.rowOnClick === "function" ? (
+          <Button
+            types="link"
+            onClick={() => {
+              if (column && column?.rowOnClick) {
+                column.rowOnClick(item);
+              }
+            }}
+          >
+            <Flex
+              key={column.dataIndex}
+              flex={columnFlex}
+              className={cx({
+                rowPadding: !scrollHeight,
+                rowPaddingOne: scrollHeight,
+              })}
+            >
+              {typeof render === "function" ? (
+                <Flex>{render(columnData, item, rowIndex, columnIndex)}</Flex>
+              ) : (
+                <RowText center={center} columnData={columnData} />
+              )}
+            </Flex>
+          </Button>
+        ) : (
           <Flex
             key={column.dataIndex}
             flex={columnFlex}
