@@ -8,8 +8,33 @@
   width: 80%;
 }
 
+.contentSpace {
+  margin: 2%;
+}
+
+.marginLeft10 {
+  margin-left: 1rem;
+}
+
+.marginTopToggel {
+  margin-top: 0.5rem;
+}
+
+.toggelLabel {
+  color: var(--color-gray-5);
+}
+
 .rightHead {
   color: var(--color-text-shade-2);
+}
+
+.rightSearch {
+  align-self: center;
+}
+
+.notifyCardLayout {
+  margin: 0 2%;
+  border-bottom: 2px solid var(--color-gray-2);
 }
 
 .rightHeadFlex {
