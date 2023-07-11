@@ -1,13 +1,8 @@
 import { useState } from "react";
 import LableWithIcon from "../../common/LableWithIcon";
-import SvgCalendar from "../../icons/SvgCalendar";
 import SvgPlus from "../../icons/SvgPlus";
-import SvgSearch from "../../icons/SvgSearch";
-import SvgSort from "../../icons/SvgSort";
 import Button from "../../packages/Button/Button";
 import Flex from "../../packages/Flex/Flex";
-import InputText from "../../packages/InputText/InputText";
-import SelectTag from "../../packages/SelectTag/SelectTag";
 import Table from "../../packages/Table/Table";
 import Text from "../../packages/Text/Text";
 import {
@@ -48,7 +43,7 @@ const columns = [
     flex: 8,
     render: (value: string, row: any) => {
       return (
-        <Flex>
+        <Flex className={styles.rowww}>
           <Text color="shade-3" type="captionBold">
             {value}
           </Text>
@@ -57,11 +52,9 @@ const columns = [
       );
     },
   },
-
   {
     title: "",
     renderTitle: () => <CreatedOnHeader />,
-
     dataIndex: "date",
     key: "date",
     flex: 2,
@@ -187,6 +180,7 @@ const ProceduresScreen = () => {
         description="Are you sure you want to delete the runs?"
       />
       <Table
+        rowPointer
         pagination
         onPageChange={handlePage}
         currentPage={currentPage}
@@ -195,13 +189,18 @@ const ProceduresScreen = () => {
         actionTitleBtn={() => (
           <Button onClick={() => {}}>
             <LableWithIcon
-              label="Create procedure"
+              label={
+                selectedRows.length !== 0 ? "Duplicate" : "Create procedure"
+              }
               actionLeft={() => <SvgPlus />}
             />
           </Button>
         )}
         // showHeader={false}
         // customHeader={<ProcedureCustomHeader />}
+        closeAction={() => {
+          setSelectedRows([]);
+        }}
         rowSelection={handleSelections}
         rowSelectionAll={handleAllSelections}
         dataSource={ACTIVE_BACKING_BOARD}

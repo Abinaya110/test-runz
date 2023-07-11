@@ -27,3 +27,6 @@
 .headerMargin {
   margin-top: 24px;
 }
+.rowPointer{
+  cursor: pointer;
+}

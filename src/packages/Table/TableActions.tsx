@@ -54,7 +54,7 @@ const TableActions = ({
         <Flex row center between>
           <Flex row center className={cx({ hideActions })}>
             {typeof closeAction === "function" && (
-              <Button className={styles.closeAction}>
+              <Button onClick={closeAction} className={styles.closeAction}>
                 <LableWithIcon
                   color="error"
                   type="captionBold"

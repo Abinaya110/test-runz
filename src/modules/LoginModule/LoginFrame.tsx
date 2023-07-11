@@ -16,7 +16,7 @@ const LoginFrame = ({
   return (
     <div
       className={styles.overAllContainer}
-      style={{ height: window.innerHeight - 1, display: "flex" }}
+      style={{ height: window.innerHeight - 40, display: "flex",overflowY:'scroll' ,padding:20}}
     >
       <Flex className={styles.overAll}>
         <img src={image} alt="frame" className={styles.image} />

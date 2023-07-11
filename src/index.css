@@ -231,14 +231,32 @@ input:-webkit-autofill:focus {
   z-index: 9999;
 }
 
-.alert-box {
+.alert-error-box {
+  background-color: #ffb9b980;
+  padding: 40px;
+  border-radius: 20px;
+  max-width: 600px;
+  text-align: center;
+  margin: 0 20px;
+}
+.alert-success-box {
   background-color: #c6ffd9;
   padding: 40px;
   border-radius: 20px;
+  max-width: 600px;
+  text-align: center;
+  margin: 0 20px;
 }
 
-.alert-text {
-  font-size: 20px;
+.alert-error-text {
+  font-size: 18px;
   font-family: "Poppins-SemiBold";
-  color: #00bf70;
+  color: var(--color-error);
 }
+.alert-success-text {
+  font-size: 18px;
+  font-family: "Poppins-SemiBold";
+  color: var(--color-success);
+}
+
+

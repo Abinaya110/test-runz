@@ -131,6 +131,7 @@ const Table = ({
                 className={cx("rowHover", {
                   rowPointer: rowPointer,
                 })}
+                onClick={()=>item?.rowOnClick(item)}
               >
                 <Rows
                   key={index}

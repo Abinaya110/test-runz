@@ -19,6 +19,7 @@ import { setAuthorization } from "../../utils/apiConfig";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "../../redux/store";
 import { authMeMiddleWare } from "./store/loginMiddleware";
+import Alert from "../../packages/Alert/Alert";
 
 type formType = {
   email: string;
@@ -76,8 +77,17 @@ const LoginScreen = () => {
         }
       })
       .catch((error) => {
+        console.log(error.message);
         if (error.code === "auth/user-not-found") {
           formikHelpers.setFieldError("email", "Email is not found");
+        } else if (error.code === "auth/wrong-password") {
+          formikHelpers.setFieldError("password", "Invalid password");
+        }
+        if (error.code === "auth/too-many-requests") {
+          Alert(
+            "Access to this account has been temporarily disabled due to many failed login attempts you can try again later",'SHORT','error'
+          );
+      
         }
         setLoader(false);
       });
