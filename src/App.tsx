@@ -16,6 +16,7 @@ import SettingsScreen from "./modules/SettingsModule/SettingsScreen";
 import BillingScreen from "./modules/BillingModule/BillingScreen";
 import store from "./redux/store";
 import ProceduresEditScreen from "./modules/ProceduresModule/ProceduresEditScreen";
+import RunzEditScreen from "./modules/RunzModule/RunzEditScreen";
 
 function App() {
   return (
@@ -32,6 +33,8 @@ function App() {
             <Route element={<ProtectedRoutes />}>
               <Route path={routes.MY_PAGE} element={<MyPageScreen />} />
               <Route path={routes.RUNZ} element={<RunzScreen />} />
+              <Route path={routes.RUNZ_EIDT} element={<RunzEditScreen />} />
+
               <Route path={routes.PROCEDURES} element={<ProceduresScreen />} />
               <Route
                 path={routes.PROCEDURE_EDIT}

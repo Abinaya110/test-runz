@@ -22,8 +22,11 @@ import ShareRunzModal from "./ShareRunzModal";
 import CreateNewRunzModal from "./CreateNewRunzModal";
 import styles from "./runzscreen.module.css";
 import Text from "../../packages/Text/Text";
+import { useNavigate } from "react-router-dom";
+import { routes } from "../../routes/routesPath";
 
 const RunzScreen = () => {
+  const navigate = useNavigate();
   const [selectedRows, setSelectedRows] = useState<any[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [deleteModal, setDeleteModal] = useState(false);
@@ -38,6 +41,9 @@ const RunzScreen = () => {
       key: "details",
       renderTitle: () => <RunzDetailsHeader />,
       flex: 6,
+      rowOnClick: (a: any) => {
+        navigate(routes.RUNZ_EIDT);
+      },
       render: (value: string, row: any) => {
         return (
           <Flex>
@@ -56,6 +62,9 @@ const RunzScreen = () => {
       flex: 1.5,
       renderTitle: () => <RunzCreatedOnHeader />,
       align: "center",
+      rowOnClick: (a: any) => {
+        navigate(routes.RUNZ_EIDT);
+      },
     },
     {
       title: "",
@@ -64,6 +73,9 @@ const RunzScreen = () => {
       flex: 1.5,
       renderTitle: () => <RunzDueDateHeader />,
       align: "center",
+      rowOnClick: (a: any) => {
+        navigate(routes.RUNZ_EIDT);
+      },
     },
     {
       title: "",
@@ -72,6 +84,9 @@ const RunzScreen = () => {
       flex: 1.5,
       renderTitle: () => <RunzStatusHeader />,
       align: "center",
+      rowOnClick: (a: any) => {
+        navigate(routes.RUNZ_EIDT);
+      },
     },
     {
       title: "",
@@ -80,6 +95,9 @@ const RunzScreen = () => {
       flex: 1.5,
       renderTitle: () => <RunzAssignedHeader />,
       align: "center",
+      rowOnClick: (a: any) => {
+        navigate(routes.RUNZ_EIDT);
+      },
     },
   ];
 
@@ -233,6 +251,7 @@ const RunzScreen = () => {
         description="Are you sure you want to submit the runs?"
       />
       <Table
+        rowPointer
         onPageChange={handlePage}
         currentPage={currentPage}
         hideActions={selectedRows.length === 0}
