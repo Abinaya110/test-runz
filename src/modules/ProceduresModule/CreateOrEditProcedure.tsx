@@ -10,13 +10,14 @@ type Props = {
   cancelClick: () => void;
   open: boolean;
   submit: () => void;
+  title: string;
 };
-const CreateOrEditProcedure = ({ cancelClick, open, submit }: Props) => {
+const CreateOrEditProcedure = ({ cancelClick, open, submit, title }: Props) => {
   return (
     <Modal
       width={700}
       onCancel={cancelClick}
-      title={<Text type="title">Create new procedure</Text>}
+      title={<Text type="title">{title}</Text>}
       closeIcon={<SvgClose />}
       centered
       open={open}

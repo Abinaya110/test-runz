@@ -9,6 +9,7 @@ type Props = {
   color?: textColorsType;
   type?: textType;
   containerClassName?: string;
+  labelSize?: number;
 };
 
 const LableWithIcon = ({
@@ -18,13 +19,14 @@ const LableWithIcon = ({
   color,
   type,
   containerClassName,
+  labelSize,
 }: Props) => {
   return (
     <Flex className={containerClassName} row center>
       {typeof actionLeft === "function" && (
         <div style={{ marginRight: 4 }}>{actionLeft()}</div>
       )}
-      <Text color={color} type={type}>
+      <Text size={labelSize} color={color} type={type}>
         {label}
       </Text>
       {typeof actitionRight === "function" && (

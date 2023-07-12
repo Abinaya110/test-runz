@@ -207,3 +207,22 @@
   font-size: 12px;
   font-family: "Poppins-Regular";
 }
+
+.text-button-1 {
+  font-size: 16px;
+  font-family: "Poppins-Regular";
+}
+
+.text-button-2 {
+  font-size: 16px;
+  font-family: "Poppins-Medium";
+}
+
+.text-button-3 {
+  font-size: 16px;
+  font-family: "Poppins-SemiBold";
+}
+.text-button-4 {
+  font-size: 20px;
+  font-family: "Poppins-SemiBold";
+}

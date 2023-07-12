@@ -9,4 +9,5 @@ export const routes = {
   ASSETS: "/assets",
   SETTINGS: "/settings",
   BILLING: "/billing",
+  PROCEDURE_EDIT:'/procedures-edit'
 };

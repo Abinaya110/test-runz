@@ -14,6 +14,13 @@
   background-color: var(--color-white) !important;
   height: 100vh !important;
   overflow-y: scroll;
+  box-shadow: 3px 4px 4px 0px #0000001a;
+}
+.sideBarContainer::-webkit-scrollbar-track {
+  /* background: red !important; */
+}
+.sideBarContainer::-webkit-scrollbar {
+  width: 0px;
 }
 .sideWidth {
   max-width: 350px !important;
@@ -24,9 +31,9 @@
 }
 .content {
   margin-top: 80px;
-  padding: 20px;
+  /* padding: 20px; */
   overflow-y: scroll;
-  padding-left: 90px;
+  padding-left: 80px;
 }
 .svgMenu {
   margin-right: 10px;

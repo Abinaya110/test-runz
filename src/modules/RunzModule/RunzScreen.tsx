@@ -14,6 +14,7 @@ import SvgSubmitReport from "../../icons/SvgSubmitReport";
 import Alert from "../../packages/Alert/Alert";
 import ShareRunzModal from "./ShareRunzModal";
 import CreateNewRunzModal from "./CreateNewRunzModal";
+import styles from "./runzscreen.module.css";
 
 const RunzScreen = () => {
   const [selectedRows, setSelectedRows] = useState<any[]>([]);
@@ -124,7 +125,7 @@ const RunzScreen = () => {
   const handleSubmitOpen = () => setSubmitModal(true);
   const handleShareOpen = () => setShareModal(true);
   return (
-    <Flex>
+    <Flex className={styles.overAll}>
       <CreateNewRunzModal
         open={createNewRunz}
         cancelClick={() => {

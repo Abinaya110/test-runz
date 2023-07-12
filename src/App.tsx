@@ -15,6 +15,7 @@ import AssetsScreen from "./modules/AssetsModule/AssetsScreen";
 import SettingsScreen from "./modules/SettingsModule/SettingsScreen";
 import BillingScreen from "./modules/BillingModule/BillingScreen";
 import store from "./redux/store";
+import ProceduresEditScreen from "./modules/ProceduresModule/ProceduresEditScreen";
 
 function App() {
   return (
@@ -31,7 +32,16 @@ function App() {
             <Route element={<ProtectedRoutes />}>
               <Route path={routes.MY_PAGE} element={<MyPageScreen />} />
               <Route path={routes.RUNZ} element={<RunzScreen />} />
-              <Route path={routes.PROCEDURES} element={<ProceduresScreen />} />
+              <Route path={routes.PROCEDURES} element={<ProceduresScreen />}>
+                <Route
+                  path={'/procedures-edit'}
+                  element={<ProceduresEditScreen />}
+                />
+              </Route>
+              <Route
+                  path={'/procedures-edit'}
+                  element={<ProceduresEditScreen />}
+                />
               <Route path={routes.PROJECTS} element={<ProjectsScreen />} />
               <Route path={routes.ASSETS} element={<AssetsScreen />} />
               <Route path={routes.SETTINGS} element={<SettingsScreen />} />

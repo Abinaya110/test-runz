@@ -40,7 +40,11 @@ export type textType =
   | "captionRegular"
   | "captionRegularItalic"
   | "smallBold"
-  | "smallRegular";
+  | "smallRegular"
+  | "button-1"
+  | "button-2"
+  | "button-3"
+  | "button-4";
 export type textTransform =
   | "capitalize"
   | "lowercase"
