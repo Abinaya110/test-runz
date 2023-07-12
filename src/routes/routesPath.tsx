@@ -4,6 +4,7 @@ export const routes = {
   FORGOT_PASSWORD: "/forgot-password",
   MY_PAGE: "/",
   RUNZ: "/runz",
+  RUNZ_EIDT: "/runz-eidt",
   PROCEDURES: "/procedures",
   PROJECTS: "/projects",
   ASSETS: "/assets",

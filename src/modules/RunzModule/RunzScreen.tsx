@@ -1,10 +1,16 @@
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import Flex from "../../packages/Flex/Flex";
 import CheckBox from "../../packages/CheckBox/CheckBox";
 import { isEmpty } from "../../utils/validators";
-import { ACTIVE_BACKING_BOARD, activeBackingBoard } from "./mock";
+import { ACTIVE_BACKING_BOARD } from "./mock";
 import Table from "../../packages/Table/Table";
-import RunzCustomHeader from "./RunzCustomHeader";
+import {
+  RunzAssignedHeader,
+  RunzCreatedOnHeader,
+  RunzDetailsHeader,
+  RunzDueDateHeader,
+  RunzStatusHeader,
+} from "./RunzCustomHeader";
 import Button from "../../packages/Button/Button";
 import LableWithIcon from "../../common/LableWithIcon";
 import SvgPlus from "../../icons/SvgPlus";
@@ -15,15 +21,85 @@ import Alert from "../../packages/Alert/Alert";
 import ShareRunzModal from "./ShareRunzModal";
 import CreateNewRunzModal from "./CreateNewRunzModal";
 import styles from "./runzscreen.module.css";
+import Text from "../../packages/Text/Text";
+import { useNavigate } from "react-router-dom";
+import { routes } from "../../routes/routesPath";
 
 const RunzScreen = () => {
+  const navigate = useNavigate();
   const [selectedRows, setSelectedRows] = useState<any[]>([]);
-  const columns = useMemo(() => activeBackingBoard(), []);
   const [currentPage, setCurrentPage] = useState(1);
   const [deleteModal, setDeleteModal] = useState(false);
   const [submitModal, setSubmitModal] = useState(false);
   const [shareModal, setShareModal] = useState(false);
   const [createNewRunz, setCreateNewRunz] = useState(false);
+
+  const columns = [
+    {
+      title: "",
+      dataIndex: "details",
+      key: "details",
+      renderTitle: () => <RunzDetailsHeader />,
+      flex: 6,
+      rowOnClick: (a: any) => {
+        navigate(routes.RUNZ_EIDT);
+      },
+      render: (value: string, row: any) => {
+        return (
+          <Flex>
+            <Text color="shade-3" type="captionBold">
+              {row.detailsDes}
+            </Text>
+            <Text type="bodyBold">{value}</Text>
+          </Flex>
+        );
+      },
+    },
+    {
+      title: "",
+      dataIndex: "Createdon",
+      key: "Createdon",
+      flex: 1.5,
+      renderTitle: () => <RunzCreatedOnHeader />,
+      align: "center",
+      rowOnClick: (a: any) => {
+        navigate(routes.RUNZ_EIDT);
+      },
+    },
+    {
+      title: "",
+      dataIndex: "Duedate",
+      key: "Duedate",
+      flex: 1.5,
+      renderTitle: () => <RunzDueDateHeader />,
+      align: "center",
+      rowOnClick: (a: any) => {
+        navigate(routes.RUNZ_EIDT);
+      },
+    },
+    {
+      title: "",
+      dataIndex: "Status",
+      key: "Status",
+      flex: 1.5,
+      renderTitle: () => <RunzStatusHeader />,
+      align: "center",
+      rowOnClick: (a: any) => {
+        navigate(routes.RUNZ_EIDT);
+      },
+    },
+    {
+      title: "",
+      dataIndex: "Assignedby",
+      key: "Assignedby",
+      flex: 1.5,
+      renderTitle: () => <RunzAssignedHeader />,
+      align: "center",
+      rowOnClick: (a: any) => {
+        navigate(routes.RUNZ_EIDT);
+      },
+    },
+  ];
 
   const isAllRowChecked = (
     selected: any[],
@@ -103,6 +179,7 @@ const RunzScreen = () => {
       </Flex>
     );
   };
+
   const handleAllUnSelections = () => {
     return (
       <Flex>
@@ -124,6 +201,7 @@ const RunzScreen = () => {
   const handleDeleteOpen = () => setDeleteModal(true);
   const handleSubmitOpen = () => setSubmitModal(true);
   const handleShareOpen = () => setShareModal(true);
+
   return (
     <Flex className={styles.overAll}>
       <CreateNewRunzModal
@@ -173,6 +251,7 @@ const RunzScreen = () => {
         description="Are you sure you want to submit the runs?"
       />
       <Table
+        rowPointer
         onPageChange={handlePage}
         currentPage={currentPage}
         hideActions={selectedRows.length === 0}
@@ -182,8 +261,6 @@ const RunzScreen = () => {
             <LableWithIcon label="Create runz" actionLeft={() => <SvgPlus />} />
           </Button>
         )}
-        showHeader={false}
-        customHeader={<RunzCustomHeader />}
         rowSelection={handleSelections}
         rowSelectionAll={handleAllSelections}
         dataSource={ACTIVE_BACKING_BOARD}
@@ -192,6 +269,10 @@ const RunzScreen = () => {
         rowDeleteAction={handleDeleteOpen}
         rowSubmitAction={handleSubmitOpen}
         rowShareAction={handleShareOpen}
+        pagination
+        closeAction={() => {
+          setSelectedRows([]);
+        }}
       />
     </Flex>
   );
