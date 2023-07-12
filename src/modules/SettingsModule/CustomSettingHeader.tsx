@@ -14,9 +14,9 @@ const CustomSettingHeader = () => {
         <LableWithIcon
           type="bodyBold"
           color="shade-3"
-          label="Runz details"
+          label="User details"
           actitionRight={() => <SvgSort />}
-          containerClassName={styles.sortTitleFlex}
+          containerClassName={styles.sortTitleFlexSettings}
         />
 
 <Flex row center flex={1}>
@@ -28,14 +28,14 @@ const CustomSettingHeader = () => {
             />
           </div>
 
-          <div className={styles.inputMargin}>
+          <div className={styles.inputMarginSettings}>
             <SelectTag
               options={[{ label: "ss", value: "11" }]}
               inputHeight={35}
               placeholder="Department"
             />
           </div>
-          <div className={styles.inputMargin}>
+          <div className={styles.inputMarginSettings}>
             <InputText
               white
               size="small"
@@ -48,7 +48,7 @@ const CustomSettingHeader = () => {
       <Flex row center flex={1}>
         <Flex className={styles.createdFlex} flex={1}>
           <LableWithIcon
-            containerClassName={styles.sortTitleFlex}
+            containerClassName={styles.sortTitleFlexSettings}
             label="Created on"
             type="bodyBold"
             color="shade-3"
@@ -63,9 +63,9 @@ const CustomSettingHeader = () => {
           />
         </Flex>
 
-        <Flex flex={1} className={styles.inputMargin}>
+        <Flex flex={1} className={styles.inputMarginSettings}>
           <LableWithIcon
-            containerClassName={styles.sortTitleFlex}
+            containerClassName={styles.sortTitleFlexSettings}
             label="Role"
             type="bodyBold"
             color="shade-3"
@@ -80,9 +80,9 @@ const CustomSettingHeader = () => {
           />
         </Flex>
 
-        <Flex flex={1} className={styles.inputMargin}>
+        <Flex flex={1} className={styles.inputMarginSettings}>
           <LableWithIcon
-            containerClassName={styles.sortTitleFlex}
+            containerClassName={styles.sortTitleFlexSettings}
             label="Status"
             type="bodyBold"
             color="shade-3"
