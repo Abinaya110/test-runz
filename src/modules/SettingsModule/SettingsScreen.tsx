@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import {useState } from "react";
 import classNames from "classnames/bind";
 import Flex from "../../packages/Flex/Flex";
 import Text from "../../packages/Text/Text";
@@ -10,23 +10,9 @@ import SvgRole from "../../icons/SvgRole";
 import ScreenHeader from "./ScreenHeader";
 import NotificationScreen from "./NotificationScreen";
 import ProfileScreen from "./ProfileScreen";
+import UserScreen from "./UserScreen";
 
 const cx = classNames.bind(styles);
-
-const UserScreen = () => {
-  return (
-    <Flex>
-      <ScreenHeader
-        title={"User Management"}
-        description={
-          "Select the kinds of notifications you get about your activities and recommendations."
-        }
-        isSearch={false}
-        isBtn={true}
-      />
-    </Flex>
-  );
-};
 
 const RoleScreen = () => {
   return (
@@ -85,7 +71,7 @@ const SettingsScreen = () => {
   };
 
   return (
-    <Flex>
+    <Flex className={styles.notifyOverall}>
       <Flex row>
         <Flex column className={styles.leftOverall}>
           <Flex className={styles.rightHeadFlex}>

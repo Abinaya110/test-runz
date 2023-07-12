@@ -32,7 +32,7 @@ const ProfileScreen = () => {
 
         <Flex className={styles.rightOverall}>
           <Flex className={styles.accordianParent}>
-            <Accordion title="General Profile">
+            <Accordion  title="General Profile">
               <Flex className={styles.profileOverall}>
                 <Flex row start>
                   <Flex column className={styles.inputFlexMarginRight}>

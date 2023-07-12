@@ -1,7 +1,17 @@
+.notifyOverall {
+  margin: 1% !important;
+  border-radius: 10px;
+  background-color: white;
+}
+
 .leftOverall {
   width: 20%;
   height: 88vh;
   border-right: 3px solid rgba(0, 0, 0, 0.09);
+}
+
+.tableOverall {
+  margin: 2%;
 }
 
 .accordianParent {
