@@ -3,7 +3,8 @@ import classNames from "classnames/bind";
 import Flex from "../../packages/Flex/Flex";
 import Text from "../../packages/Text/Text";
 import styles from "./settings.module.css";
-import Switch from "react-switch";
+// import Switch from "react-switch";
+import Switch from "../../packages/Switch/Switch";
 
 import ScreenHeader from "./ScreenHeader";
 
@@ -100,51 +101,21 @@ const NotificationScreen = () => {
 
               <Flex column className={styles.rightSearch}>
                 <Flex row between>
-                  <Flex column className={styles.rightSearch}>
-                    <Text
-                      size={12}
-                      bold="semiBold"
-                      className={styles.toggelLabel}
-                    >
-                      Notification
-                    </Text>
-                  </Flex>
-
-                  <Flex column>
-                    <Switch
-                      uncheckedIcon={false}
-                      onColor="#ffc60b"
-                      checkedIcon={false}
-                      onChange={() => handleChange(c.id, "notify")}
-                      checked={c.isNotifyActive}
-                      id="normal-switch"
-                      className={styles.marginLeft10}
+                    <Switch 
+                    label="Notification"
+                    labelColor="gray"
+                    checked={c.isNotifyActive}
+                    onClick={() => handleChange(c.id, "notify")}
                     />
-                  </Flex>
                 </Flex>
 
                 <Flex row between className={styles.marginTopToggel}>
-                  <Flex column className={styles.rightSearch}>
-                    <Text
-                      size={12}
-                      bold="semiBold"
-                      className={styles.toggelLabel}
-                    >
-                      Email
-                    </Text>
-                  </Flex>
-
-                  <Flex column>
-                    <Switch
-                      uncheckedIcon={false}
-                      onColor="#ffc60b"
-                      checkedIcon={false}
-                      onChange={() => handleChange(c.id, "email")}
-                      checked={c.isEmailActive}
-                      id="normal-switch"
-                      className={styles.marginLeft10}
+                  <Switch 
+                    label="Email"
+                    labelColor="gray"
+                    checked={c.isNotifyActive}
+                    onClick={() => handleChange(c.id, "notify")}
                     />
-                  </Flex>
                 </Flex>
               </Flex>
             </Flex>
