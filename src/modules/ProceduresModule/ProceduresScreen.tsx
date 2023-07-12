@@ -16,6 +16,10 @@ import CheckBox from "../../packages/CheckBox/CheckBox";
 import YesOrNo from "../../common/YesOrNo";
 import SvgDelete1 from "../../icons/SvgDelete1";
 import Alert from "../../packages/Alert/Alert";
+import CreateOrEditProcedure from "./CreateOrEditProcedure";
+import SvgCancel from "../../icons/SvgCancel";
+import { Outlet, useNavigate } from "react-router-dom";
+import { routes } from "../../routes/routesPath";
 
 export const ACTIVE_BACKING_BOARD: any = [
   {
@@ -34,55 +38,58 @@ export const ACTIVE_BACKING_BOARD: any = [
   },
 ];
 
-const columns = [
-  {
-    title: "",
-    renderTitle: () => <ProcedureHeader />,
-    dataIndex: "eventType",
-    key: "eventType",
-    flex: 8,
-    rowOnClick: (a: any) => {
-      console.log("a", a);
-    },
-    render: (value: string, row: any) => {
-      return (
-        <Flex>
-          <Text color="shade-3" type="captionBold">
-            {value}
-          </Text>
-          <Text type="bodyBold">{row.eventName}</Text>
-        </Flex>
-      );
-    },
-  },
-  {
-    title: "",
-    renderTitle: () => <CreatedOnHeader />,
-    dataIndex: "date",
-    key: "date",
-    flex: 2,
-    align: "center",
-    rowOnClick: (a: any) => {
-      console.log("a", a);
-    },
-  },
-  {
-    title: "",
-    renderTitle: () => <CreatedByHeader />,
-    dataIndex: "Username",
-    key: "Username",
-    flex: 2,
-    align: "center",
-    rowOnClick: (a: any) => {
-      console.log("a", a);
-    },
-  },
-];
-
 const ProceduresScreen = () => {
+  const navigate = useNavigate();
   const [selectedRows, setSelectedRows] = useState<any[]>([]);
   const [deleteModal, setDeleteModal] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
+  const [createProcedure, setCreateProcedure] = useState(false);
+  const [isPermission, setPermission] = useState(false);
+
+  const columns = [
+    {
+      title: "",
+      renderTitle: () => <ProcedureHeader />,
+      dataIndex: "eventType",
+      key: "eventType",
+      flex: 8,
+      rowOnClick: (a: any) => {
+        navigate(routes.PROCEDURE_EDIT);
+      },
+      render: (value: string, row: any) => {
+        return (
+          <Flex>
+            <Text color="shade-3" type="captionBold">
+              {value}
+            </Text>
+            <Text type="bodyBold">{row.eventName}</Text>
+          </Flex>
+        );
+      },
+    },
+    {
+      title: "",
+      renderTitle: () => <CreatedOnHeader />,
+      dataIndex: "date",
+      key: "date",
+      flex: 2,
+      align: "center",
+      rowOnClick: (a: any) => {
+        console.log("a", a);
+      },
+    },
+    {
+      title: "",
+      renderTitle: () => <CreatedByHeader />,
+      dataIndex: "Username",
+      key: "Username",
+      flex: 2,
+      align: "center",
+      rowOnClick: (a: any) => {
+        console.log("a", a);
+      },
+    },
+  ];
 
   const isAllRowChecked = (
     selected: any[],
@@ -174,7 +181,18 @@ const ProceduresScreen = () => {
     setCurrentPage(page);
   };
   return (
-    <Flex>
+    <Flex className={styles.overAll}>
+      <CreateOrEditProcedure
+        title="Create new procedure"
+        open={createProcedure}
+        submit={() => {
+          setCreateProcedure(false);
+          Alert("Procedure created successfully.");
+        }}
+        cancelClick={() => {
+          setCreateProcedure(false);
+        }}
+      />
       <YesOrNo
         title="Confirmation"
         icon={<SvgDelete1 />}
@@ -188,6 +206,31 @@ const ProceduresScreen = () => {
         }}
         description="Are you sure you want to delete the runs?"
       />
+
+      <YesOrNo
+        noBtnTitle="Cancel"
+        yesBtnTitle="Ok"
+        title="Notice"
+        icon={<SvgCancel />}
+        open={isPermission}
+        yesClick={() => {
+          setPermission(false);
+        }}
+        noClick={() => {
+          setPermission(false);
+        }}
+        description={
+          <Flex>
+            <Text align="center" type="bodyBold" color="shade-2">
+              To duplicate please select only one procedure.
+            </Text>
+            <Text align="center" type="captionBold" color="shade-3">
+              Multiple duplicates are not allowed
+            </Text>
+          </Flex>
+        }
+      />
+
       <Table
         rowPointer
         pagination
@@ -196,7 +239,11 @@ const ProceduresScreen = () => {
         hideActions={selectedRows.length === 0}
         actionTitle="Procedure"
         actionTitleBtn={() => (
-          <Button onClick={() => {}}>
+          <Button
+            onClick={() => {
+              setCreateProcedure(true);
+            }}
+          >
             <LableWithIcon
               label={
                 selectedRows.length !== 0 ? "Duplicate" : "Create procedure"
@@ -205,8 +252,6 @@ const ProceduresScreen = () => {
             />
           </Button>
         )}
-        // showHeader={false}
-        // customHeader={<ProcedureCustomHeader />}
         closeAction={() => {
           setSelectedRows([]);
         }}

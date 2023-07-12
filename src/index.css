@@ -258,5 +258,6 @@ input:-webkit-autofill:focus {
   font-family: "Poppins-SemiBold";
   color: var(--color-success);
 }
-
-
+.tox-statusbar__branding {
+  display: none !important;
+}

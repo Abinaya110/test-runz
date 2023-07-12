@@ -11,9 +11,12 @@ type Props = {
   yesClick: () => void;
   noClick: () => void;
   icon: ReactChild;
-  description: string;
+  description: ReactChild;
   title: string;
+  noBtnTitle?: string;
+  yesBtnTitle?: string;
 };
+
 const YesOrNo = ({
   open,
   yesClick,
@@ -21,6 +24,8 @@ const YesOrNo = ({
   icon,
   description,
   title,
+  noBtnTitle = "No",
+  yesBtnTitle = "Yes",
 }: Props) => {
   return (
     <Modal
@@ -32,24 +37,30 @@ const YesOrNo = ({
       footer={
         <Flex row center middle className={styles.footer}>
           <Button onClick={noClick} className={styles.noBtn} types="tertiary">
-            No
+            {noBtnTitle}
           </Button>
           <Button onClick={yesClick} className={styles.yesBtn}>
-            Yes
+            {yesBtnTitle}
           </Button>
         </Flex>
       }
     >
       <Flex center middle>
         {icon}
-        <Text
-          align="center"
-          className={styles.desText}
-          type="bodyBold"
-          color="shade-2"
-        >
-          {description}
-        </Text>
+        {typeof description === "string" ? (
+          <Text
+            align="center"
+            className={styles.desText}
+            type="bodyBold"
+            color="shade-2"
+          >
+            {description}
+          </Text>
+        ) : (
+          <Flex center middle className={styles.desText}>
+            {description}
+          </Flex>
+        )}
       </Flex>
     </Modal>
   );

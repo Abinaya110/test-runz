@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Layout as LayoutAntd, Menu, Drawer } from "antd";
+import { Layout as LayoutAntd, Menu } from "antd";
 import styles from "./layout.module.css";
 import SvgMenu from "../../icons/SvgMenu";
 import Button from "../../packages/Button/Button";

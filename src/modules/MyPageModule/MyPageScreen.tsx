@@ -103,7 +103,7 @@ const MyPageScreen = () => {
 
   const mark = ["04-03-2020", "03-03-2020", "05-03-2020"];
   return (
-    <Flex>
+    <Flex className={styles.overAll}>
       <Table
         pagination
         currentPage={1}
