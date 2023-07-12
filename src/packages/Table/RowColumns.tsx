@@ -40,29 +40,25 @@ const RowColumns = ({ columns, item, rowIndex, scrollHeight }: Props) => {
         const center = columnRestData.align === "center" ? true : false;
 
         return typeof column?.rowOnClick === "function" ? (
-          <Button
-            types="link"
+          <div
+            className={cx({
+              rowPadding: !scrollHeight,
+              rowPaddingOne: scrollHeight,
+            })}
+            key={column.dataIndex}
+            style={{ flex: columnFlex }}
             onClick={() => {
               if (column && column?.rowOnClick) {
                 column.rowOnClick(item);
               }
             }}
           >
-            <Flex
-              key={column.dataIndex}
-              flex={columnFlex}
-              className={cx({
-                rowPadding: !scrollHeight,
-                rowPaddingOne: scrollHeight,
-              })}
-            >
-              {typeof render === "function" ? (
-                <Flex>{render(columnData, item, rowIndex, columnIndex)}</Flex>
-              ) : (
-                <RowText center={center} columnData={columnData} />
-              )}
-            </Flex>
-          </Button>
+            {typeof render === "function" ? (
+              <Flex>{render(columnData, item, rowIndex, columnIndex)}</Flex>
+            ) : (
+              <RowText center={center} columnData={columnData} />
+            )}
+          </div>
         ) : (
           <Flex
             key={column.dataIndex}

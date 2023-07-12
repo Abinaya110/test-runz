@@ -16,6 +16,8 @@ import CheckBox from "../../packages/CheckBox/CheckBox";
 import YesOrNo from "../../common/YesOrNo";
 import SvgDelete1 from "../../icons/SvgDelete1";
 import Alert from "../../packages/Alert/Alert";
+import CreateOrEditProcedure from "./CreateOrEditProcedure";
+import SvgCancel from "../../icons/SvgCancel";
 
 export const ACTIVE_BACKING_BOARD: any = [
   {
@@ -83,6 +85,7 @@ const ProceduresScreen = () => {
   const [selectedRows, setSelectedRows] = useState<any[]>([]);
   const [deleteModal, setDeleteModal] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
+  const [createProcedure, setCreateProcedure] = useState(false);
 
   const isAllRowChecked = (
     selected: any[],
@@ -175,6 +178,16 @@ const ProceduresScreen = () => {
   };
   return (
     <Flex>
+      <CreateOrEditProcedure
+        open={createProcedure}
+        submit={() => {
+          setCreateProcedure(false);
+          Alert("Procedure created successfully.");
+        }}
+        cancelClick={() => {
+          setCreateProcedure(false);
+        }}
+      />
       <YesOrNo
         title="Confirmation"
         icon={<SvgDelete1 />}
@@ -188,6 +201,32 @@ const ProceduresScreen = () => {
         }}
         description="Are you sure you want to delete the runs?"
       />
+
+      <YesOrNo
+        noBtnTitle="Cancel"
+        yesBtnTitle="Ok"
+        title="Notice"
+        icon={<SvgCancel />}
+        open={false}
+        yesClick={() => {
+          Alert("Runs deleted sucessfully.");
+          setDeleteModal(false);
+        }}
+        noClick={() => {
+          setDeleteModal(false);
+        }}
+        description={
+          <Flex>
+            <Text align="center" type="bodyBold" color="shade-2">
+              To duplicate please select only one procedure.
+            </Text>
+            <Text align="center" type="captionBold" color="shade-3">
+              Multiple duplicates are not allowed
+            </Text>
+          </Flex>
+        }
+      />
+
       <Table
         rowPointer
         pagination
@@ -196,7 +235,11 @@ const ProceduresScreen = () => {
         hideActions={selectedRows.length === 0}
         actionTitle="Procedure"
         actionTitleBtn={() => (
-          <Button onClick={() => {}}>
+          <Button
+            onClick={() => {
+              setCreateProcedure(true);
+            }}
+          >
             <LableWithIcon
               label={
                 selectedRows.length !== 0 ? "Duplicate" : "Create procedure"
@@ -205,8 +248,6 @@ const ProceduresScreen = () => {
             />
           </Button>
         )}
-        // showHeader={false}
-        // customHeader={<ProcedureCustomHeader />}
         closeAction={() => {
           setSelectedRows([]);
         }}
