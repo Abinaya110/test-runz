@@ -18,7 +18,7 @@ import SvgDelete1 from "../../icons/SvgDelete1";
 import Alert from "../../packages/Alert/Alert";
 import CreateOrEditProcedure from "./CreateOrEditProcedure";
 import SvgCancel from "../../icons/SvgCancel";
-import { useNavigate } from "react-router-dom";
+import { Outlet, useNavigate } from "react-router-dom";
 import { routes } from "../../routes/routesPath";
 
 export const ACTIVE_BACKING_BOARD: any = [
@@ -54,7 +54,7 @@ const ProceduresScreen = () => {
       key: "eventType",
       flex: 8,
       rowOnClick: (a: any) => {
-        navigate(`/procedures-edit`);
+        navigate(routes.PROCEDURE_EDIT);
       },
       render: (value: string, row: any) => {
         return (

@@ -32,16 +32,11 @@ function App() {
             <Route element={<ProtectedRoutes />}>
               <Route path={routes.MY_PAGE} element={<MyPageScreen />} />
               <Route path={routes.RUNZ} element={<RunzScreen />} />
-              <Route path={routes.PROCEDURES} element={<ProceduresScreen />}>
-                <Route
-                  path={'/procedures-edit'}
-                  element={<ProceduresEditScreen />}
-                />
-              </Route>
+              <Route path={routes.PROCEDURES} element={<ProceduresScreen />} />
               <Route
-                  path={'/procedures-edit'}
-                  element={<ProceduresEditScreen />}
-                />
+                path={routes.PROCEDURE_EDIT}
+                element={<ProceduresEditScreen />}
+              />
               <Route path={routes.PROJECTS} element={<ProjectsScreen />} />
               <Route path={routes.ASSETS} element={<AssetsScreen />} />
               <Route path={routes.SETTINGS} element={<SettingsScreen />} />

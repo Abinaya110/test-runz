@@ -3,7 +3,6 @@ import SvgEdit from "../../icons/SvgEdit";
 import Flex from "../../packages/Flex/Flex";
 import Text from "../../packages/Text/Text";
 import styles from "./procedureseditscreen.module.css";
-import "react-quill/dist/quill.snow.css";
 import RichText from "../../packages/RichText/RichText";
 import Button from "../../packages/Button/Button";
 import SvgPrint from "../../icons/SvgPrint";
