@@ -38,7 +38,7 @@ const RichText = (
         onBlur={onBlur}
         ref={ref}
         onInit={onInit}
-        apiKey="uj0oha992kumeot92rqhcuwmvlf5x3gxz440rwzvl9cchihz"
+        apiKey="bamie1wheqvfes9rx1fitdyk2o9c0q1q8ij2wh4l8ffm6gor"
         init={{
           height,
           placeholder,
