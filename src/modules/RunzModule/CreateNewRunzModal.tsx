@@ -10,14 +10,15 @@ import InputText from "../../packages/InputText/InputText";
 type Props = {
   open: boolean;
   cancelClick: () => void;
-  suubmit: () => void;
+  submit: () => void;
+  title: string;
 };
-const CreateNewRunzModal = ({ open, suubmit, cancelClick }: Props) => {
+const CreateNewRunzModal = ({ open, submit, cancelClick, title }: Props) => {
   return (
     <Modal
       width={700}
       onCancel={cancelClick}
-      title={<Text type="title">Create new Runz</Text>}
+      title={<Text type="title">{title}</Text>}
       closeIcon={<SvgClose />}
       centered
       open={open}
@@ -30,7 +31,7 @@ const CreateNewRunzModal = ({ open, suubmit, cancelClick }: Props) => {
           >
             Create
           </Button>
-          <Button onClick={suubmit} className={styles.yesBtn}>
+          <Button onClick={submit} className={styles.yesBtn}>
             Create
           </Button>
         </Flex>

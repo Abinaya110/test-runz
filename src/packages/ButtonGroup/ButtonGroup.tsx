@@ -1,4 +1,7 @@
 import { useState } from "react";
+import Button from "../Button/Button";
+import Flex from "../Flex/Flex";
+import styles from "./buttongroup.module.css";
 
 type Props = {
   buttons: string[];
@@ -16,17 +19,19 @@ const ButtonGroup = ({ buttons, defaultSelected, onButtonChange }: Props) => {
   };
 
   return (
-    <div>
+    <Flex row center flex={1}>
       {buttons.map((button, index) => (
-        <button
+        <Button
           key={index}
+          types={selectedButton === button ? "primary" : "tertiary"}
           onClick={() => handleButtonClick(button)}
-          className={selectedButton === button ? "active" : ""}
+          // className={selectedButton === button ? "active" : ""}
+          className={styles.btn}
         >
           {button}
-        </button>
+        </Button>
       ))}
-    </div>
+    </Flex>
   );
 };
 

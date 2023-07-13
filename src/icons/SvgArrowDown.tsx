@@ -3,18 +3,25 @@ import React, { memo } from "react";
 const defaultProps = {
   width: 24,
   height: 24,
-  fill: "#000",
+  fill: "#181818",
+  fillOne: "#fff",
 };
 
-const SvgArrowDown = ({ width, height, fill }: typeof defaultProps) => (
+const SvgArrowDown = ({
+  width,
+  height,
+  fill,
+  fillOne,
+}: typeof defaultProps) => (
   <svg width={width} height={height} viewBox="0 0 24 24" fill="none">
+    <rect width="24" height="24" fill={fillOne} />
     <path
-      fill="#181818"
-      d="M1.222.757a1 1 0 0 0 0 1.414l7.07 7.071a1 1 0 1 0 1.415-1.414L2.636.757a1 1 0 0 0-1.414 0Z"
+      d="M4.22156 7.75698C3.83103 8.14751 3.83103 8.78067 4.22156 9.1712L11.2926 16.2423C11.6832 16.6328 12.3163 16.6328 12.7068 16.2423C13.0974 15.8517 13.0974 15.2186 12.7068 14.828L5.63577 7.75698C5.24525 7.36646 4.61208 7.36646 4.22156 7.75698Z"
+      fill={fill}
     />
     <path
-      fill="#181818"
-      d="M8.293 7.828a1 1 0 1 0 1.414 1.414l7.07-7.07A1 1 0 0 0 15.365.756L8.293 7.828Z"
+      d="M11.2926 14.828C10.9021 15.2186 10.9021 15.8517 11.2926 16.2423C11.6832 16.6328 12.3163 16.6328 12.7068 16.2423L19.7779 9.1712C20.1684 8.78067 20.1684 8.14751 19.7779 7.75698C19.3874 7.36646 18.7542 7.36646 18.3637 7.75698L11.2926 14.828Z"
+      fill={fill}
     />
   </svg>
 );

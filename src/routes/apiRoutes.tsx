@@ -1,4 +1,5 @@
-export const signUpApi = "https://testrunzauthserve.onrender.com/auth/register";
-export const authMeApi = "https://testrunzauthserve.onrender.com/auth/me";
-export const googleLoginApi =
-  "https://testrunzauthserve.onrender.com/auth/googlelogin";
+import { authFetchUrl } from "../utils/apiConfig";
+
+export const signUpApi = authFetchUrl("register");
+export const authMeApi = authFetchUrl("me");
+export const googleLoginApi = authFetchUrl("googlelogin");

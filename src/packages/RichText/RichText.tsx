@@ -33,6 +33,27 @@ const RichText = (
   return (
     <div>
       <Editor
+        // initialValue={expresult}
+        apiKey="au50u78j9vjabzcr4icg4v3oknubu08ifv9rfstawlzmdobp"
+        init={{
+          // selector: "textarea",
+          plugins: "charmap link image code lists directionality",
+          directionality: "ltr",
+          menubar: "format ",
+          toolbar:
+            "undo redo | blocks| " +
+            "charmap superscript subscript" +
+            "superscript subscript bold italic forecolor | alignleft aligncenter " +
+            "alignright alignjustify | bullist numlist outdent indent | ",
+
+          content_style:
+            "body { font-family:Helvetica,Arial,sans-serif; font-size:14px }",
+        }}
+        // onInit={(evt, editor) => (editorRef.current = editor)}
+        // onChange={init}
+      />
+
+      {/* <Editor
         id={id}
         onFocus={onFocus}
         onBlur={onBlur}
@@ -53,7 +74,7 @@ const RichText = (
         initialValue={initialValue}
         value={value}
         onEditorChange={onChange}
-      />
+      /> */}
     </div>
   );
 };

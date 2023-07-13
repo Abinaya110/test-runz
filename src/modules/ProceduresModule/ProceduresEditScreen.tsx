@@ -3,12 +3,12 @@ import SvgEdit from "../../icons/SvgEdit";
 import Flex from "../../packages/Flex/Flex";
 import Text from "../../packages/Text/Text";
 import styles from "./procedureseditscreen.module.css";
-import RichText from "../../packages/RichText/RichText";
 import Button from "../../packages/Button/Button";
 import SvgPrint from "../../icons/SvgPrint";
 import CreateOrEditProcedure from "./CreateOrEditProcedure";
 import { useState } from "react";
 import Alert from "../../packages/Alert/Alert";
+import ProceduresRichText from "./ProceduresRichText";
 
 const ProceduresEditScreen = () => {
   const [editdProcedure, setEditdProcedure] = useState(false);
@@ -78,7 +78,7 @@ const ProceduresEditScreen = () => {
           Full procedure
         </Text>
 
-        <RichText
+        {/* <RichText
           // onFocus={handleOpenInput}
           // onBlur={handleCloseInput}
           // onInit={(_a: any, editor: any) => (editorRef.current = editor)}
@@ -89,7 +89,42 @@ const ProceduresEditScreen = () => {
           //   // onDirty();
           //   console.log('desssss')
           // }}
-        />
+        /> */}
+
+        <ProceduresRichText />
+        {/* <Editor
+          id="myTiny_Mce"
+          // initialValue={initialcontent}
+          apiKey="au50u78j9vjabzcr4icg4v3oknubu08ifv9rfstawlzmdobp"
+          init={{
+            height: "100vh",
+            menubar: true,
+            external_plugins: {
+              // tiny_mce_wiris: `${path.join(
+              //   __dirname,
+              //   "../../../../node_modules/@wiris/mathtype-tinymce5/plugin.min.js"
+              // )}`,
+            },
+            plugins: [
+              "advlist autolink lists link image code textpattern template",
+              "charmap print preview anchor help",
+              "searchreplace visualblocks code",
+              "insertdatetime media table advtablesort paste wordcount save",
+            ],
+            toolbar: `undo redo | formatselect | bold italic | \
+            alignleft aligncenter alignright | \
+            bullist numlist outdent indent | help | image code table customInsertButton customDateButton template tiny_mce_wiris_formulaEditor tiny_mce_wiris_formulaEditorChemistry`,
+            image_advtab: true,
+            image_title: true,
+            automatic_uploads: true,
+            file_picker_types: "image",
+            table_advtab: "true",
+
+            content_style:
+              "body { font-family:Helvetica,Arial,sans-serif; font-size:14px }",
+          }}
+          // onInit={(evt, editor) => (editorRef.current = editor)}
+        /> */}
       </Flex>
       <Flex row center between className={styles.footerContainer}>
         <Button types="tertiary-1">Back</Button>

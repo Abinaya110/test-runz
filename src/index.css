@@ -261,3 +261,8 @@ input:-webkit-autofill:focus {
 .tox-statusbar__branding {
   display: none !important;
 }
+
+.ant-dropdown .ant-dropdown-menu {
+  padding: 0 !important;
+  border-radius: 8px !important;
+}
