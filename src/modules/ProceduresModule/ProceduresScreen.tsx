@@ -22,8 +22,12 @@ import { useNavigate } from "react-router-dom";
 import { routes } from "../../routes/routesPath";
 import { AppDispatch, RootState } from "../../redux/store";
 import { useDispatch, useSelector } from "react-redux";
-import { procedureMiddleWare } from "./store/proceduresMiddleware";
+import {
+  procedureCreateMiddleWare,
+  procedureMiddleWare,
+} from "./store/proceduresMiddleware";
 import Loader from "../../packages/Loader/Loader";
+import { useFormik } from "formik";
 
 export const ACTIVE_BACKING_BOARD: any = [
   {
@@ -41,6 +45,22 @@ export const ACTIVE_BACKING_BOARD: any = [
     id: "2",
   },
 ];
+
+export type formType = {
+  title: string;
+  html: string;
+};
+const initialValues: formType = {
+  title: "",
+  html: "",
+};
+const validate = (values: formType) => {
+  const errors: Partial<formType> = {};
+  if (isEmpty(values.title)) {
+    errors.title = "This field is required";
+  }
+  return errors;
+};
 
 const ProceduresScreen = () => {
   const navigate = useNavigate();
@@ -198,17 +218,32 @@ const ProceduresScreen = () => {
     setSelectedRows([]);
     setCurrentPage(page);
   };
+  const handleSubmit = (values: formType) => {
+    dispatch(procedureCreateMiddleWare({ title: values.title, html: "" })).then(
+      (res) => {
+        console.log("res", res);
+
+        // setCreateProcedure(false);
+        // Alert("Procedure created successfully.");
+        // console.log("values", values);
+      }
+    );
+  };
+
+  const formik = useFormik({
+    initialValues,
+    onSubmit: handleSubmit,
+    validate,
+  });
 
   return (
     <Flex className={styles.overAll}>
       {isLoading && <Loader />}
       <CreateOrEditProcedure
+        formik={formik}
         title="Create new procedure"
         open={createProcedure}
-        submit={() => {
-          setCreateProcedure(false);
-          Alert("Procedure created successfully.");
-        }}
+        submit={formik.handleSubmit}
         cancelClick={() => {
           setCreateProcedure(false);
         }}

@@ -9,19 +9,41 @@ import CreateOrEditProcedure from "./CreateOrEditProcedure";
 import { useState } from "react";
 import Alert from "../../packages/Alert/Alert";
 import ProceduresRichText from "./ProceduresRichText";
+import { formType } from "./ProceduresScreen";
+import { useFormik } from "formik";
+import { isEmpty } from "../../utils/validators";
 
 const ProceduresEditScreen = () => {
   const [editdProcedure, setEditdProcedure] = useState(false);
 
+  const initialValues: formType = {
+    title: "",
+    html: "",
+  };
+  const validate = (values: formType) => {
+    const errors: Partial<formType> = {};
+    if (isEmpty(values.title)) {
+      errors.title = "This field is required";
+    }
+    return errors;
+  };
+  const handleSubmit = (values: formType) => {
+    setEditdProcedure(false);
+    Alert("Procedure saved successfully.");
+    console.log("values", values);
+  };
+  const formik = useFormik({
+    initialValues,
+    onSubmit: handleSubmit,
+    validate,
+  });
   return (
     <Flex>
       <CreateOrEditProcedure
+        formik={formik}
         title="Edit procedure"
         open={editdProcedure}
-        submit={() => {
-          setEditdProcedure(false);
-          Alert("Procedure saved successfully.");
-        }}
+        submit={formik.handleSubmit}
         cancelClick={() => {
           setEditdProcedure(false);
         }}

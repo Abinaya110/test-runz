@@ -6,14 +6,23 @@ import Text from "../../packages/Text/Text";
 import Button from "../../packages/Button/Button";
 import InputText from "../../packages/InputText/InputText";
 import DatePicker from "../../packages/DatePicker/DatePicker";
+import { FormikProps } from "formik";
+import { formType } from "./ProceduresScreen";
 
 type Props = {
   cancelClick: () => void;
   open: boolean;
   submit: () => void;
   title: string;
+  formik: FormikProps<formType>;
 };
-const CreateOrEditProcedure = ({ cancelClick, open, submit, title }: Props) => {
+const CreateOrEditProcedure = ({
+  cancelClick,
+  open,
+  submit,
+  title,
+  formik,
+}: Props) => {
   return (
     <Modal
       width={700}
@@ -49,14 +58,21 @@ const CreateOrEditProcedure = ({ cancelClick, open, submit, title }: Props) => {
 
         <Flex row className={styles.inputFlexMargin}>
           <Flex flex={1} className={styles.inputMarginRight20}>
-            <InputText label="Department" />
+            <InputText disabled label="Department" />
           </Flex>
           <Flex flex={1}>
-            <InputText label="Laboratory" />
+            <InputText disabled label="Laboratory" />
           </Flex>
         </Flex>
         <Flex flex={1} className={styles.inputFlexMargin}>
-          <InputText label="Procedure name" required />
+          <InputText
+            status={formik.touched.title && formik.errors.title ? "error" : ""}
+            message={formik.errors.title}
+            value={formik.values.title}
+            onChange={formik.handleChange("title")}
+            label="Procedure name"
+            required
+          />
         </Flex>
       </Flex>
     </Modal>
