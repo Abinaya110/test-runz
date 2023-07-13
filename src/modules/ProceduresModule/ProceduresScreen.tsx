@@ -28,6 +28,8 @@ import {
 } from "./store/proceduresMiddleware";
 import Loader from "../../packages/Loader/Loader";
 import { useFormik } from "formik";
+import { ROLE_STUDENT } from "../../utils/constants";
+import NotAuthorizedModal from "../../common/NotAuthorizedModal";
 
 export const ACTIVE_BACKING_BOARD: any = [
   {
@@ -75,11 +77,14 @@ const ProceduresScreen = () => {
     dispatch(procedureMiddleWare());
   }, []);
 
-  const { isLoading } = useSelector(({ procedureReducers }: RootState) => {
-    return {
-      isLoading: procedureReducers.isLoading,
-    };
-  });
+  const { isLoading, authMeData } = useSelector(
+    ({ procedureReducers, authMeReducers }: RootState) => {
+      return {
+        isLoading: procedureReducers.isLoading,
+        authMeData: authMeReducers.data,
+      };
+    }
+  );
 
   const columns = [
     {
@@ -239,6 +244,7 @@ const ProceduresScreen = () => {
   return (
     <Flex className={styles.overAll}>
       {isLoading && <Loader />}
+      {/* <NotAuthorizedModal open onClick={() => {}} /> */}
       <CreateOrEditProcedure
         formik={formik}
         title="Create new procedure"
@@ -291,10 +297,13 @@ const ProceduresScreen = () => {
         pagination
         onPageChange={handlePage}
         currentPage={currentPage}
-        hideActions={selectedRows.length === 0}
+        hideActions={
+          selectedRows.length === 0 || authMeData.role === ROLE_STUDENT
+        }
         actionTitle="Procedure"
         actionTitleBtn={() => (
           <Button
+            disabled={authMeData.role === ROLE_STUDENT}
             onClick={() => {
               setCreateProcedure(true);
             }}

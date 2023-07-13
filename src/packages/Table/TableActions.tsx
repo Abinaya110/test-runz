@@ -3,7 +3,6 @@ import SvgClose from "../../icons/SvgClose";
 import SvgDelete from "../../icons/SvgDelete";
 import SvgSearch from "../../icons/SvgSearch";
 import Button from "../Button/Button";
-import CheckBox from "../CheckBox/CheckBox";
 import Flex from "../Flex/Flex";
 import InputText from "../InputText/InputText";
 import Text from "../Text/Text";
