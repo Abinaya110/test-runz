@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import LableWithIcon from "../../common/LableWithIcon";
 import SvgPlus from "../../icons/SvgPlus";
 import Button from "../../packages/Button/Button";
@@ -18,8 +18,12 @@ import SvgDelete1 from "../../icons/SvgDelete1";
 import Alert from "../../packages/Alert/Alert";
 import CreateOrEditProcedure from "./CreateOrEditProcedure";
 import SvgCancel from "../../icons/SvgCancel";
-import { Outlet, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { routes } from "../../routes/routesPath";
+import { AppDispatch, RootState } from "../../redux/store";
+import { useDispatch, useSelector } from "react-redux";
+import { procedureMiddleWare } from "./store/proceduresMiddleware";
+import Loader from "../../packages/Loader/Loader";
 
 export const ACTIVE_BACKING_BOARD: any = [
   {
@@ -40,11 +44,22 @@ export const ACTIVE_BACKING_BOARD: any = [
 
 const ProceduresScreen = () => {
   const navigate = useNavigate();
+  const dispatch: AppDispatch = useDispatch();
   const [selectedRows, setSelectedRows] = useState<any[]>([]);
   const [deleteModal, setDeleteModal] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [createProcedure, setCreateProcedure] = useState(false);
   const [isPermission, setPermission] = useState(false);
+
+  useEffect(() => {
+    dispatch(procedureMiddleWare());
+  }, []);
+
+  const { isLoading } = useSelector(({ procedureReducers }: RootState) => {
+    return {
+      isLoading: procedureReducers.isLoading,
+    };
+  });
 
   const columns = [
     {
@@ -165,6 +180,7 @@ const ProceduresScreen = () => {
       />
     );
   };
+
   const handleAllUnSelections = () => {
     return (
       <CheckBox
@@ -175,13 +191,17 @@ const ProceduresScreen = () => {
       />
     );
   };
+
   const handleDeleteOpen = () => setDeleteModal(true);
+
   const handlePage = (page: number) => {
     setSelectedRows([]);
     setCurrentPage(page);
   };
+
   return (
     <Flex className={styles.overAll}>
+      {isLoading && <Loader />}
       <CreateOrEditProcedure
         title="Create new procedure"
         open={createProcedure}
