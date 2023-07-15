@@ -14,7 +14,7 @@ export const RunzDetailsHeader = () => {
         type="bodyBold"
         color="shade-3"
         label="Runz details"
-        actitionRight={() => <SvgSort />}
+        actionRight={() => <SvgSort />}
         containerClassName={styles.sortTitleFlex}
       />
 
@@ -62,7 +62,7 @@ export const RunzCreatedOnHeader = () => {
         label="Created on"
         type="bodyBold"
         color="shade-3"
-        actitionRight={() => <SvgSort />}
+        actionRight={() => <SvgSort />}
       />
 
       <InputText
@@ -82,7 +82,7 @@ export const RunzDueDateHeader = () => {
         label="Due date"
         type="bodyBold"
         color="shade-3"
-        actitionRight={() => <SvgSort />}
+        actionRight={() => <SvgSort />}
       />
 
       <InputText
@@ -103,7 +103,7 @@ export const RunzStatusHeader = () => {
         label="Status"
         type="bodyBold"
         color="shade-3"
-        actitionRight={() => <SvgSort />}
+        actionRight={() => <SvgSort />}
       />
 
       <InputText
@@ -124,7 +124,7 @@ export const RunzAssignedHeader = () => {
         label="Assigned by"
         type="bodyBold"
         color="shade-3"
-        actitionRight={() => <SvgSort />}
+        actionRight={() => <SvgSort />}
       />
 
       <InputText

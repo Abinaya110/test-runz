@@ -33,7 +33,7 @@ const ProfileDrawer = ({ open, onClose, handleLogout }: Props) => {
             <LableWithIcon
               label="Logout"
               type="bodyBold"
-              actitionRight={() => <SvgLogOut />}
+              actionRight={() => <SvgLogOut />}
             />
           </Button>
         </Flex>

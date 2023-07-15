@@ -266,3 +266,17 @@ input:-webkit-autofill:focus {
   padding: 0 !important;
   border-radius: 8px !important;
 }
+
+/* input[type="color"] {
+  -webkit-appearance: none;
+  border: none;
+  width: 32px;
+  height: 32px;
+  border-radius: ;
+}
+input[type="color"]::-webkit-color-swatch-wrapper {
+  padding: 0;
+}
+input[type="color"]::-webkit-color-swatch {
+  border: none;
+} */

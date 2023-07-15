@@ -34,12 +34,8 @@
 
 .buttonTypes-tertiary-1 {
   background-color: var(--color-white);
-  /* outline: 1px; */
   border: 2px solid var(--color-text-shade-1);
 }
-/* .buttonTypes-tertiary-1 {
-  border: 2px solid var(--color-text-shade-1);
-} */
 
 .buttonTypes-link {
   padding: 0;
@@ -52,4 +48,18 @@
 
 .disabled-primary {
   background-color: var(--color-text-shade-3);
+  cursor: not-allowed;
+}
+
+.disabled-secondary {
+  background-color: var(--color-text-shade-3);
+  cursor: not-allowed;
+}
+.disabled-tertiary {
+  background-color: var(--color-text-shade-3);
+  cursor: not-allowed;
+}
+.disabled-tertiary-1 {
+  background-color: var(--color-text-shade-3);
+  cursor: not-allowed;
 }

@@ -105,6 +105,7 @@ const MyPageScreen = () => {
   return (
     <Flex className={styles.overAll}>
       <Table
+        isAction={false}
         pagination
         currentPage={1}
         customHeader={<MyPageTableHeader />}
@@ -115,6 +116,7 @@ const MyPageScreen = () => {
       <Flex row className={styles.notificationsContainer}>
         <Flex flex={1}>
           <Table
+            isAction={false}
             pagination
             currentPage={1}
             customHeader={

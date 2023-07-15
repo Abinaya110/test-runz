@@ -25,6 +25,7 @@ import RunzRichText from "./RunzRichText";
 import SvgPrint from "../../icons/SvgPrint";
 import CreateNewRunzModal from "./CreateNewRunzModal";
 import Alert from "../../packages/Alert/Alert";
+import LineCharts from "../../common/LineChart/LineCharts";
 
 const LabelWithColumn = ({
   title,
@@ -172,7 +173,7 @@ const RunzEditScreen = () => {
               className={styles.svgMore}
             >
               <LableWithIcon
-                actitionRight={() => <SvgArrowDown fill={textShade1} />}
+                actionRight={() => <SvgArrowDown fill={textShade1} />}
                 label="More Info"
                 type="button-2"
               />
@@ -196,7 +197,7 @@ const RunzEditScreen = () => {
                   <LableWithIcon
                     type="captionBold"
                     label="Status"
-                    actitionRight={() => (
+                    actionRight={() => (
                       <SvgArrowDown
                         height={20}
                         width={20}
@@ -265,13 +266,22 @@ Observations
                 buttons={["Results", "Charts", "Remarks"]}
                 onButtonChange={handleTab}
               />
-              <Flex
-                height={window.innerHeight - 303}
-                className={styles.actionFlex}
-              >
-                {isTab === "Results" && <RunzRichText height={"100%"} />}
-                {isTab === "Charts" && <></>}
-                {isTab === "Remarks" && <RunzRichText height={"100%"} />}
+              <Flex height={window.innerHeight - 303}>
+                {isTab === "Results" && (
+                  <div className={styles.actionFlex}>
+                    <RunzRichText height={"100%"} />
+                  </div>
+                )}
+                {isTab === "Charts" && (
+                  <div style={{ overflowY: "scroll", padding: 10 }}>
+                    <LineCharts />
+                  </div>
+                )}
+                {isTab === "Remarks" && (
+                  <div className={styles.actionFlex}>
+                    <RunzRichText height={"100%"} />
+                  </div>
+                )}
               </Flex>
               <Flex row center between className={styles.footer}>
                 <Button types="tertiary-1">Back</Button>
