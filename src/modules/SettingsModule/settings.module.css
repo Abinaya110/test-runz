@@ -25,6 +25,7 @@
 
 .rightOverall {
   width: 80%;
+  height: 100%;
 }
 
 .contentSpace {
@@ -135,4 +136,13 @@
 
 .marginOverall {
   margin: 2%;
+}
+
+.marginRoleOverall {
+  margin: 2%;
+  height: 40% !important;
+}
+
+.overScroll {
+  overflow-y: scroll;
 }
