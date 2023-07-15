@@ -7,27 +7,13 @@ import SvgNotify from "../../icons/SvgNotify";
 import SvgProfile from "../../icons/SvgProfile";
 import SvgUser from "../../icons/SvgUser";
 import SvgRole from "../../icons/SvgRole";
-import ScreenHeader from "./ScreenHeader";
+// import ScreenHeader from "./ScreenHeader";
 import NotificationScreen from "./NotificationScreen";
 import ProfileScreen from "./ProfileScreen";
 import UserScreen from "./UserScreen";
+import RoleScreen from './RoleScreen';
 
 const cx = classNames.bind(styles);
-
-const RoleScreen = () => {
-  return (
-    <Flex>
-      <ScreenHeader
-        title={"Role Management"}
-        description={
-          "Select the kinds of notifications you get about your activities and recommendations."
-        }
-        isSearch={true}
-        isBtn={false}
-      />
-    </Flex>
-  );
-};
 
 const SettingsScreen = () => {
   const settingsModule = [
