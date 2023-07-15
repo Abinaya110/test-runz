@@ -52,6 +52,7 @@ const Layout = ({ children }: Props) => {
   useEffect(() => {
     dispatch(authMeMiddleWare());
   }, []);
+
   const { data } = useSelector(({ authMeReducers }: RootState) => {
     return {
       data: authMeReducers.data,

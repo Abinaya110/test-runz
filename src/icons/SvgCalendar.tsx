@@ -8,8 +8,8 @@ const defaultProps = {
 
 const SvgCalendar = ({ width, height, fill }: typeof defaultProps) => (
   <svg width={width} height={height} viewBox="0 0 24 24" fill="none">
-    <rect width="24" height="24" fill="white" />
-    <mask id="path-1-inside-1_232_6970" fill="white">
+    <rect width="24" height="24" fill="transparent" />
+    <mask id="path-1-inside-1_232_6970" fill="transparent">
       <path
         fill-rule="evenodd"
         clip-rule="evenodd"

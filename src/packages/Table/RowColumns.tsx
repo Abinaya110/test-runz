@@ -46,7 +46,11 @@ const RowColumns = ({ columns, item, rowIndex, scrollHeight }: Props) => {
               rowPaddingOne: scrollHeight,
             })}
             key={column.dataIndex}
-            style={{ flex: columnFlex }}
+            style={{
+              flex: columnFlex,
+              display: "flex",
+              flexDirection: "column",
+            }}
             onClick={() => {
               if (column && column?.rowOnClick) {
                 column.rowOnClick(item);

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import LableWithIcon from "../../common/LableWithIcon";
 import SvgPlus from "../../icons/SvgPlus";
 import Button from "../../packages/Button/Button";
@@ -18,8 +18,18 @@ import SvgDelete1 from "../../icons/SvgDelete1";
 import Alert from "../../packages/Alert/Alert";
 import CreateOrEditProcedure from "./CreateOrEditProcedure";
 import SvgCancel from "../../icons/SvgCancel";
-import { Outlet, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { routes } from "../../routes/routesPath";
+import { AppDispatch, RootState } from "../../redux/store";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  procedureCreateMiddleWare,
+  procedureMiddleWare,
+} from "./store/proceduresMiddleware";
+import Loader from "../../packages/Loader/Loader";
+import { useFormik } from "formik";
+import { ROLE_STUDENT } from "../../utils/constants";
+import NotAuthorizedModal from "../../common/NotAuthorizedModal";
 
 export const ACTIVE_BACKING_BOARD: any = [
   {
@@ -38,13 +48,43 @@ export const ACTIVE_BACKING_BOARD: any = [
   },
 ];
 
+export type formType = {
+  title: string;
+  html: string;
+};
+const initialValues: formType = {
+  title: "",
+  html: "",
+};
+const validate = (values: formType) => {
+  const errors: Partial<formType> = {};
+  if (isEmpty(values.title)) {
+    errors.title = "This field is required";
+  }
+  return errors;
+};
+
 const ProceduresScreen = () => {
   const navigate = useNavigate();
+  const dispatch: AppDispatch = useDispatch();
   const [selectedRows, setSelectedRows] = useState<any[]>([]);
   const [deleteModal, setDeleteModal] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [createProcedure, setCreateProcedure] = useState(false);
   const [isPermission, setPermission] = useState(false);
+
+  useEffect(() => {
+    dispatch(procedureMiddleWare());
+  }, []);
+
+  const { isLoading, authMeData } = useSelector(
+    ({ procedureReducers, authMeReducers }: RootState) => {
+      return {
+        isLoading: procedureReducers.isLoading,
+        authMeData: authMeReducers.data,
+      };
+    }
+  );
 
   const columns = [
     {
@@ -165,6 +205,7 @@ const ProceduresScreen = () => {
       />
     );
   };
+
   const handleAllUnSelections = () => {
     return (
       <CheckBox
@@ -175,20 +216,40 @@ const ProceduresScreen = () => {
       />
     );
   };
+
   const handleDeleteOpen = () => setDeleteModal(true);
+
   const handlePage = (page: number) => {
     setSelectedRows([]);
     setCurrentPage(page);
   };
+  const handleSubmit = (values: formType) => {
+    dispatch(procedureCreateMiddleWare({ title: values.title, html: "" })).then(
+      (res) => {
+        console.log("res", res);
+
+        // setCreateProcedure(false);
+        // Alert("Procedure created successfully.");
+        // console.log("values", values);
+      }
+    );
+  };
+
+  const formik = useFormik({
+    initialValues,
+    onSubmit: handleSubmit,
+    validate,
+  });
+
   return (
     <Flex className={styles.overAll}>
+      {isLoading && <Loader />}
+      {/* <NotAuthorizedModal open onClick={() => {}} /> */}
       <CreateOrEditProcedure
+        formik={formik}
         title="Create new procedure"
         open={createProcedure}
-        submit={() => {
-          setCreateProcedure(false);
-          Alert("Procedure created successfully.");
-        }}
+        submit={formik.handleSubmit}
         cancelClick={() => {
           setCreateProcedure(false);
         }}
@@ -236,10 +297,13 @@ const ProceduresScreen = () => {
         pagination
         onPageChange={handlePage}
         currentPage={currentPage}
-        hideActions={selectedRows.length === 0}
+        hideActions={
+          selectedRows.length === 0 || authMeData.role === ROLE_STUDENT
+        }
         actionTitle="Procedure"
         actionTitleBtn={() => (
           <Button
+            disabled={authMeData.role === ROLE_STUDENT}
             onClick={() => {
               setCreateProcedure(true);
             }}

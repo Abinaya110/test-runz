@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import styles from  "./accordian.module.css"; // Import the CSS file for styling
+import { useState } from "react";
+import styles from "./accordian.module.css"; // Import the CSS file for styling
 import Flex from "../Flex/Flex";
 import Text from "../Text/Text";
 import SvgArrowDown from "../../icons/SvgArrowDown";
@@ -14,11 +14,11 @@ const Accordion = ({ title, children }: { title: string; children: any }) => {
 
   return (
     <div className={styles.accordion}>
-      <div onClick={handleToggle} className={styles.overallAccordian} >
+      <div onClick={handleToggle} className={styles.overallAccordian}>
         <Flex row between className={styles.accordianHeads}>
           <Flex column>
-            <div className={styles.accordianInnerHead} >
-              <Text size={16} >{title}</Text>
+            <div className={styles.accordianInnerHead}>
+              <Text size={16}>{title}</Text>
             </div>
           </Flex>
 

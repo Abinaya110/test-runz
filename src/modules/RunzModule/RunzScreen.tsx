@@ -205,11 +205,12 @@ const RunzScreen = () => {
   return (
     <Flex className={styles.overAll}>
       <CreateNewRunzModal
+        title="Create new Runz"
         open={createNewRunz}
         cancelClick={() => {
           setCreateNewRunz(false);
         }}
-        suubmit={() => {
+        submit={() => {
           Alert("Runz created successfully.");
           setCreateNewRunz(false);
         }}

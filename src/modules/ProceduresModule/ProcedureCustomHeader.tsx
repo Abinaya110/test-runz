@@ -14,7 +14,7 @@ export const ProcedureHeader = () => {
         type="bodyBold"
         color="shade-3"
         label="Runz details"
-        actitionRight={() => <SvgSort />}
+        actionRight={() => <SvgSort />}
         containerClassName={styles.sortTitleFlex}
       />
 
@@ -62,7 +62,7 @@ export const CreatedOnHeader = () => {
         label="Created on"
         type="bodyBold"
         color="shade-3"
-        actitionRight={() => <SvgSort />}
+        actionRight={() => <SvgSort />}
       />
 
       <InputText
@@ -83,7 +83,7 @@ export const CreatedByHeader = () => {
         label="Created By"
         type="bodyBold"
         color="shade-3"
-        actitionRight={() => <SvgSort />}
+        actionRight={() => <SvgSort />}
       />
 
       <InputText

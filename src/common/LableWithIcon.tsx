@@ -5,7 +5,7 @@ import { textColorsType, textType } from "../packages/Text/textTypes";
 type Props = {
   label: string;
   actionLeft?: Function;
-  actitionRight?: Function;
+  actionRight?: Function;
   color?: textColorsType;
   type?: textType;
   containerClassName?: string;
@@ -15,7 +15,7 @@ type Props = {
 const LableWithIcon = ({
   label,
   actionLeft,
-  actitionRight,
+  actionRight,
   color,
   type,
   containerClassName,
@@ -24,13 +24,13 @@ const LableWithIcon = ({
   return (
     <Flex className={containerClassName} row center>
       {typeof actionLeft === "function" && (
-        <div style={{ marginRight: 4 }}>{actionLeft()}</div>
+        <div style={{ marginRight: 4, display: "flex" }}>{actionLeft()}</div>
       )}
       <Text size={labelSize} color={color} type={type}>
         {label}
       </Text>
-      {typeof actitionRight === "function" && (
-        <div style={{ marginLeft: 4 }}>{actitionRight()}</div>
+      {typeof actionRight === "function" && (
+        <div style={{ marginLeft: 4, display: "flex" }}>{actionRight()}</div>
       )}
     </Flex>
   );

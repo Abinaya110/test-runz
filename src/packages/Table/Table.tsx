@@ -90,7 +90,7 @@ const Table = ({
   const finalData = pagination ? currentItems : dataSource;
   return (
     <Flex className={styles.overAllContainer}>
-      {typeof rowSelection === "function" && isAction && (
+      {isAction && (
         <TableActions
           actionTitle={actionTitle}
           actionTitleBtn={actionTitleBtn}
@@ -133,6 +133,7 @@ const Table = ({
                 })}
               >
                 <Rows
+                  hideActions={hideActions}
                   key={index}
                   item={item}
                   columns={columns}
