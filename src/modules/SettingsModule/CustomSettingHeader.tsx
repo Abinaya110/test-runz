@@ -15,11 +15,11 @@ const CustomSettingHeader = () => {
           type="bodyBold"
           color="shade-3"
           label="User details"
-          actitionRight={() => <SvgSort />}
+          actionRight={() => <SvgSort />}
           containerClassName={styles.sortTitleFlexSettings}
         />
 
-<Flex row center flex={1}>
+        <Flex row center flex={1}>
           <div style={{ flex: 1 }}>
             <SelectTag
               options={[{ label: "ss", value: "11" }]}
@@ -52,7 +52,7 @@ const CustomSettingHeader = () => {
             label="Created on"
             type="bodyBold"
             color="shade-3"
-            actitionRight={() => <SvgSort />}
+            actionRight={() => <SvgSort />}
           />
 
           <InputText
@@ -69,7 +69,7 @@ const CustomSettingHeader = () => {
             label="Role"
             type="bodyBold"
             color="shade-3"
-            actitionRight={() => <SvgSort />}
+            actionRight={() => <SvgSort />}
           />
 
           <InputText
@@ -86,7 +86,7 @@ const CustomSettingHeader = () => {
             label="Status"
             type="bodyBold"
             color="shade-3"
-            actitionRight={() => <SvgSort />}
+            actionRight={() => <SvgSort />}
           />
 
           <InputText

@@ -14,7 +14,7 @@ export const AssetsDetailsHeader = () => {
         type="bodyBold"
         color="shade-3"
         label="Assets details"
-        actitionRight={() => <SvgSort />}
+        actionRight={() => <SvgSort />}
         containerClassName={styles.sortTitleFlex}
       />
 
@@ -62,7 +62,7 @@ export const AssetsCreatedOnHeader = () => {
         label="Purchased on"
         type="bodyBold"
         color="shade-3"
-        actitionRight={() => <SvgSort />}
+        actionRight={() => <SvgSort />}
       />
 
       <InputText
@@ -82,7 +82,7 @@ export const AssetsDueDateHeader = () => {
         label="Last Used"
         type="bodyBold"
         color="shade-3"
-        actitionRight={() => <SvgSort />}
+        actionRight={() => <SvgSort />}
       />
 
       <InputText
@@ -103,7 +103,7 @@ export const AssetsStatusHeader = () => {
         label="Status"
         type="bodyBold"
         color="shade-3"
-        actitionRight={() => <SvgSort />}
+        actionRight={() => <SvgSort />}
       />
 
       <InputText
@@ -124,7 +124,7 @@ export const AssetsAssignedHeader = () => {
         label="Availability"
         type="bodyBold"
         color="shade-3"
-        actitionRight={() => <SvgSort />}
+        actionRight={() => <SvgSort />}
       />
 
       <InputText
