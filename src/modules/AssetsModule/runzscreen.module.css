@@ -1,0 +1,15 @@
+.overAll {
+  padding: 20px;
+}
+
+.MarginRight10 {
+  margin-right: 10px;
+}
+
+.leftModalContent {
+  width: 30%;
+}
+
+.rightModalContent {
+  width: 70% !important;
+}
