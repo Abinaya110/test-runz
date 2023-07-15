@@ -92,9 +92,10 @@ const LineCharts = () => {
     onSubmit: () => {},
   });
 
+  let arrayLineDataInitial: any;
   useEffect(() => {
-    let arrayLineData = [{ ...lineData, datasets: [lineData.datasets[0]] }];
-    formik.setFieldValue("data", arrayLineData);
+    arrayLineDataInitial = [{ ...lineData, datasets: [lineData.datasets[0]] }];
+    formik.setFieldValue("data", arrayLineDataInitial);
   }, []);
 
   return (
@@ -112,6 +113,7 @@ const LineCharts = () => {
                   options={options}
                   list={list}
                   lineData={lineData}
+                  arrayLineDataInitial={arrayLineDataInitial}
                 />
               );
             })

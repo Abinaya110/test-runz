@@ -74,19 +74,34 @@ type Props = {
     }[];
   };
   formik: FormikProps<formType>;
+  arrayLineDataInitial: any;
 };
 
 const LineChartsList = ({ options, list, index, lineData, formik }: Props) => {
+  const handleAddChart = () => {
+    formik.setFieldValue("data", [
+      ...formik.values.data,
+      { ...lineData, datasets: [lineData.datasets[0]] },
+    ]);
+  };
+
   return (
     <Flex>
       <Flex row center between className={styles.titleFlex}>
         <Text type="subTitle">Chart no. {index + 1}</Text>
-        <Button height="small" className={styles.addBtn} types="tertiary">
-          <LableWithIcon
-            label="Add Chart"
-            actionLeft={() => <SvgPlus height={20} width={20} />}
-          />
-        </Button>
+        {index === 0 && (
+          <Button
+            onClick={handleAddChart}
+            height="small"
+            className={styles.addBtn}
+            types="tertiary"
+          >
+            <LableWithIcon
+              label="Add Chart"
+              actionLeft={() => <SvgPlus height={20} width={20} />}
+            />
+          </Button>
+        )}
       </Flex>
       <Flex row start between>
         <LabelColorInput

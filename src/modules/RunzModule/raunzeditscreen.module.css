@@ -54,6 +54,7 @@
 }
 .footer {
   padding: 16px 20px;
+  box-shadow: -3px 0px 16px 0px #0000001a;
 }
 .actionFlex {
   padding: 10px;
