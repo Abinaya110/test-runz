@@ -20,4 +20,7 @@ const auth = firebase.auth();
 const provider = new GoogleAuthProvider();
 const microProvider = new OAuthProvider("microsoft.com");
 
+microProvider.addScope("mail.read");
+microProvider.addScope("calendars.read");
+
 export { auth, provider, microProvider };

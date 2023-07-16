@@ -5,8 +5,6 @@ import CheckBox from "../../packages/CheckBox/CheckBox";
 import Flex from "../../packages/Flex/Flex";
 import Text from "../../packages/Text/Text";
 import { routes } from "../../routes/routesPath";
-import SvgMicrosoft from "../../icons/SvgMicrosoft";
-import SvgLinkedIn from "../../icons/SvgLinkedIn";
 import InputText from "../../packages/InputText/InputText";
 import { getPasswordStrength, useVisibilityIcon } from "../../utils/helpers";
 import { isEmpty, isValidEmail } from "../../utils/validators";
@@ -20,13 +18,18 @@ import LinkedinSignIn from "../../packages/LinkedinSignIn/LinkedinSignIn";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "../../redux/store";
 import {
+  authMeMiddleWare,
   googleLoginMiddleWare,
+  microsoftLoginMiddleWare,
   signUpMiddleWare,
 } from "./store/loginMiddleware";
 import Toast from "../../packages/Toast/Toast";
 import { useState } from "react";
 import Loader from "../../packages/Loader/Loader";
-import { auth, provider } from "../../utils/firebase";
+import { auth, microProvider, provider } from "../../utils/firebase";
+import { setAuthorization } from "../../utils/apiConfig";
+import { AUTH_TOKEN } from "../../utils/localStoreConst";
+import { getAuth, signInWithPopup } from "firebase/auth";
 
 type formType = {
   email: string;
@@ -180,7 +183,13 @@ const SignUpScreen = () => {
           setLoader(false);
           if (res?.payload?.success) {
             Toast(res.payload.success);
-            navigate(routes.LOGIN);
+            setAuthorization(result.user?._delegate?.accessToken);
+            localStorage.setItem(
+              AUTH_TOKEN,
+              result.user?._delegate?.accessToken
+            );
+            dispatch(authMeMiddleWare());
+            navigate(routes.MY_PAGE);
             formik.resetForm();
           } else {
             Toast(res.payload.error, "LONG", "error");
@@ -188,6 +197,40 @@ const SignUpScreen = () => {
         })
         .catch(() => setLoader(false));
     });
+  };
+
+  const handlerMicroSoftSignIn = (e: any) => {
+    e.preventDefault();
+    const auth = getAuth();
+    signInWithPopup(auth, microProvider)
+      .then((result: any) => {
+        setLoader(true);
+        dispatch(
+          microsoftLoginMiddleWare({
+            email: result.user.email,
+            name: result.user.displayName,
+            uid: result.user.uid,
+            timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+          })
+        )
+          .then((res: any) => {
+            setLoader(false);
+            if (res?.payload?.success) {
+              Toast(res.payload.success);
+              setAuthorization(result.user.accessToken);
+              localStorage.setItem(AUTH_TOKEN, result.user.accessToken);
+              dispatch(authMeMiddleWare());
+              navigate(routes.MY_PAGE);
+              formik.resetForm();
+            } else {
+              Toast(res.payload.error, "LONG", "error");
+            }
+          })
+          .catch(() => setLoader(false));
+      })
+      .catch(() => {
+        setLoader(false);
+      });
   };
 
   return (
@@ -204,8 +247,8 @@ const SignUpScreen = () => {
                   Sign up via
                 </Text>
                 <GoogleSignIn onClick={handlerGoogleSignIn} />
-                <MicrosoftSignIn />
-                <LinkedinSignIn />
+                <MicrosoftSignIn onClick={handlerMicroSoftSignIn} />
+                {/* <LinkedinSignIn /> */}
               </Flex>
             </Flex>
 
