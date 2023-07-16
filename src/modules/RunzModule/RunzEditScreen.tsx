@@ -268,9 +268,9 @@ Observations
               />
               <Flex height={window.innerHeight - 303}>
                 {isTab === "Results" && (
-                  <div className={styles.actionFlex}>
+                  <Flex className={styles.actionFlex}>
                     <RunzRichText height={"100%"} />
-                  </div>
+                  </Flex>
                 )}
                 {isTab === "Charts" && (
                   <div style={{ overflowY: "scroll", padding: 10 }}>
@@ -278,9 +278,9 @@ Observations
                   </div>
                 )}
                 {isTab === "Remarks" && (
-                  <div className={styles.actionFlex}>
+                  <Flex className={styles.actionFlex}>
                     <RunzRichText height={"100%"} />
-                  </div>
+                  </Flex>
                 )}
               </Flex>
               <Flex row center between className={styles.footer}>
