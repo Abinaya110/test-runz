@@ -29,7 +29,7 @@ type RowsProps = {
   totalRows?: number;
   rowSelection?: Function;
   disableMultiSelect?: boolean;
-  hideActions?: boolean;
+  hideRowSelection: boolean;
 };
 
 const Rows = ({
@@ -40,7 +40,7 @@ const Rows = ({
   totalRows,
   rowSelection,
   disableMultiSelect,
-  hideActions,
+  hideRowSelection,
 }: RowsProps) => {
   const borderStyle = rowIndex + 1 !== totalRows;
 
@@ -52,7 +52,7 @@ const Rows = ({
         borderNone: !borderStyle,
       })}
     >
-      {!hideActions && (
+      {!hideRowSelection && (
         <RowSelection
           rowSelection={rowSelection}
           item={item}

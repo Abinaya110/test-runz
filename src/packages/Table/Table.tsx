@@ -20,6 +20,7 @@ type DefaultProps = {
   itemsPerPage?: number;
   onPageChange: (a: any) => void;
   isAction?: boolean;
+  hideRowSelection: boolean;
 };
 
 const defaultProps: DefaultProps = {
@@ -29,6 +30,7 @@ const defaultProps: DefaultProps = {
   itemsPerPage: 10,
   onPageChange: () => {},
   isAction: true,
+  hideRowSelection: false,
 };
 
 type Props = {
@@ -74,6 +76,7 @@ const Table = ({
   rowSubmitAction,
   pagination,
   isAction,
+  hideRowSelection,
 }: Props) => {
   const totalRows = dataSource.length;
 
@@ -133,7 +136,6 @@ const Table = ({
                 })}
               >
                 <Rows
-                  hideActions={hideActions}
                   key={index}
                   item={item}
                   columns={columns}
@@ -142,6 +144,7 @@ const Table = ({
                   totalRows={totalRows}
                   rowSelection={rowSelection}
                   disableMultiSelect={disableMultiSelect}
+                  hideRowSelection={hideRowSelection}
                 />
               </div>
             ))
