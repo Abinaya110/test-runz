@@ -1,4 +1,5 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { useEffect } from "react";
 import AssetsScreen from "./modules/AssetsModule/AssetsScreen";
 import BillingScreen from "./modules/BillingModule/BillingScreen";
 import ForgotPasswordScreen from "./modules/LoginModule/ForgotPasswordScreen";
@@ -18,7 +19,9 @@ import Layout from "./common/Layout/Layout";
 import { useInterceptors } from "./utils/interceptors";
 
 const AppProvider = () => {
-  // useInterceptors();
+  useEffect(() => {
+    useInterceptors();
+  }, []);
   return (
     <Router>
       <Layout>

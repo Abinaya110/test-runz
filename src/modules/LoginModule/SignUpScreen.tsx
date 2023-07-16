@@ -14,7 +14,6 @@ import LoginFrame from "./LoginFrame";
 import HelpAndTerms from "./HelpAndTerms";
 import styles from "./loginscreen.module.css";
 import MicrosoftSignIn from "../../packages/MicrosoftSignIn/MicrosoftSignIn";
-import LinkedinSignIn from "../../packages/LinkedinSignIn/LinkedinSignIn";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "../../redux/store";
 import {
@@ -188,9 +187,12 @@ const SignUpScreen = () => {
               AUTH_TOKEN,
               result.user?._delegate?.accessToken
             );
-            dispatch(authMeMiddleWare());
-            navigate(routes.MY_PAGE);
-            formik.resetForm();
+            setTimeout(() => {
+              dispatch(authMeMiddleWare()).then(() => {
+                navigate(routes.MY_PAGE);
+                formik.resetForm();
+              });
+            }, 1000);
           } else {
             Toast(res.payload.error, "LONG", "error");
           }
@@ -219,9 +221,12 @@ const SignUpScreen = () => {
               Toast(res.payload.success);
               setAuthorization(result.user.accessToken);
               localStorage.setItem(AUTH_TOKEN, result.user.accessToken);
-              dispatch(authMeMiddleWare());
-              navigate(routes.MY_PAGE);
-              formik.resetForm();
+              setTimeout(() => {
+                dispatch(authMeMiddleWare()).then(() => {
+                  navigate(routes.MY_PAGE);
+                  formik.resetForm();
+                });
+              }, 200);
             } else {
               Toast(res.payload.error, "LONG", "error");
             }

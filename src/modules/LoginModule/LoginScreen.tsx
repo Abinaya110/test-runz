@@ -72,7 +72,6 @@ const LoginScreen = () => {
           setAuthorization(res.user?._delegate?.accessToken);
           localStorage.setItem(AUTH_TOKEN, res.user?._delegate?.accessToken);
           dispatch(authMeMiddleWare());
-
           navigate(routes.MY_PAGE);
         }
       })
@@ -85,9 +84,10 @@ const LoginScreen = () => {
         }
         if (error.code === "auth/too-many-requests") {
           Alert(
-            "Access to this account has been temporarily disabled due to many failed login attempts you can try again later",'SHORT','error'
+            "Access to this account has been temporarily disabled due to many failed login attempts you can try again later",
+            "SHORT",
+            "error"
           );
-      
         }
         setLoader(false);
       });
