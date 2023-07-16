@@ -4,6 +4,7 @@ export const signUpApi = authFetchUrl("register");
 export const authMeApi = authFetchUrl("me");
 export const googleLoginApi = authFetchUrl("googlelogin");
 export const microsoftLoginApi = authFetchUrl("microsoftlogin");
+export const linkedinLoginApi = authFetchUrl("linkedinlogin");
 
 export const procedureApi = proceduresFetchUrl("procedure");
 export const procedureByIdApi = (id: string) => {

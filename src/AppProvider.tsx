@@ -18,7 +18,7 @@ import Layout from "./common/Layout/Layout";
 import { useInterceptors } from "./utils/interceptors";
 
 const AppProvider = () => {
-  useInterceptors();
+  // useInterceptors();
   return (
     <Router>
       <Layout>
