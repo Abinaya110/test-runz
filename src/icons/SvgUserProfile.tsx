@@ -22,8 +22,8 @@ const SvgUserProfile = ({ width, height }: typeof defaultProps) => (
     </mask>
     <g mask="url(#mask0_232_5597)">
       <path
-        fill-rule="evenodd"
-        clip-rule="evenodd"
+        fillRule="evenodd"
+        clipRule="evenodd"
         d="M12 14C14.7614 14 17 11.7614 17 9C17 6.23858 14.7614 4 12 4C9.23858 4 7 6.23858 7 9C7 11.7614 9.23858 14 12 14ZM12 38C18.3513 38 23.5 32.8513 23.5 26.5C23.5 20.1487 18.3513 15 12 15C5.64873 15 0.5 20.1487 0.5 26.5C0.5 32.8513 5.64873 38 12 38Z"
         fill="url(#paint0_linear_232_5597)"
       />
@@ -37,8 +37,8 @@ const SvgUserProfile = ({ width, height }: typeof defaultProps) => (
         y2="14.2646"
         gradientUnits="userSpaceOnUse"
       >
-        <stop stop-color="#FFC60B" />
-        <stop offset="1" stop-color="white" />
+        <stop stopColor="#FFC60B" />
+        <stop offset="1" stopColor="white" />
       </linearGradient>
     </defs>
   </svg>

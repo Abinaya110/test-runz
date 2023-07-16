@@ -14,7 +14,7 @@ const SvgSearch = ({ width, height, fill }: typeof defaultProps) => (
       r="6"
       transform="rotate(-45 9.8995 10)"
       stroke={fill}
-      stroke-width="2"
+      strokeWidth="2"
     />
     <rect
       x="19.6531"
