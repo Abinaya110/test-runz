@@ -18,9 +18,9 @@ const firebaseApp = firebase.initializeApp(firebaseConfig);
 firebaseApp.firestore();
 const auth = firebase.auth();
 const provider = new GoogleAuthProvider();
-// const microProvider = new OAuthProvider("microsoft.com");
+const microProvider = new OAuthProvider("microsoft.com");
 
-// microProvider.addScope("mail.read");
-// microProvider.addScope("calendars.read");
+microProvider.addScope("mail.read");
+microProvider.addScope("calendars.read");
 
-export { auth, provider };
+export { auth, provider, microProvider };
