@@ -9,12 +9,15 @@ import SelectTag from "../packages/SelectTag/SelectTag";
 import { useFormik } from "formik";
 import { isEmpty } from "../utils/validators";
 import ErrorMessage from "../packages/ErrorMessage/ErrorMessage";
-import { AppDispatch } from "../redux/store";
-import { useDispatch } from "react-redux";
+import { AppDispatch, RootState } from "../redux/store";
+import { useDispatch, useSelector } from "react-redux";
 import {
   authMeMiddleWare,
   authMeUpdateMiddleWare,
 } from "../modules/LoginModule/store/loginMiddleware";
+import PhoneInput from "../packages/PhoneInput/PhoneInput";
+import { isValidPhoneNumber } from "react-phone-number-input";
+import { validatePhoneNumberLength } from "libphonenumber-js";
 
 const userFrame = require("../images/userFrame.png");
 
@@ -42,6 +45,13 @@ const initialValues: formType = {
 
 const ProfileEditModal = () => {
   const dispatch: AppDispatch = useDispatch();
+
+  const { data } = useSelector(({ authMeReducers }: RootState) => {
+    return {
+      data: authMeReducers.data,
+    };
+  });
+
   const validate = (values: formType) => {
     const errors: Partial<formType> = {};
     if (isEmpty(values.firstName)) {
@@ -55,6 +65,8 @@ const ProfileEditModal = () => {
     }
     if (isEmpty(values.mobile)) {
       errors.mobile = "Mobile field is required";
+    } else if (!isValidPhoneNumber(formik.values.mobile)) {
+      errors.mobile = "Invalid mobile number";
     }
     if (isEmpty(values.organisation)) {
       errors.organisation = "Organisation field is required";
@@ -80,7 +92,7 @@ const ProfileEditModal = () => {
   const formik = useFormik({
     initialValues,
     onSubmit: handleSubmit,
-    // validate,
+    validate,
   });
 
   return (
@@ -97,12 +109,6 @@ const ProfileEditModal = () => {
             Submit
           </Button>
         </Flex>
-      }
-      bodyStyle={
-        {
-          // overflowY: "scroll",
-          // height: window.innerHeight - 130,
-        }
       }
     >
       <Flex className={styles.overAll}>
@@ -157,12 +163,20 @@ const ProfileEditModal = () => {
             />
           </Flex>
           <Flex flex={1} className={styles.inputFlexMarginLeft}>
-            <InputText
+            {/* <InputText
               value={formik.values.mobile}
               onChange={formik.handleChange("mobile")}
               label="Mobile"
               required
               placeholder="000000023"
+            /> */}
+            <PhoneInput
+              value={formik.values.mobile}
+              onChange={(_value, _value_1: any, _value_2, formattedValue) => {
+                formik.setFieldValue("mobile", formattedValue);
+              }}
+              label="Mobile"
+              required
             />
             <ErrorMessage
               name="mobile"
@@ -228,6 +242,7 @@ const ProfileEditModal = () => {
           </Flex>
           <Flex flex={1} className={styles.inputFlexMarginLeft}>
             <InputText
+              disabled
               value={formik.values.requestorId}
               onChange={formik.handleChange("requestorId")}
               label="Requestor ID/Tester ID"

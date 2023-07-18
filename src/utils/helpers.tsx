@@ -1,6 +1,7 @@
 import { useState } from "react";
 import Button from "../packages/Button/Button";
 import SvgEye from "../icons/SvgEye";
+import PhoneNumber from "libphonenumber-js";
 
 export const useVisibilityIcon = () => {
   const [isVisible, setVisible] = useState(false);
@@ -66,3 +67,13 @@ export const getPasswordStrength = (password: string) => {
     return "Weak strength";
   }
 };
+
+// export const isValidPhoneNumber=(phoneNumber:any, countryCode:any)=> {
+//   try {
+//     const parsedNumber = PhoneNumber(phoneNumber, countryCode);
+
+//     return parsedNumber.isValid();
+//   } catch (error) {
+//     return false;
+//   }
+// }
