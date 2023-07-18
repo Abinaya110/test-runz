@@ -187,12 +187,10 @@ const SignUpScreen = () => {
               AUTH_TOKEN,
               result.user?._delegate?.accessToken
             );
-            setTimeout(() => {
-              dispatch(authMeMiddleWare()).then(() => {
-                navigate(routes.MY_PAGE);
-                formik.resetForm();
-              });
-            }, 1000);
+            dispatch(authMeMiddleWare()).then(() => {
+              navigate(routes.MY_PAGE);
+              formik.resetForm();
+            });
           } else {
             Toast(res.payload.error, "LONG", "error");
           }

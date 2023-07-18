@@ -13,8 +13,8 @@ export const useInterceptors = () => {
     (error) => {
       if (error.response.status === 401) {
         localStorage.removeItem(AUTH_TOKEN);
-        dispatch(resetStore());
         window.location.reload();
+        dispatch(resetStore());
       }
       return error;
     }

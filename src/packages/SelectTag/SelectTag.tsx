@@ -8,7 +8,6 @@ import Select, {
 } from "react-select";
 import { SelectComponents } from "react-select/dist/declarations/src/components";
 import { FilterOptionOption } from "react-select/dist/declarations/src/filters";
-import Flex from "../Flex/Flex";
 import { selectTagTheme } from "./selectHelper";
 import LabelWrapper from "../LabelWrapper/LabelWrapper";
 import {

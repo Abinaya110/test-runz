@@ -1,5 +1,6 @@
 export const SIGNUP = "login/SIGNUP";
 export const AUTH_ME = "login/AUTH_ME";
+export const AUTH_ME_UPDATE = "login/AUTH_ME_UPDATE";
 export const GOOGLE_SIGNUP = "login/GOOGLE_SIGNUP";
 export const MICROSOFT_SIGNIN = "login/MICROSOFT_SIGNIN";
 

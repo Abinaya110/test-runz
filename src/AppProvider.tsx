@@ -1,4 +1,5 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
 import AssetsScreen from "./modules/AssetsModule/AssetsScreen";
 import BillingScreen from "./modules/BillingModule/BillingScreen";
 import ForgotPasswordScreen from "./modules/LoginModule/ForgotPasswordScreen";
@@ -13,42 +14,67 @@ import RunzScreen from "./modules/RunzModule/RunzScreen";
 import SettingsScreen from "./modules/SettingsModule/SettingsScreen";
 import { routes } from "./routes/routesPath";
 import PageNotFound from "./utils/PageNotFound";
-import ProtectedRoutes from "./utils/ProtectedRoutes";
+import ProtectedRoutes, { useAuth } from "./utils/ProtectedRoutes";
 import Layout from "./common/Layout/Layout";
 import { useInterceptors } from "./utils/interceptors";
+import { AppDispatch, RootState } from "./redux/store";
+import Loader from "./packages/Loader/Loader";
+import ProfileEditModal from "./common/ProfileEditModal";
+import { Fragment, useEffect } from "react";
+import { authMeMiddleWare } from "./modules/LoginModule/store/loginMiddleware";
 
 const AppProvider = () => {
   useInterceptors();
+  const dispatch: AppDispatch = useDispatch();
+  const isAuth = useAuth();
+
+  useEffect(() => {
+    if (isAuth) {
+      dispatch(authMeMiddleWare());
+    }
+  }, [isAuth]);
+
+  const { data, authLoader } = useSelector(({ authMeReducers }: RootState) => {
+    return {
+      data: authMeReducers.data,
+      authLoader: authMeReducers.isLoading,
+    };
+  });
+
   return (
-    <Router>
-      <Layout>
-        <Routes>
-          <Route path={routes.LOGIN} element={<LoginScreen />} />
-          <Route path={routes.SIGNUP} element={<SignUpScreen />} />
-          <Route
-            path={routes.FORGOT_PASSWORD}
-            element={<ForgotPasswordScreen />}
-          />
-          <Route element={<ProtectedRoutes />}>
-            <Route path={routes.MY_PAGE} element={<MyPageScreen />} />
-            <Route path={routes.RUNZ} element={<RunzScreen />} />
-            <Route path={routes.RUNZ_EIDT} element={<RunzEditScreen />} />
-
-            <Route path={routes.PROCEDURES} element={<ProceduresScreen />} />
+    <Fragment>
+      {authLoader && <Loader />}
+      {data.firstuse && <ProfileEditModal />}
+      <Router>
+        <Layout>
+          <Routes>
+            <Route path={routes.LOGIN} element={<LoginScreen />} />
+            <Route path={routes.SIGNUP} element={<SignUpScreen />} />
             <Route
-              path={routes.PROCEDURE_EDIT}
-              element={<ProceduresEditScreen />}
+              path={routes.FORGOT_PASSWORD}
+              element={<ForgotPasswordScreen />}
             />
-            <Route path={routes.PROJECTS} element={<ProjectsScreen />} />
-            <Route path={routes.ASSETS} element={<AssetsScreen />} />
-            <Route path={routes.SETTINGS} element={<SettingsScreen />} />
-            <Route path={routes.BILLING} element={<BillingScreen />} />
+            <Route element={<ProtectedRoutes />}>
+              <Route path={routes.MY_PAGE} element={<MyPageScreen />} />
+              <Route path={routes.RUNZ} element={<RunzScreen />} />
+              <Route path={routes.RUNZ_EIDT} element={<RunzEditScreen />} />
 
-            <Route path="*" element={<PageNotFound />} />
-          </Route>
-        </Routes>
-      </Layout>
-    </Router>
+              <Route path={routes.PROCEDURES} element={<ProceduresScreen />} />
+              <Route
+                path={routes.PROCEDURE_EDIT}
+                element={<ProceduresEditScreen />}
+              />
+              <Route path={routes.PROJECTS} element={<ProjectsScreen />} />
+              <Route path={routes.ASSETS} element={<AssetsScreen />} />
+              <Route path={routes.SETTINGS} element={<SettingsScreen />} />
+              <Route path={routes.BILLING} element={<BillingScreen />} />
+
+              <Route path="*" element={<PageNotFound />} />
+            </Route>
+          </Routes>
+        </Layout>
+      </Router>
+    </Fragment>
   );
 };
 

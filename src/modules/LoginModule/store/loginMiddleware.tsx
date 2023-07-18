@@ -2,6 +2,7 @@ import { createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 import {
   AUTH_ME,
+  AUTH_ME_UPDATE,
   GOOGLE_SIGNUP,
   MICROSOFT_SIGNIN,
   SIGNUP,
@@ -97,6 +98,19 @@ export const authMeMiddleWare = createAsyncThunk(
   async (_, { rejectWithValue }) => {
     try {
       const { data } = await axios.get(authMeApi);
+      return data;
+    } catch (error: any) {
+      const typedError = error as Error;
+      return rejectWithValue(typedError);
+    }
+  }
+);
+
+export const authMeUpdateMiddleWare = createAsyncThunk(
+  AUTH_ME_UPDATE,
+  async ({ firstuse }: { firstuse: boolean }, { rejectWithValue }) => {
+    try {
+      const { data } = await axios.patch(authMeApi, { firstuse });
       return data;
     } catch (error: any) {
       const typedError = error as Error;

@@ -13,6 +13,7 @@ export interface AuthMe {
   created_at: string;
   updated_at: string;
   __v: number;
+  firstuse: boolean;
 }
 
 export interface AuthMeReducerState {

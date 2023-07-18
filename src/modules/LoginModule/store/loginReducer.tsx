@@ -41,6 +41,7 @@ const authMeInitialState: AuthMeReducerState = {
     updated_at: "",
     __v: 0,
     _id: "",
+    firstuse: false,
   },
 };
 

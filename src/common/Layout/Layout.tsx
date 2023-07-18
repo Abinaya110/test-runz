@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { ReactChild, useState } from "react";
 import { Layout as LayoutAntd, Menu } from "antd";
 import styles from "./layout.module.css";
 import SvgMenu from "../../icons/SvgMenu";
@@ -29,14 +29,13 @@ import { AUTH_TOKEN } from "../../utils/localStoreConst";
 import InsideClickHandler from "./InsideClickHandler";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../redux/store";
-import { authMeMiddleWare } from "../../modules/LoginModule/store/loginMiddleware";
 
 const cx = classNames.bind(styles);
 
 const { Header, Sider, Content } = LayoutAntd;
 
 type Props = {
-  children: any;
+  children: ReactChild;
 };
 
 const svgFill = (value: boolean) => {
@@ -49,9 +48,10 @@ const Layout = ({ children }: Props) => {
   const [isDrawer, setDrawer] = useState(false);
   const [isNoti, setNoti] = useState(false);
 
-  useEffect(() => {
-    dispatch(authMeMiddleWare());
-  }, []);
+  const hideLayout =
+    window.location.pathname === routes.LOGIN ||
+    window.location.pathname === routes.FORGOT_PASSWORD ||
+    window.location.pathname === routes.SIGNUP;
 
   const { data } = useSelector(({ authMeReducers }: RootState) => {
     return {
@@ -66,11 +66,6 @@ const Layout = ({ children }: Props) => {
   const assets = window.location.pathname === routes.ASSETS;
   const settings = window.location.pathname === routes.SETTINGS;
   const billing = window.location.pathname === routes.BILLING;
-
-  const hideLayout =
-    window.location.pathname === routes.LOGIN ||
-    window.location.pathname === routes.FORGOT_PASSWORD ||
-    window.location.pathname === routes.SIGNUP;
 
   const menuNavigate = (value: string) => {
     switch (value) {
@@ -98,8 +93,9 @@ const Layout = ({ children }: Props) => {
   };
 
   if (hideLayout) {
-    return children;
+    return <>{children}</>;
   }
+
   return (
     <>
       <ProfileDrawer
