@@ -9,6 +9,7 @@ import Flex from "../../packages/Flex/Flex";
 import Text from "../../packages/Text/Text";
 import {
   error,
+  gray4,
   primaryShade4,
   success,
   textShade1,
@@ -17,7 +18,7 @@ import {
 } from "../../theme/colors";
 import styles from "./raunzeditscreen.module.css";
 import Badge from "../../packages/Badge/Badge";
-import { useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import SvgNewWindow from "../../icons/SvgNewWindow";
 import SvgUnWindow from "../../icons/SvgUnWindow";
 import ButtonGroup from "../../packages/ButtonGroup/ButtonGroup";
@@ -26,6 +27,7 @@ import SvgPrint from "../../icons/SvgPrint";
 import CreateNewRunzModal from "./CreateNewRunzModal";
 import Alert from "../../packages/Alert/Alert";
 import LineCharts from "../../common/LineChart/LineCharts";
+import ResizePanel from "../../packages/ResizePanel/ResizePanel";
 
 const LabelWithColumn = ({
   title,
@@ -47,11 +49,49 @@ const LabelWithColumn = ({
 };
 
 const RunzEditScreen = () => {
+  const [state, setState] = useState({ box1: 0, box2: 0 });
+
   const [isStatus, setStatus] = useState<any>("error");
   const [isMore, setMore] = useState<boolean>(false);
   const [isFull, setFull] = useState<boolean>(false);
   const [isTab, setTab] = useState("Results");
   const [editNewRunz, setEditNewRunz] = useState(false);
+
+  const onMouseDown = useCallback(
+    ([key1, key2]: any, dragKey: any) =>
+      () => {
+        const onMove = (e: any) => {
+          const { movementX } = e;
+          const minWidth = 150;
+
+          setState((x: any) => {
+            // get new sizes
+            const firstWidth = x[key1] + movementX;
+            const scndWidth = x[key2] - movementX;
+
+            // check constraints
+            if (
+              (firstWidth < minWidth && firstWidth < x[key1]) ||
+              (scndWidth < minWidth && scndWidth < x[key2])
+            ) {
+              return x;
+            }
+
+            return {
+              ...x,
+              [key1]: firstWidth,
+              [key2]: scndWidth,
+            };
+          });
+        };
+        window.addEventListener("mousemove", onMove);
+        window.addEventListener("mouseup", () => {
+          window.removeEventListener("mousemove", onMove);
+          // setResizeIsActive("");
+        });
+      },
+    [setState]
+  );
 
   const items: MenuProps["items"] = [
     {
@@ -214,23 +254,27 @@ const RunzEditScreen = () => {
           </Flex>
         )}
       </Flex>
-
       <div className={styles.borderBottom} />
-      <Flex row>
-        <Flex
-          height={window.innerHeight - 179}
-          flex={7}
-          className={styles.textContent}
+      <Flex row height={window.innerHeight - 179}>
+        <ResizePanel
+          setInitialWidth={(box1: any) =>
+            setState((state) => ({ ...state, box1 }))
+          }
+          width={state.box1}
         >
-          <Button
-            onClick={() => setFull(!isFull)}
-            types="link"
-            className={styles.svgNewWindow}
+          <Flex
+            height={window.innerHeight - 179}
+            className={styles.textContent}
           >
-            {isFull ? <SvgUnWindow /> : <SvgNewWindow />}
-          </Button>
-          <Text tag={"pre"} className={styles.preTag}>
-            {`Aim
+            <Button
+              onClick={() => setFull(!isFull)}
+              types="link"
+              className={styles.svgNewWindow}
+            >
+              {isFull ? <SvgUnWindow /> : <SvgNewWindow />}
+            </Button>
+            <Text tag={"pre"} className={styles.preTag}>
+              {`Aim
 To measure the time period of a simple pendulum.
 
 Apparatus required
@@ -256,43 +300,56 @@ Observations
 4. Least count of voltmeter = ...V 
 5. Least count of metre scale = ... m 
 6. Length of the given wire, l = ...m`}
-          </Text>
-        </Flex>
-        {!isFull && (
-          <Flex flex={5}>
-            <Flex>
-              <ButtonGroup
-                defaultSelected={"Results"}
-                buttons={["Results", "Charts", "Remarks"]}
-                onButtonChange={handleTab}
-              />
-              <Flex height={window.innerHeight - 303}>
-                {isTab === "Results" && (
-                  <Flex className={styles.actionFlex}>
-                    <RunzRichText height={"100%"} />
-                  </Flex>
-                )}
-                {isTab === "Charts" && (
-                  <div style={{ overflowY: "scroll", padding: 10 }}>
-                    <LineCharts />
-                  </div>
-                )}
-                {isTab === "Remarks" && (
-                  <Flex className={styles.actionFlex}>
-                    <RunzRichText height={"100%"} />
-                  </Flex>
-                )}
-              </Flex>
-              <Flex row center between className={styles.footer}>
-                <Button types="tertiary-1">Back</Button>
-                <Flex row center>
-                  <SvgPrint />
-                  <Button style={{ marginLeft: 8 }}>Save</Button>
+            </Text>
+          </Flex>
+        </ResizePanel>
+        <div
+          style={{
+            height: "100%",
+            width: 4,
+            backgroundColor: gray4,
+            cursor: "ew-resize",
+          }}
+          onMouseDown={onMouseDown(["box1", "box2"], 1)}
+        />
+        <ResizePanel
+          setInitialWidth={(box2: any) =>
+            setState((state) => ({ ...state, box2 }))
+          }
+          width={state.box2}
+        >
+          <Flex>
+            <ButtonGroup
+              defaultSelected={"Results"}
+              buttons={["Results", "Charts", "Remarks"]}
+              onButtonChange={handleTab}
+            />
+            <Flex height={window.innerHeight - 303}>
+              {isTab === "Results" && (
+                <Flex className={styles.actionFlex}>
+                  <RunzRichText height={"100%"} />
                 </Flex>
+              )}
+              {isTab === "Charts" && (
+                <div style={{ overflowY: "scroll", padding: 10 }}>
+                  <LineCharts />
+                </div>
+              )}
+              {isTab === "Remarks" && (
+                <Flex className={styles.actionFlex}>
+                  <RunzRichText height={"100%"} />
+                </Flex>
+              )}
+            </Flex>
+            <Flex row center between className={styles.footer}>
+              <Button types="tertiary-1">Back</Button>
+              <Flex row center>
+                <SvgPrint />
+                <Button style={{ marginLeft: 8 }}>Save</Button>
               </Flex>
             </Flex>
           </Flex>
-        )}
+        </ResizePanel>
       </Flex>
     </Flex>
   );

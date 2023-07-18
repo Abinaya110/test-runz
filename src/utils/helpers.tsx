@@ -1,7 +1,6 @@
 import { useState } from "react";
 import Button from "../packages/Button/Button";
 import SvgEye from "../icons/SvgEye";
-import PhoneNumber from "libphonenumber-js";
 
 export const useVisibilityIcon = () => {
   const [isVisible, setVisible] = useState(false);

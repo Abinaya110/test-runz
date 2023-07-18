@@ -25,7 +25,16 @@ const ProtectedRoutes = () => {
   });
 
   return isAuth ? (
-    <> {data.firstuse || authLoader ? <></> : <Outlet />}</>
+    <>
+      {" "}
+      {data.firstuse || authLoader ? (
+        <>
+          <Outlet />
+        </>
+      ) : (
+        <Outlet />
+      )}
+    </>
   ) : (
     <Navigate to={routes.LOGIN} state={{ from: location }} replace />
   );

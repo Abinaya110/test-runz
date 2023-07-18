@@ -17,7 +17,6 @@ import {
 } from "../modules/LoginModule/store/loginMiddleware";
 import PhoneInput from "../packages/PhoneInput/PhoneInput";
 import { isValidPhoneNumber } from "react-phone-number-input";
-import { validatePhoneNumberLength } from "libphonenumber-js";
 
 const userFrame = require("../images/userFrame.png");
 

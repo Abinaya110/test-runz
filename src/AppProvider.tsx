@@ -44,7 +44,7 @@ const AppProvider = () => {
   return (
     <Fragment>
       {authLoader && <Loader />}
-      {data.firstuse && <ProfileEditModal />}
+      {/* {data.firstuse && <ProfileEditModal />} */}
       <Router>
         <Layout>
           <Routes>
