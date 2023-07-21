@@ -426,7 +426,7 @@ const Layout = ({ children }: Props) => {
           <InsideClickHandler onInsideClick={() => setCollapsed(true)}>
             <Content
               className={styles.content}
-              style={{ height: window.innerHeight - 82 }}
+              // style={{ height: window.innerHeight - 82 }}
             >
               {children}
             </Content>

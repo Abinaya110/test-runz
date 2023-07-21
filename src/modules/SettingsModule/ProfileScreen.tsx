@@ -1,165 +1,456 @@
 import Flex from "../../packages/Flex/Flex";
-import styles from "./settings.module.css";
+import styles from "./profilescreen.module.css";
 import InputText from "../../packages/InputText/InputText";
 import SvgDesignation from "../../icons/SvgDesignation";
 import SvgOrganisation from "../../icons/SvgOrganisation";
 import SvgUserInput from "../../icons/SvgUserInput";
 import SvgProfileEdit from "../../icons/SvgProfileEdit";
-import ScreenHeader from "./ScreenHeader";
+import ScreenHeader from "./SettingScreenHeader";
 import Accordion from "../../packages/Accordian/Accordian";
 import { useVisibilityIcon } from "../../utils/helpers";
+import { Collapse, CollapseProps } from "antd";
+import SvgArrowDown from "../../icons/SvgArrowDown";
+import SvgArrowUp from "../../icons/SvgArrowUp";
+import Text from "../../packages/Text/Text";
+import { useEffect, useMemo, useRef } from "react";
+import { isEmpty } from "../../utils/validators";
+import { useFormik } from "formik";
+import { AppDispatch, RootState } from "../../redux/store";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  moreInfoListMiddleWare,
+  moreInfoMiddleWare,
+  moreInfoUserMiddleWare,
+} from "../MyPageModule/store/mypageMiddleware";
+import {
+  authMeMiddleWare,
+  authMeUpdateMiddleWare,
+  uploadMiddleWare,
+} from "../LoginModule/store/loginMiddleware";
+import ErrorMessage from "../../packages/ErrorMessage/ErrorMessage";
+import SelectTag from "../../packages/SelectTag/SelectTag";
+import { designationOptions } from "../LoginModule/mock";
+import Button from "../../packages/Button/Button";
+import Loader from "../../packages/Loader/Loader";
+
+export type formType = {
+  firstName: string;
+  lastName: string;
+  email: string;
+  organization: any;
+  department: any;
+  lab: any;
+  profile: any;
+};
+
+const initialValues: formType = {
+  firstName: "",
+  lastName: "",
+  email: "",
+  organization: "",
+  department: "",
+  lab: "",
+  profile: "",
+};
+
+const validate = (values: formType) => {
+  const errors: Partial<formType> = {};
+  if (isEmpty(values.firstName)) {
+    errors.firstName = "First Name field is required";
+  }
+  if (isEmpty(values.lastName)) {
+    errors.lastName = "Last Name field is required";
+  }
+  if (isEmpty(values.email)) {
+    errors.email = "Email field is required";
+  }
+
+  if (isEmpty(values.organization)) {
+    errors.organization = "organization field is required";
+  }
+  if (isEmpty(values.department)) {
+    errors.department = "Department field is required";
+  }
+  if (isEmpty(values.lab)) {
+    errors.lab = "Lab type field is required";
+  }
+  return errors;
+};
 
 const ProfileScreen = () => {
   const { visibleIcon, isVisible } = useVisibilityIcon();
+  const dispatch: AppDispatch = useDispatch();
 
-  return (
-    <Flex>
-      <ScreenHeader
-        title={"Profile Settings"}
-        description={"Edit your profile appearance / name / contact info etc."}
-        isSearch={true}
-        isBtn={false}
-      />
+  const fileInputRef = useRef<any>(null);
+  const handleProfileClick = () => {
+    if (fileInputRef && fileInputRef.current) {
+      fileInputRef.current.click();
+    }
+  };
 
-      <Flex row className={styles.marginTopToggel}>
-        <Flex column className={styles.PrfileleftOverall}>
-          <Flex className={styles.rightHeadFlex}>
-            <Flex center className={styles.marginTopDp}>
-              <SvgProfileEdit height={200} width={200} />
+  useEffect(() => {
+    dispatch(moreInfoListMiddleWare());
+  }, []);
+  const {
+    moreInfoData,
+    moreInfoList,
+    uploadLoader,
+    updateLoader,
+    moreInfoUserLoader,
+    authMeLoader,
+  } = useSelector(
+    ({
+      authMeReducers,
+      moreInfoUserReducers,
+      moreInfoListReducers,
+      uploadReducers,
+      moreInfoUserUpdateReducers,
+    }: RootState) => {
+      return {
+        moreInfoData: moreInfoUserReducers.data,
+        moreInfoList: moreInfoListReducers.data,
+        uploadLoader: uploadReducers.isLoading,
+        updateLoader: moreInfoUserUpdateReducers.isLoading,
+        authMeLoader: authMeReducers.isLoading,
+        moreInfoUserLoader: moreInfoUserReducers.isLoading,
+      };
+    }
+  );
+
+  const handleSubmit = (values: formType) => {
+    if (values.profile?.name) {
+      let formData = new FormData();
+      formData.append("image", values.profile);
+      dispatch(uploadMiddleWare({ formData })).then((res) => {
+        if (res.payload?.imageUrl) {
+          const beforeQuestionMark = res.payload.imageUrl.split("?")[0];
+          dispatch(
+            moreInfoMiddleWare({
+              activeStatus: false,
+              imageUrl: beforeQuestionMark,
+              firstname: values.firstName,
+              lastname: values.lastName,
+              email: values.email,
+              organization: values.organization,
+              department: values.department.value,
+              labtype: values.lab,
+            })
+          ).then(() => {
+            dispatch(moreInfoUserMiddleWare());
+          });
+          dispatch(
+            authMeUpdateMiddleWare({
+              activeStatus: false,
+              imageUrl: beforeQuestionMark,
+              firstname: values.firstName,
+              lastname: values.lastName,
+              email: values.email,
+              organization: values.organization,
+              department: values.department.value,
+              labtype: values.lab,
+            })
+          ).then(() => {
+            dispatch(authMeMiddleWare());
+          });
+        }
+      });
+    } else {
+      dispatch(
+        moreInfoMiddleWare({
+          activeStatus: false,
+          imageUrl: formik.values.profile,
+          firstname: values.firstName,
+          lastname: values.lastName,
+          email: values.email,
+          organization: values.organization,
+          department: values.department,
+          labtype: values.lab,
+        })
+      ).then(() => {
+        dispatch(moreInfoUserMiddleWare());
+      });
+      dispatch(
+        authMeUpdateMiddleWare({
+          activeStatus: false,
+          imageUrl: formik.values.profile,
+          firstname: values.firstName,
+          lastname: values.lastName,
+          email: values.email,
+          organization: values.organization,
+          department: values.department,
+          labtype: values.lab,
+        })
+      ).then(() => {
+        dispatch(authMeMiddleWare());
+      });
+    }
+  };
+
+  const formik = useFormik({
+    initialValues,
+    onSubmit: handleSubmit,
+    validate,
+  });
+
+  const getDepartmentOption: any = useMemo(() => {
+    const result = moreInfoList.filter(
+      (list) => list.organization === formik.values.organization?.organization
+    );
+    return result ? result[0] : { department: [], labtype: [] };
+  }, [formik.values.organization]);
+
+  useEffect(() => {
+    if (!isEmpty(moreInfoData?.firstname)) {
+      formik.setFieldValue("firstName", moreInfoData.firstname);
+      formik.setFieldValue("lastName", moreInfoData.lastname);
+      formik.setFieldValue(
+        "organization",
+        typeof moreInfoData.organization === "string"
+          ? {
+              organization: moreInfoData.organization,
+              _id: moreInfoData._id,
+            }
+          : moreInfoData.organization
+      );
+      formik.setFieldValue(
+        "department",
+        typeof moreInfoData.department === "string"
+          ? {
+              label: moreInfoData.department,
+              value: moreInfoData.department,
+            }
+          : moreInfoData.department
+      );
+      formik.setFieldValue("lab", moreInfoData.labtype);
+    }
+    formik.setFieldValue("email", moreInfoData.email);
+    formik.setFieldValue("profile", moreInfoData.imageUrl);
+  }, [moreInfoData]);
+
+  const items: CollapseProps["items"] = [
+    {
+      key: "1",
+      label: (
+        <Text type="subTitle" color="shade-2">
+          General settings
+        </Text>
+      ),
+      children: (
+        <Flex>
+          <Flex row flex={1}>
+            <Flex flex={1} className={styles.inputFlexMarginRight}>
+              <InputText
+                value={formik.values.firstName}
+                onChange={formik.handleChange("firstName")}
+                label="First name"
+                required
+                placeholder="First name"
+              />
+              <ErrorMessage
+                name="firstName"
+                touched={formik.touched}
+                errors={formik.errors}
+              />
+            </Flex>
+            <Flex flex={1} className={styles.inputFlexMarginLeft}>
+              <InputText
+                value={formik.values.lastName}
+                onChange={formik.handleChange("lastName")}
+                placeholder="Last name"
+                label="Last name"
+                required
+              />
+              <ErrorMessage
+                name="lastName"
+                touched={formik.touched}
+                errors={formik.errors}
+              />
+            </Flex>
+          </Flex>
+          <Flex flex={1} className={styles.marginVer}>
+            <InputText
+              value={formik.values.email}
+              onChange={formik.handleChange("email")}
+              placeholder="username@gmail.com"
+              label="Email"
+              required
+            />
+            <ErrorMessage
+              name="email"
+              touched={formik.touched}
+              errors={formik.errors}
+            />
+          </Flex>
+
+          <div style={{ flex: 1 }}>
+            <SelectTag
+              required
+              value={formik.values.organization}
+              onChange={(event) => {
+                formik.setFieldValue("department", "");
+                formik.setFieldValue("lab", "");
+                formik.setFieldValue("organization", {
+                  organization: event.organization,
+                  _id: event._id,
+                });
+              }}
+              options={moreInfoList}
+              placeholder="Select"
+              label="Organization"
+              getOptionLabel={(option) => option.organization}
+              getOptionValue={(option) => option._id}
+            />
+            <ErrorMessage
+              name="organization"
+              touched={formik.touched}
+              errors={formik.errors}
+            />
+          </div>
+
+          <div style={{ flex: 1 }} className={styles.marginVer}>
+            <SelectTag
+              required
+              value={formik.values.department}
+              onChange={(event) => {
+                formik.setFieldValue("department", event);
+              }}
+              options={
+                getDepartmentOption?.department
+                  ? getDepartmentOption?.department
+                  : []
+              }
+              placeholder="Select"
+              label="Department"
+            />
+            <ErrorMessage
+              name="department"
+              touched={formik.touched}
+              errors={formik.errors}
+            />
+          </div>
+          <div style={{ flex: 1 }}>
+            <SelectTag
+              required
+              isMulti
+              value={formik.values.lab}
+              onChange={(event) => {
+                formik.setFieldValue("lab", event);
+              }}
+              options={
+                getDepartmentOption?.department
+                  ? getDepartmentOption?.department
+                  : []
+              }
+              placeholder="Select"
+              label="Lab Types"
+            />
+            <ErrorMessage
+              name="department"
+              touched={formik.touched}
+              errors={formik.errors}
+            />
+          </div>
+          <Flex row flex={1} marginTop={16}>
+            <Flex flex={1} className={styles.inputFlexMarginRight}>
+              <SelectTag
+                value={designationOptions.filter(
+                  (option) => option.value === moreInfoData.role
+                )}
+                required
+                isDisabled
+                options={designationOptions}
+                label="Designation"
+              />
+            </Flex>
+            <Flex flex={1} className={styles.inputFlexMarginLeft}>
+              <InputText
+                disabled
+                value={moreInfoData.userId}
+                label="Requestor ID/Tester ID"
+                required
+                actionLeft={() => <SvgUserInput />}
+              />
             </Flex>
           </Flex>
         </Flex>
+      ),
+    },
+    // {
+    //   key: "2",
+    //   label: (
+    //     <Text type="subTitle" color="shade-2">
+    //       Change password
+    //     </Text>
+    //   ),
+    //   children: <p>{"ss"}</p>,
+    // },
+  ];
 
-        <Flex className={styles.rightOverall}>
-          <Flex className={styles.accordianParent}>
-            <Accordion  title="General Profile">
-              <Flex className={styles.profileOverall}>
-                <Flex row start>
-                  <Flex column className={styles.inputFlexMarginRight}>
-                    <InputText
-                      disabled
-                      label="First name"
-                      required
-                      placeholder="First name"
-                    />
-                  </Flex>
-                  <Flex column className={styles.inputFlexMarginLeft}>
-                    <InputText
-                      placeholder="Last name"
-                      label="Last name"
-                      required
-                    />
-                  </Flex>
-                </Flex>
-                <Flex row className={styles.marginVer}>
-                  <Flex className={styles.inputFlexMarginRight}>
-                    <InputText
-                      placeholder="username@gmail.com"
-                      label="Email"
-                      required
-                    />
-                  </Flex>
-                  <Flex className={styles.inputFlexMarginLeft}>
-                    <InputText
-                      label="Mobile"
-                      required
-                      placeholder="000000023"
-                    />
-                  </Flex>
-                </Flex>
+  return (
+    <Flex className={styles.overAll}>
+      {(uploadLoader || updateLoader || moreInfoUserLoader || authMeLoader) && (
+        <Loader />
+      )}
+      <ScreenHeader
+        title={"Profile Settings"}
+        description={"Edit your profile appearance / name / contact info etc."}
+        isSearch
+      />
 
-                <Flex className={styles.mainFieldWidth}>
-                  <InputText
-                    label="Organisation"
-                    required
-                    placeholder="Organisation name"
-                    actionLeft={() => <SvgOrganisation />}
-                  />
-                </Flex>
+      <Flex row marginTop={24}>
+        <Flex>
+          <input
+            style={{ display: "none" }}
+            ref={fileInputRef}
+            accept="image/*"
+            type="file"
+            onChange={(event: any) => {
+              formik.setFieldValue("profile", event.target.files[0]);
+            }}
+          />
+          <Flex center middle className={styles.profileEdit}>
+            <SvgProfileEdit onClick={handleProfileClick} />
 
-                <Flex className={styles.mainFieldWidth}>
-                  <InputText
-                    label="Department"
-                    required
-                    placeholder="Department name"
-                    actionLeft={() => <SvgOrganisation />}
-                  />
-                </Flex>
-
-                <Flex className={styles.mainFieldWidth}>
-                  <InputText
-                    label="Organisation"
-                    required
-                    placeholder="Organisation name"
-                    actionLeft={() => <SvgOrganisation />}
-                  />
-                </Flex>
-
-                <Flex className={styles.mainFieldWidth}>
-                  <InputText
-                    label="Labs assigned"
-                    required
-                    placeholder="Organisation name"
-                    actionLeft={() => <SvgOrganisation />}
-                  />
-                </Flex>
-
-                <Flex row>
-                  <Flex className={styles.inputFlexMarginRight}>
-                    <InputText
-                      actionLeft={() => <SvgDesignation />}
-                      label="Designation"
-                      required
-                      placeholder="Designation"
-                    />
-                  </Flex>
-                  <Flex className={styles.inputFlexMarginLeft}>
-                    <InputText
-                      label="Requestor ID/Tester ID"
-                      required
-                      placeholder="Requestor ID/Tester ID"
-                      actionLeft={() => <SvgUserInput />}
-                    />
-                  </Flex>
-                </Flex>
-              </Flex>
-            </Accordion>
-
-            <Accordion title="Change Password">
-              <Flex className={styles.profileOverall}>
-                <Flex className={styles.mainFieldWidth}>
-                  <InputText
-                    autoComplete="new-password"
-                    white
-                    label={"Enter old password"}
-                    keyboardType={isVisible ? "text" : "password"}
-                    actionRight={visibleIcon}
-                  />
-                </Flex>
-
-                <Flex className={styles.mainFieldWidth}>
-                  <InputText
-                    autoComplete="new-password"
-                    white
-                    label={"Enter new password"}
-                    keyboardType={isVisible ? "text" : "password"}
-                    actionRight={visibleIcon}
-                  />
-                </Flex>
-
-                <Flex className={styles.mainFieldWidth}>
-                  <InputText
-                    autoComplete="new-password"
-                    white
-                    label={"Confirm new password"}
-                    keyboardType={isVisible ? "text" : "password"}
-                    actionRight={visibleIcon}
-                  />
-                </Flex>
-              </Flex>
-            </Accordion>
+            {formik.values.profile?.name ? (
+              <img
+                style={{
+                  position: "absolute",
+                  borderRadius: 100,
+                  objectFit: "cover",
+                }}
+                height={168}
+                width={168}
+                src={URL.createObjectURL(formik.values.profile)}
+              />
+            ) : (
+              <img
+                style={{
+                  position: "absolute",
+                  borderRadius: 100,
+                  objectFit: "cover",
+                }}
+                height={168}
+                width={168}
+                src={formik.values.profile}
+              />
+            )}
           </Flex>
         </Flex>
+        <Collapse
+          style={{ minWidth: 600 }}
+          expandIconPosition="end"
+          accordion
+          expandIcon={({ isActive }) =>
+            !isActive ? <SvgArrowDown /> : <SvgArrowUp />
+          }
+          activeKey={["1"]}
+          ghost
+          items={items}
+        />
+      </Flex>
+      <Flex row between center className={styles.btnContainer}>
+        <Button types="tertiary-1">Back</Button>
+        <Button>Save</Button>
       </Flex>
     </Flex>
   );

@@ -24,6 +24,7 @@ import styles from "./runzscreen.module.css";
 import Text from "../../packages/Text/Text";
 import { useNavigate } from "react-router-dom";
 import { routes } from "../../routes/routesPath";
+import { HEADER_HEIGHT } from "../../utils/constants";
 
 const RunzScreen = () => {
   const navigate = useNavigate();
@@ -203,7 +204,10 @@ const RunzScreen = () => {
   const handleShareOpen = () => setShareModal(true);
 
   return (
-    <Flex className={styles.overAll}>
+    <Flex
+      className={styles.overAll}
+      height={window.innerHeight - HEADER_HEIGHT}
+    >
       <CreateNewRunzModal
         title="Create new Runz"
         open={createNewRunz}

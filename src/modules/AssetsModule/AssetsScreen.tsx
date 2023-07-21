@@ -21,10 +21,12 @@ import SvgUnknown from "../../icons/SvgUnknown";
 import Alert from "../../packages/Alert/Alert";
 import ShareRunzModal from "./ShareRunzModal";
 import CreateNewRunzModal from "./CreateNewRunzModal";
-import styles from "./runzscreen.module.css";
+import styles from "./assetsscreen.module.css";
 import Text from "../../packages/Text/Text";
 import { useNavigate } from "react-router-dom";
 import { routes } from "../../routes/routesPath";
+import { HEADER_HEIGHT } from "../../utils/constants";
+
 const AssetsScreen = () => {
   const navigate = useNavigate();
   const [selectedRows, setSelectedRows] = useState<any[]>([]);
@@ -52,12 +54,11 @@ const AssetsScreen = () => {
             </Flex>
 
             <Flex column>
-            <Text color="shade-3" type="captionBold">
-              {row.detailsDes} 1111
-            </Text>
-            <Text type="bodyBold">{value} vvvv</Text>
+              <Text color="shade-3" type="captionBold">
+                {row.detailsDes} 1111
+              </Text>
+              <Text type="bodyBold">{value} vvvv</Text>
             </Flex>
-            
           </Flex>
         );
       },
@@ -210,7 +211,10 @@ const AssetsScreen = () => {
   const handleShareOpen = () => setShareModal(true);
 
   return (
-    <Flex className={styles.overAll}>
+    <Flex
+      className={styles.overAll}
+      height={window.innerHeight - HEADER_HEIGHT}
+    >
       <CreateNewRunzModal
         open={createNewRunz}
         cancelClick={() => {
@@ -282,7 +286,7 @@ const AssetsScreen = () => {
         }}
       />
     </Flex>
-  )
+  );
 };
 
 export default AssetsScreen;

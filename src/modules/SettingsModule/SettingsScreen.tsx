@@ -1,116 +1,83 @@
-import {useState } from "react";
+import { useState } from "react";
 import classNames from "classnames/bind";
 import Flex from "../../packages/Flex/Flex";
 import Text from "../../packages/Text/Text";
-import styles from "./settings.module.css";
+import styles from "./settingsscreen.module.css";
 import SvgNotify from "../../icons/SvgNotify";
 import SvgProfile from "../../icons/SvgProfile";
 import SvgUser from "../../icons/SvgUser";
 import SvgRole from "../../icons/SvgRole";
-// import ScreenHeader from "./ScreenHeader";
 import NotificationScreen from "./NotificationScreen";
 import ProfileScreen from "./ProfileScreen";
 import UserScreen from "./UserScreen";
-import RoleScreen from './RoleScreen';
+import RoleScreen from "./RoleScreen";
+import { textShade1, textShade3 } from "../../theme/colors";
+import Button from "../../packages/Button/Button";
+import { HEADER_HEIGHT } from "../../utils/constants";
 
 const cx = classNames.bind(styles);
 
 const SettingsScreen = () => {
-  const settingsModule = [
+  const [activeModule, setActiveModule] = useState(1);
+
+  const handleChangeSettings = (e: number) => {
+    setActiveModule(e);
+  };
+
+  const settingsModuleList = [
     {
       id: 1,
-      isSelected: true,
       title: "Notification Settings",
+      icon: <SvgNotify fill={activeModule === 1 ? textShade1 : textShade3} />,
     },
     {
       id: 2,
-      isSelected: false,
       title: "Profile Settings",
+      icon: <SvgProfile fill={activeModule === 2 ? textShade1 : textShade3} />,
     },
     {
       id: 3,
-      isSelected: false,
       title: "User Management",
+      icon: <SvgUser fill={activeModule === 3 ? textShade1 : textShade3} />,
     },
     {
       id: 4,
-      isSelected: false,
       title: "Role Management",
+      icon: <SvgRole fill={activeModule === 4 ? textShade1 : textShade3} />,
     },
   ];
 
-  const [moduleArray, setModuleArray] = useState(settingsModule);
-  const [activeModule, setActiveModule] = useState(1);
-
-  const handleChangeSettings = (e: any) => {
-    const updated = moduleArray.map((c) => {
-      if (c.id === e) {
-        c.isSelected = true;
-        return c;
-      } else {
-        c.isSelected = false;
-        return c;
-      }
-    });
-    setActiveModule(e);
-    setModuleArray(updated);
-  };
-
   return (
-    <Flex className={styles.notifyOverall}>
-      <Flex row>
-        <Flex column className={styles.leftOverall}>
-          <Flex className={styles.rightHeadFlex}>
-            <Text size={20} bold="semiBold" className={styles.rightHead}>
-              settings
-            </Text>
-          </Flex>
+    <Flex
+      className={styles.overAll}
+      height={window.innerHeight - HEADER_HEIGHT}
+    >
+      <Flex row flex={1}>
+        <Flex width={300} className={styles.leftContainer}>
+          <Text type="subTitle" color="shade-2" className={styles.settingText}>
+            Settings
+          </Text>
 
-          {moduleArray.map((c: any) => {
+          {settingsModuleList.map((list: any) => {
             return (
-              <div
-                role="presentation"
-                onClick={() => handleChangeSettings(c.id)}
+              <Button
+                types="link"
+                onClick={() => handleChangeSettings(list.id)}
+                className={cx("listText", {
+                  activeModule: activeModule === list.id,
+                })}
               >
-                <Flex
-                  className={
-                    c.isSelected
-                      ? styles.rightListFlexStyle
-                      : styles.rightListFlexStyleInactive
-                  }
-                >
-                  <Flex row>
-                    <Flex column className={styles.iconCenter}>
-                      {c.id === 1 && (
-                        <SvgNotify fill={c.isSelected ? "#000" : "#9f9f9f"} />
-                      )}
-                      {c.id === 2 && (
-                        <SvgProfile fill={c.isSelected ? "#000" : "#9f9f9f"} />
-                      )}
-                      {c.id === 3 && (
-                        <SvgUser fill={c.isSelected ? "#000" : "#9f9f9f"} />
-                      )}
-                      {c.id === 4 && (
-                        <SvgRole fill={c.isSelected ? "#000" : "#9f9f9f"} />
-                      )}
-                    </Flex>
-
-                    <Flex column middle>
-                      <Text
-                        size={16}
-                        bold="semiBold"
-                        className={
-                          c.isSelected
-                            ? styles.rightListActive
-                            : styles.rightListInactive
-                        }
-                      >
-                        {c.title}
-                      </Text>
-                    </Flex>
-                  </Flex>
+                <Flex row center>
+                  {list.icon}
+                  <Text
+                    color={activeModule === list.id ? "primary" : "shade-3"}
+                    style={{ marginLeft: 8 }}
+                    type="bodyBold"
+                  >
+                    {list.title}
+                  </Text>
                 </Flex>
-              </div>
+              </Button>
             );
           })}
         </Flex>

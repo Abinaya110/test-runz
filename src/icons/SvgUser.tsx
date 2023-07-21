@@ -1,13 +1,13 @@
 import React, { memo } from "react";
 
 const defaultProps = {
-  width: 44,
-  height: 44,
-  fill: '#000'
+  width: 24,
+  height: 24,
+  fill: "#181818",
 };
 
 const SvgUser = ({ width, height, fill }: typeof defaultProps) => (
-  <svg width={width}  height={height} viewBox="0 0 44 44" fill={fill}>
+  <svg width={width} height={height} viewBox="0 0 24 24" fill={fill}>
     <circle cx={12} cy={8} r={4} fill={fill} />
     <path
       fill={fill}

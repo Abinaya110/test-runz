@@ -19,4 +19,5 @@
 }
 .overAll {
   padding: 20px;
+  overflow-y: scroll;
 }

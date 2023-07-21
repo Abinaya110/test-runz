@@ -1,27 +1,27 @@
 import Flex from "../../packages/Flex/Flex";
 import Text from "../../packages/Text/Text";
-import styles from "./settings.module.css";
+import styles from "./settingscreenheader.module.css";
 import InputText from "../../packages/InputText/InputText";
 import Button from "../../packages/Button/Button";
 import SvgSearch from "../../icons/SvgSearch";
 
-const ScreenHeader = (props: any) => {
+const SettingScreenHeader = (props: any) => {
   const { title, description, isSearch, isBtn } = props;
 
   const handleLogin = () => {};
   return (
-    <Flex row between className={styles.contentSpace}>
-      <Flex column>
-        <Text size={24} bold="semiBold" className={styles.rightHead}>
+    <Flex row between className={styles.overAll}>
+      <Flex>
+        <Text color="shade-2" type="title">
           {title}
         </Text>
 
-        <Text size={16} bold="light" className={styles.rightHead}>
+        <Text style={{ marginTop: 4 }} color="shade-2" type="bodyMedium">
           {description}
         </Text>
       </Flex>
 
-      <Flex column className={styles.rightSearch}>
+      <Flex>
         {isSearch && (
           <InputText placeholder="Search" actionRight={() => <SvgSearch />} />
         )}
@@ -40,4 +40,4 @@ const ScreenHeader = (props: any) => {
   );
 };
 
-export default ScreenHeader;
+export default SettingScreenHeader;

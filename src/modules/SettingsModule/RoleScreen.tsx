@@ -1,7 +1,7 @@
 import Flex from "../../packages/Flex/Flex";
 import Text from "../../packages/Text/Text";
-import ScreenHeader from "./ScreenHeader";
-import styles from "./settings.module.css";
+import ScreenHeader from "./SettingScreenHeader";
+import styles from "./rolescreen.module.css";
 import SvgRadioBox from "../../icons/SvgRadioBox";
 import SvgRadioOutline from "../../icons/SvgRadioOutline";
 import { useEffect, useState } from "react";
@@ -83,27 +83,30 @@ const RoleScreen = () => {
         isSearch={true}
         isBtn={false}
       />
+      <Text
+        style={{ marginTop: 20, marginBottom: 20 }}
+        type="button-3"
+        color="shade-2"
+      >
+        Access control
+      </Text>
+      <Flex row center flex={1} className={styles.headerFlex}>
+        <Flex flex={7.5}>
+          <Text type="button-2">Action</Text>
+        </Flex>
+        <Flex flex={1.5} center>
+          <Text type="button-2">Admin</Text>
+        </Flex>
+        <Flex flex={1.5} center>
+          <Text type="button-2">Requester</Text>
+        </Flex>
 
-      <Flex className={styles.marginRoleOverall}>
-        <Flex className={styles.overScroll}>
-          <Flex className={styles.tableHeader}>
-            <Flex flex={2}>
-              <Text size={18}>Action</Text>
-            </Flex>
-            <Flex flex={1}>
-              <Text size={18}>Admin</Text>
-            </Flex>
-
-            <Flex flex={1}>
-              <Text size={18}>Requester</Text>
-            </Flex>
-
-            <Flex flex={1}>
-              <Text size={18}>Tester</Text>
-            </Flex>
-          </Flex>
-
-          <Flex row between className={styles.contentSpace}>
+        <Flex flex={1.5} center>
+          <Text type="button-2">Tester</Text>
+        </Flex>
+      </Flex>
+      <Flex>
+        {/* <Flex row between className={styles.contentSpace}>
             <Flex column>
               <Text size={20} bold="semiBold" className={styles.rightHead}>
                 Procedure
@@ -113,9 +116,9 @@ const RoleScreen = () => {
                 Control the actions of users under procedure section.
               </Text>
             </Flex>
-          </Flex>
+          </Flex> */}
 
-          {list.map((res: any) => {
+        {/* {list.map((res: any) => {
             return (
               <Flex key={res.id} className={styles.tableContent}>
                 <Flex flex={2}>
@@ -190,9 +193,9 @@ const RoleScreen = () => {
                 </Flex>
               </Flex>
             );
-          })}
+          })} */}
 
-          <Flex row between className={styles.contentSpace}>
+        {/* <Flex row between className={styles.contentSpace}>
             <Flex column>
               <Text size={20} bold="semiBold" className={styles.rightHead}>
                 Profile
@@ -202,9 +205,9 @@ const RoleScreen = () => {
                 Control the actions of users under profile section.
               </Text>
             </Flex>
-          </Flex>
+          </Flex> */}
 
-          {profileList.map((res: any) => {
+        {/* {profileList.map((res: any) => {
             return (
               <Flex key={res.id} className={styles.tableContent}>
                 <Flex flex={2}>
@@ -279,10 +282,9 @@ const RoleScreen = () => {
                 </Flex>
               </Flex>
             );
-          })}
-        </Flex>
+          })} */}
       </Flex>
-      <Flex row between className={styles.marginOverall}>
+      {/* <Flex row between className={styles.marginOverall}>
         <Flex column>
           <Button
             style={{ marginLeft: 4 }}
@@ -301,7 +303,7 @@ const RoleScreen = () => {
             Save
           </Button>
         </Flex>
-      </Flex>
+      </Flex> */}
     </Flex>
   );
 };

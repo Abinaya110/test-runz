@@ -28,7 +28,7 @@ import {
 } from "./store/proceduresMiddleware";
 import Loader from "../../packages/Loader/Loader";
 import { useFormik } from "formik";
-import { ROLE_STUDENT } from "../../utils/constants";
+import { HEADER_HEIGHT, ROLE_STUDENT } from "../../utils/constants";
 import NotAuthorizedModal from "../../common/NotAuthorizedModal";
 
 export const ACTIVE_BACKING_BOARD: any = [
@@ -242,7 +242,10 @@ const ProceduresScreen = () => {
   });
 
   return (
-    <Flex className={styles.overAll}>
+    <Flex
+      className={styles.overAll}
+      height={window.innerHeight - HEADER_HEIGHT}
+    >
       {isLoading && <Loader />}
       {/* <NotAuthorizedModal open onClick={() => {}} /> */}
       <CreateOrEditProcedure

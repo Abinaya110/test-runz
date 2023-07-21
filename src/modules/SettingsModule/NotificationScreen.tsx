@@ -1,12 +1,11 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import classNames from "classnames/bind";
 import Flex from "../../packages/Flex/Flex";
 import Text from "../../packages/Text/Text";
-import styles from "./settings.module.css";
-// import Switch from "react-switch";
+import styles from "./notificationscreen.module.css";
 import Switch from "../../packages/Switch/Switch";
 
-import ScreenHeader from "./ScreenHeader";
+import SettingScreenHeader from "./SettingScreenHeader";
 
 const cx = classNames.bind(styles);
 
@@ -38,11 +37,8 @@ const NotificationScreen = () => {
     },
   ];
   const [cardDetails, setCardDetails] = useState(notifyCard);
-  const handleLogin = () => {
-    console.log("hitted");
-  };
 
-  const handleChange = (id: any, val: any) => {
+  const handleChange = (id: number, val: string) => {
     const updated = cardDetails.map((res) => {
       if (res.id === id) {
         res.isNotifyActive =
@@ -59,65 +55,49 @@ const NotificationScreen = () => {
   };
   return (
     <Flex>
-      <ScreenHeader
+      <SettingScreenHeader
         title={"Notification Settings"}
         description={
           "Select the kinds of notifications you get about your activities and recommendations."
         }
-        isSearch={true}
-        isBtn={false}
+        isSearch
       />
 
-      <Flex row between className={styles.contentSpace}>
-        <Flex column>
-          <Text size={20} bold="semiBold" className={styles.rightHead}>
-            Alerts
-          </Text>
-
-          <Text size={16} bold="light" className={styles.rightHead}>
-            Select the options you want to get alerted via email and
-            notification.
-          </Text>
-        </Flex>
+      <Flex className={styles.alertContainer}>
+        <Text type="button-4" color="shade-2">
+          Alerts
+        </Text>
+        <Text style={{ marginTop: 4 }} type="bodyMedium" color="shade-2">
+          Select the options you want to get alerted via email and notification.
+        </Text>
       </Flex>
 
-      {cardDetails.map((c: any) => {
+      {cardDetails.map((list) => {
         return (
-          <Flex className={styles.notifyCardLayout}>
-            <Flex row between className={styles.contentSpace}>
-              <Flex column>
-                <Text size={16} bold="semiBold" className={styles.rightHead}>
-                  {c.heading}
-                </Text>
+          <Flex row between className={styles.listContainer}>
+            <Flex column>
+              <Text type="button-3">{list.heading}</Text>
+              <Text type="bodyMedium" color="shade-2" style={{ marginTop: 8 }}>
+                {list.subHead}
+              </Text>
+            </Flex>
 
-                <Text
-                  size={16}
-                  bold="light"
-                  className={cx("rightHead", "marginTopToggel")}
-                >
-                  {c.subHead}
-                </Text>
-              </Flex>
+            <Flex between end>
+              <Switch
+                left
+                label="Notification"
+                labelColor="gray"
+                checked={list.isNotifyActive}
+                onClick={() => handleChange(list.id, "notify")}
+              />
 
-              <Flex column className={styles.rightSearch}>
-                <Flex row between>
-                    <Switch 
-                    label="Notification"
-                    labelColor="gray"
-                    checked={c.isNotifyActive}
-                    onClick={() => handleChange(c.id, "notify")}
-                    />
-                </Flex>
-
-                <Flex row between className={styles.marginTopToggel}>
-                  <Switch 
-                    label="Email"
-                    labelColor="gray"
-                    checked={c.isNotifyActive}
-                    onClick={() => handleChange(c.id, "notify")}
-                    />
-                </Flex>
-              </Flex>
+              <Switch
+                left
+                label="Email"
+                labelColor="gray"
+                checked={list.isNotifyActive}
+                onClick={() => handleChange(list.id, "notify")}
+              />
             </Flex>
           </Flex>
         );

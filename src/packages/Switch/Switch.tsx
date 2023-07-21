@@ -4,6 +4,7 @@ import SvgSwitchOutline from "../../icons/SvgSwitchOutline";
 import SwitchLabel from "./SwitchLabel";
 import styles from "./switch.module.css";
 import { textColorsType } from "../Text/textTypes";
+import Flex from "../Flex/Flex";
 
 type DefaultPropsTypes = {
   name?: string;
@@ -30,6 +31,7 @@ type Props = {
   label?: import("react").ReactNode;
   value?: any[];
   labelColor?: textColorsType;
+  left?: boolean;
 } & typeof defaultProps;
 
 const CheckBox = ({
@@ -39,6 +41,7 @@ const CheckBox = ({
   label,
   labelColor,
   name,
+  left,
   value,
 }: Props) => {
   const handleOnClick = useCallback(
@@ -69,8 +72,13 @@ const CheckBox = ({
       onBlur={onBlur}
       className={styles.container}
     >
+      {left && (
+        <Flex marginRight={8}>
+          <SwitchLabel label={label} labelColor={labelColor} />
+        </Flex>
+      )}
       {checked ? <SvgSwitch /> : <SvgSwitchOutline />}
-      <SwitchLabel label={label} labelColor={labelColor} />
+      {!left && <SwitchLabel label={label} labelColor={labelColor} />}
     </div>
   );
 };

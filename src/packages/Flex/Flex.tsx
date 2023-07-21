@@ -31,6 +31,8 @@ type Props = {
   width?: number | string;
   id?: string;
   marginTop?: number;
+  marginRight?: number;
+  marginLeft?: number;
 } & typeof defaultProps;
 
 const Flex = ({
@@ -56,6 +58,8 @@ const Flex = ({
   width,
   id,
   marginTop,
+  marginRight,
+  marginLeft,
 }: Props) => {
   const flexClassName = cx(
     {
@@ -81,7 +85,7 @@ const Flex = ({
   return (
     <div
       id={id}
-      style={{ flex, height, width, marginTop }}
+      style={{ flex, height, width, marginTop, marginRight, marginLeft }}
       className={flexClassName}
     >
       {children}

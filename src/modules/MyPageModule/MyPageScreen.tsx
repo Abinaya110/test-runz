@@ -9,6 +9,7 @@ import MyPageTableHeader from "./MyPageTableHeader";
 import SvgChevronLeft from "../../icons/SvgChevronLeft";
 import SvgChevronRight from "../../icons/SvgChevronRight";
 import SvgNoTask from "../../icons/SvgNoTask";
+import { HEADER_HEIGHT } from "../../utils/constants";
 
 export const ACTIVE_BACKING_BOARD = [
   {
@@ -103,7 +104,10 @@ const MyPageScreen = () => {
 
   const mark = ["04-03-2020", "03-03-2020", "05-03-2020"];
   return (
-    <Flex className={styles.overAll}>
+    <Flex
+      className={styles.overAll}
+      height={window.innerHeight - HEADER_HEIGHT}
+    >
       <Table
         isAction={false}
         pagination

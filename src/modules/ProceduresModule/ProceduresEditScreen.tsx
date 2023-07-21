@@ -12,6 +12,7 @@ import ProceduresRichText from "./ProceduresRichText";
 import { formType } from "./ProceduresScreen";
 import { useFormik } from "formik";
 import { isEmpty } from "../../utils/validators";
+import { HEADER_HEIGHT } from "../../utils/constants";
 
 const ProceduresEditScreen = () => {
   const [editdProcedure, setEditdProcedure] = useState(false);
@@ -38,7 +39,7 @@ const ProceduresEditScreen = () => {
     validate,
   });
   return (
-    <Flex>
+    <Flex height={window.innerHeight - HEADER_HEIGHT}>
       <CreateOrEditProcedure
         formik={formik}
         title="Edit procedure"

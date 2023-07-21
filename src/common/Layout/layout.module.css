@@ -32,8 +32,9 @@
 .content {
   margin-top: 80px;
   /* padding: 20px; */
-  overflow-y: scroll;
+  /* overflow-y: scroll; */
   padding-left: 80px;
+  /* background-color: var(--color-white); */
 }
 .svgMenu {
   margin-right: 10px;

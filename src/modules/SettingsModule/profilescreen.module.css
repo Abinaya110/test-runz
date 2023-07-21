@@ -1,0 +1,20 @@
+.overAll {
+}
+
+.inputFlexMarginRight {
+  margin-right: 8px;
+}
+.inputFlexMarginLeft {
+  margin-left: 8px;
+}
+.marginVer {
+  margin: 16px 0;
+}
+
+.profileEdit {
+  position: relative;
+}
+.btnContainer {
+  border-top: 3px solid var(--color-gray-2);
+  padding-top: 24px;
+}
