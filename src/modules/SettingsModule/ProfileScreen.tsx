@@ -34,6 +34,7 @@ import Button from "../../packages/Button/Button";
 import Loader from "../../packages/Loader/Loader";
 import { useNavigate } from "react-router-dom";
 import { statusType } from "../../packages/InputText/inputTextTypes";
+import { auth } from "../../utils/firebase";
 
 export type formType = {
   firstName: string;
@@ -232,9 +233,12 @@ const ProfileScreen = () => {
     validate,
   });
 
+  const handlePassword = (values: formTypePassword) => {
+    auth.confirmPasswordReset(moreInfoData.email, values.newPassword);
+  };
   const formikPassword = useFormik({
     initialValues: initialPasswordValues,
-    onSubmit: () => {},
+    onSubmit: handlePassword,
     validate: validatePassword,
   });
 
@@ -459,64 +463,64 @@ const ProfileScreen = () => {
         </Flex>
       ),
     },
-    {
-      key: "2",
-      label: (
-        <Text type="subTitle" color="shade-2">
-          Change password
-        </Text>
-      ),
-      children: (
-        <Flex>
-          <InputText
-            autoComplete="new-password"
-            label="Enter old password"
-            required
-            value={formikPassword.values.oldPassword}
-            onChange={formikPassword.handleChange("oldPassword")}
-          />
-          <Flex marginTop={20} marginBottom={20}>
-            <InputText
-              autoComplete="new-password"
-              label="Enter new password"
-              required
-              value={formikPassword.values.newPassword}
-              onChange={formikPassword.handleChange("newPassword")}
-              keyboardType={isVisible ? "text" : "password"}
-              actionRight={visibleIcon}
-              message={
-                formikPassword.errors.newPassword ||
-                getPasswordStrength(formikPassword.values.newPassword)
-              }
-              status={
-                formikPassword.touched.newPassword &&
-                formikPassword.errors.newPassword
-                  ? "error"
-                  : passwordMessage
-              }
-            />
-          </Flex>
-          <InputText
-            autoComplete="new-password"
-            label="Confirm new password"
-            required
-            value={formikPassword.values.confirmPassword}
-            onChange={formikPassword.handleChange("confirmPassword")}
-            keyboardType={isVisibleOne ? "text" : "password"}
-            actionRight={visibleIconOne}
-            message={
-              formikPassword.errors.confirmPassword || confirmPasswordMessage
-            }
-            status={
-              formikPassword.touched.confirmPassword &&
-              formikPassword.errors.confirmPassword
-                ? "error"
-                : confirmPasswordStatus
-            }
-          />
-        </Flex>
-      ),
-    },
+    // {
+    //   key: "2",
+    //   label: (
+    //     <Text type="subTitle" color="shade-2">
+    //       Change password
+    //     </Text>
+    //   ),
+    //   children: (
+    //     <Flex>
+    //       <InputText
+    //         autoComplete="new-password"
+    //         label="Enter old password"
+    //         required
+    //         value={formikPassword.values.oldPassword}
+    //         onChange={formikPassword.handleChange("oldPassword")}
+    //       />
+    //       <Flex marginTop={20} marginBottom={20}>
+    //         <InputText
+    //           autoComplete="new-password"
+    //           label="Enter new password"
+    //           required
+    //           value={formikPassword.values.newPassword}
+    //           onChange={formikPassword.handleChange("newPassword")}
+    //           keyboardType={isVisible ? "text" : "password"}
+    //           actionRight={visibleIcon}
+    //           message={
+    //             formikPassword.errors.newPassword ||
+    //             getPasswordStrength(formikPassword.values.newPassword)
+    //           }
+    //           status={
+    //             formikPassword.touched.newPassword &&
+    //             formikPassword.errors.newPassword
+    //               ? "error"
+    //               : passwordMessage
+    //           }
+    //         />
+    //       </Flex>
+    //       <InputText
+    //         autoComplete="new-password"
+    //         label="Confirm new password"
+    //         required
+    //         value={formikPassword.values.confirmPassword}
+    //         onChange={formikPassword.handleChange("confirmPassword")}
+    //         keyboardType={isVisibleOne ? "text" : "password"}
+    //         actionRight={visibleIconOne}
+    //         message={
+    //           formikPassword.errors.confirmPassword || confirmPasswordMessage
+    //         }
+    //         status={
+    //           formikPassword.touched.confirmPassword &&
+    //           formikPassword.errors.confirmPassword
+    //             ? "error"
+    //             : confirmPasswordStatus
+    //         }
+    //       />
+    //     </Flex>
+    //   ),
+    // },
   ];
 
   return (
@@ -581,8 +585,9 @@ const ProfileScreen = () => {
             expandIcon={({ isActive }) =>
               !isActive ? <SvgArrowDown /> : <SvgArrowUp />
             }
-            defaultActiveKey={["1"]}
+            // defaultActiveKey={["1"]}
             items={items}
+            activeKey={["1"]}
           />
         </Flex>
       </Flex>
