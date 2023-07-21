@@ -87,6 +87,7 @@ const RoleScreen = () => {
         style={{ marginTop: 20, marginBottom: 20 }}
         type="button-3"
         color="shade-2"
+        align="center"
       >
         Access control
       </Text>

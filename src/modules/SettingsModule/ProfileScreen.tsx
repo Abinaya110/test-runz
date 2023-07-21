@@ -534,7 +534,7 @@ const ProfileScreen = () => {
           description={
             "Edit your profile appearance / name / contact info etc."
           }
-          isSearch
+          // isSearch
         />
 
         <Flex row marginTop={24}>

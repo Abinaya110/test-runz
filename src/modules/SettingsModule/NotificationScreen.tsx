@@ -1,13 +1,9 @@
 import { useState } from "react";
-import classNames from "classnames/bind";
 import Flex from "../../packages/Flex/Flex";
 import Text from "../../packages/Text/Text";
 import styles from "./notificationscreen.module.css";
 import Switch from "../../packages/Switch/Switch";
-
 import SettingScreenHeader from "./SettingScreenHeader";
-
-const cx = classNames.bind(styles);
 
 const NotificationScreen = () => {
   const notifyCard = [
@@ -38,19 +34,21 @@ const NotificationScreen = () => {
   ];
   const [cardDetails, setCardDetails] = useState(notifyCard);
 
-  const handleChange = (id: number, val: string) => {
+  const handleChange = (id: number, value: boolean, val: string) => {
     const updated = cardDetails.map((res) => {
       if (res.id === id) {
-        res.isNotifyActive =
-          val === "notify" ? !res.isNotifyActive : res.isNotifyActive;
-        res.isEmailActive =
-          val === "email" ? !res.isEmailActive : res.isEmailActive;
+        if (val === "notify") {
+          res.isNotifyActive = value;
+        }
+        if (val === "email") {
+          res.isEmailActive = value;
+        }
+
         return res;
       } else {
         return res;
       }
     });
-
     setCardDetails(updated);
   };
   return (
@@ -60,7 +58,7 @@ const NotificationScreen = () => {
         description={
           "Select the kinds of notifications you get about your activities and recommendations."
         }
-        isSearch
+        // isSearch
       />
 
       <Flex className={styles.alertContainer}>
@@ -88,15 +86,26 @@ const NotificationScreen = () => {
                 label="Notification"
                 labelColor="gray"
                 checked={list.isNotifyActive}
-                onClick={() => handleChange(list.id, "notify")}
+                onClick={() =>
+                  handleChange(
+                    list.id,
+                    list.isNotifyActive ? false : true,
+                    "notify"
+                  )
+                }
               />
-
               <Switch
                 left
                 label="Email"
                 labelColor="gray"
-                checked={list.isNotifyActive}
-                onClick={() => handleChange(list.id, "notify")}
+                checked={list.isEmailActive}
+                onClick={() =>
+                  handleChange(
+                    list.id,
+                    list.isEmailActive ? false : true,
+                    "email"
+                  )
+                }
               />
             </Flex>
           </Flex>
