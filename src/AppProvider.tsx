@@ -49,7 +49,7 @@ const AppProvider = () => {
   return (
     <Fragment>
       {(authLoader || moreInfoUserLoader) && <Loader />}
-      {data.activeStatus && <ProfileEditModal />}
+      {data?.activeStatus && <ProfileEditModal />}
       <Router>
         <Layout>
           <Routes>

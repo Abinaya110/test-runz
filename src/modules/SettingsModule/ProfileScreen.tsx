@@ -7,7 +7,7 @@ import SvgUserInput from "../../icons/SvgUserInput";
 import SvgProfileEdit from "../../icons/SvgProfileEdit";
 import ScreenHeader from "./SettingScreenHeader";
 import Accordion from "../../packages/Accordian/Accordian";
-import { useVisibilityIcon } from "../../utils/helpers";
+import { getPasswordStrength, useVisibilityIcon } from "../../utils/helpers";
 import { Collapse, CollapseProps } from "antd";
 import SvgArrowDown from "../../icons/SvgArrowDown";
 import SvgArrowUp from "../../icons/SvgArrowUp";
@@ -32,6 +32,8 @@ import SelectTag from "../../packages/SelectTag/SelectTag";
 import { designationOptions } from "../LoginModule/mock";
 import Button from "../../packages/Button/Button";
 import Loader from "../../packages/Loader/Loader";
+import { useNavigate } from "react-router-dom";
+import { statusType } from "../../packages/InputText/inputTextTypes";
 
 export type formType = {
   firstName: string;
@@ -77,11 +79,48 @@ const validate = (values: formType) => {
   return errors;
 };
 
-const ProfileScreen = () => {
-  const { visibleIcon, isVisible } = useVisibilityIcon();
-  const dispatch: AppDispatch = useDispatch();
+type formTypePassword = {
+  oldPassword: string;
+  newPassword: string;
+  confirmPassword: string;
+};
 
+const initialPasswordValues: formTypePassword = {
+  oldPassword: "",
+  newPassword: "",
+  confirmPassword: "",
+};
+
+const validatePassword = (values: formTypePassword) => {
+  const errors: Partial<formTypePassword> = {};
+  if (isEmpty(values.oldPassword)) {
+    errors.oldPassword = "Old password field is required";
+  }
+  if (isEmpty(values.newPassword)) {
+    errors.newPassword = "Password field is required";
+  } else if (getPasswordStrength(values.newPassword) !== "Strong strength") {
+    errors.newPassword = getPasswordStrength(values.newPassword);
+  }
+
+  if (isEmpty(values.confirmPassword)) {
+    errors.confirmPassword = "Password field is required";
+  } else if (
+    values.newPassword.length !== 0 &&
+    values.confirmPassword.length !== 0 &&
+    values.newPassword !== values.confirmPassword
+  ) {
+    errors.confirmPassword = "Password not matched";
+  }
+
+  return errors;
+};
+
+const ProfileScreen = () => {
+  const { visibleIcon, isVisible, visibleIconOne, isVisibleOne } =
+    useVisibilityIcon();
+  const dispatch: AppDispatch = useDispatch();
   const fileInputRef = useRef<any>(null);
+
   const handleProfileClick = () => {
     if (fileInputRef && fileInputRef.current) {
       fileInputRef.current.click();
@@ -91,6 +130,7 @@ const ProfileScreen = () => {
   useEffect(() => {
     dispatch(moreInfoListMiddleWare());
   }, []);
+
   const {
     moreInfoData,
     moreInfoList,
@@ -192,6 +232,12 @@ const ProfileScreen = () => {
     validate,
   });
 
+  const formikPassword = useFormik({
+    initialValues: initialPasswordValues,
+    onSubmit: () => {},
+    validate: validatePassword,
+  });
+
   const getDepartmentOption: any = useMemo(() => {
     const result = moreInfoList.filter(
       (list) => list.organization === formik.values.organization?.organization
@@ -226,6 +272,44 @@ const ProfileScreen = () => {
     formik.setFieldValue("email", moreInfoData.email);
     formik.setFieldValue("profile", moreInfoData.imageUrl);
   }, [moreInfoData]);
+
+  let passwordMessage: statusType = "";
+  if (
+    getPasswordStrength(formikPassword.values.newPassword) ===
+      "Weak strength" &&
+    formikPassword.values.newPassword.length > 0
+  ) {
+    passwordMessage = "error";
+  } else if (
+    getPasswordStrength(formikPassword.values.newPassword) === "Medium strength"
+  ) {
+    passwordMessage = "theme";
+  } else if (
+    getPasswordStrength(formikPassword.values.newPassword) === "Strong strength"
+  ) {
+    passwordMessage = "success";
+  } else {
+    passwordMessage = "";
+  }
+
+  let confirmPasswordStatus: statusType = "";
+  let confirmPasswordMessage = "";
+  if (
+    formikPassword.values.newPassword.length !== 0 &&
+    formikPassword.values.newPassword === formikPassword.values.confirmPassword
+  ) {
+    confirmPasswordStatus = "success";
+    confirmPasswordMessage = "Password matched";
+  } else if (
+    formikPassword.values.newPassword.length !== 0 &&
+    formikPassword.values.confirmPassword.length !== 0 &&
+    formikPassword.values.newPassword !== formikPassword.values.confirmPassword
+  ) {
+    confirmPasswordStatus = "error";
+  } else {
+    confirmPasswordStatus = "";
+    confirmPasswordMessage = "";
+  }
 
   const items: CollapseProps["items"] = [
     {
@@ -375,82 +459,134 @@ const ProfileScreen = () => {
         </Flex>
       ),
     },
-    // {
-    //   key: "2",
-    //   label: (
-    //     <Text type="subTitle" color="shade-2">
-    //       Change password
-    //     </Text>
-    //   ),
-    //   children: <p>{"ss"}</p>,
-    // },
+    {
+      key: "2",
+      label: (
+        <Text type="subTitle" color="shade-2">
+          Change password
+        </Text>
+      ),
+      children: (
+        <form autoComplete="off">
+          <Flex>
+            <InputText
+              autoComplete="new-password"
+              label="Enter old password"
+              required
+              value={formikPassword.values.oldPassword}
+              onChange={formikPassword.handleChange("oldPassword")}
+            />
+            <Flex marginTop={20} marginBottom={20}>
+              <InputText
+                autoComplete="new-password"
+                value={formikPassword.values.confirmPassword}
+                onChange={formik.handleChange("confirmPassword")}
+                label={"Enter new password"}
+                keyboardType={isVisible ? "text" : "password"}
+                actionRight={visibleIcon}
+                message={
+                  formikPassword.errors.newPassword ||
+                  getPasswordStrength(formikPassword.values.newPassword)
+                }
+                status={
+                  formikPassword.touched.newPassword &&
+                  formikPassword.errors.newPassword
+                    ? "error"
+                    : passwordMessage
+                }
+              />
+            </Flex>
+            <InputText
+              value={formikPassword.values.confirmPassword}
+              onChange={formikPassword.handleChange("confirmPassword")}
+              label={"Enter confirm password"}
+              keyboardType={isVisibleOne ? "text" : "password"}
+              actionRight={visibleIconOne}
+              message={
+                formikPassword.errors.confirmPassword || confirmPasswordMessage
+              }
+              status={
+                formikPassword.touched.confirmPassword &&
+                formikPassword.errors.confirmPassword
+                  ? "error"
+                  : confirmPasswordStatus
+              }
+            />
+          </Flex>
+        </form>
+      ),
+    },
   ];
 
   return (
-    <Flex className={styles.overAll}>
+    <Flex className={styles.overAll} flex={1} between>
       {(uploadLoader || updateLoader || moreInfoUserLoader || authMeLoader) && (
         <Loader />
       )}
-      <ScreenHeader
-        title={"Profile Settings"}
-        description={"Edit your profile appearance / name / contact info etc."}
-        isSearch
-      />
-
-      <Flex row marginTop={24}>
-        <Flex>
-          <input
-            style={{ display: "none" }}
-            ref={fileInputRef}
-            accept="image/*"
-            type="file"
-            onChange={(event: any) => {
-              formik.setFieldValue("profile", event.target.files[0]);
-            }}
-          />
-          <Flex center middle className={styles.profileEdit}>
-            <SvgProfileEdit onClick={handleProfileClick} />
-
-            {formik.values.profile?.name ? (
-              <img
-                style={{
-                  position: "absolute",
-                  borderRadius: 100,
-                  objectFit: "cover",
-                }}
-                height={168}
-                width={168}
-                src={URL.createObjectURL(formik.values.profile)}
-              />
-            ) : (
-              <img
-                style={{
-                  position: "absolute",
-                  borderRadius: 100,
-                  objectFit: "cover",
-                }}
-                height={168}
-                width={168}
-                src={formik.values.profile}
-              />
-            )}
-          </Flex>
-        </Flex>
-        <Collapse
-          style={{ minWidth: 600 }}
-          expandIconPosition="end"
-          accordion
-          expandIcon={({ isActive }) =>
-            !isActive ? <SvgArrowDown /> : <SvgArrowUp />
+      <Flex>
+        <ScreenHeader
+          title={"Profile Settings"}
+          description={
+            "Edit your profile appearance / name / contact info etc."
           }
-          activeKey={["1"]}
-          ghost
-          items={items}
+          isSearch
         />
+
+        <Flex row marginTop={24}>
+          <Flex marginRight={30}>
+            <input
+              style={{ display: "none" }}
+              ref={fileInputRef}
+              accept="image/*"
+              type="file"
+              onChange={(event: any) => {
+                formik.setFieldValue("profile", event.target.files[0]);
+              }}
+            />
+            <Flex center middle className={styles.profileEdit}>
+              <SvgProfileEdit onClick={handleProfileClick} />
+
+              {formik.values.profile?.name ? (
+                <img
+                  style={{
+                    position: "absolute",
+                    borderRadius: 100,
+                    objectFit: "cover",
+                  }}
+                  height={168}
+                  width={168}
+                  src={URL.createObjectURL(formik.values.profile)}
+                />
+              ) : (
+                <img
+                  style={{
+                    position: "absolute",
+                    borderRadius: 100,
+                    objectFit: "cover",
+                  }}
+                  height={168}
+                  width={168}
+                  src={formik.values.profile}
+                />
+              )}
+            </Flex>
+          </Flex>
+          <Collapse
+            ghost
+            style={{ minWidth: 600 }}
+            expandIconPosition="end"
+            accordion
+            expandIcon={({ isActive }) =>
+              !isActive ? <SvgArrowDown /> : <SvgArrowUp />
+            }
+            defaultActiveKey={["1"]}
+            items={items}
+          />
+        </Flex>
       </Flex>
-      <Flex row between center className={styles.btnContainer}>
-        <Button types="tertiary-1">Back</Button>
-        <Button>Save</Button>
+
+      <Flex end className={styles.btnContainer}>
+        <Button onClick={formik.handleSubmit}>Save</Button>
       </Flex>
     </Flex>
   );

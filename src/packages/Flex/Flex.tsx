@@ -33,6 +33,7 @@ type Props = {
   marginTop?: number;
   marginRight?: number;
   marginLeft?: number;
+  marginBottom?: number;
 } & typeof defaultProps;
 
 const Flex = ({
@@ -60,6 +61,7 @@ const Flex = ({
   marginTop,
   marginRight,
   marginLeft,
+  marginBottom,
 }: Props) => {
   const flexClassName = cx(
     {
@@ -85,7 +87,15 @@ const Flex = ({
   return (
     <div
       id={id}
-      style={{ flex, height, width, marginTop, marginRight, marginLeft }}
+      style={{
+        flex,
+        height,
+        width,
+        marginTop,
+        marginRight,
+        marginLeft,
+        marginBottom,
+      }}
       className={flexClassName}
     >
       {children}

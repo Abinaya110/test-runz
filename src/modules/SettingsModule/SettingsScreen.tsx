@@ -25,7 +25,7 @@ const SettingsScreen = () => {
   const [activeModule, setActiveModule] = useState(1);
 
   useEffect(() => {
-    dispatch(getSettingMiddleWare());
+    // dispatch(getSettingMiddleWare());
   }, []);
   const handleChangeSettings = (e: number) => {
     setActiveModule(e);
@@ -74,9 +74,10 @@ const SettingsScreen = () => {
                   activeModule: activeModule === list.id,
                 })}
               >
-                <Flex row center>
+                <Flex row>
                   {list.icon}
                   <Text
+                    align="start"
                     color={activeModule === list.id ? "primary" : "shade-3"}
                     style={{ marginLeft: 8 }}
                     type="bodyBold"
