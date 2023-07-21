@@ -12,6 +12,7 @@ export const authMeApi = authFetchUrl("me");
 export const googleLoginApi = authFetchUrl("googlelogin");
 export const microsoftLoginApi = authFetchUrl("microsoftlogin");
 export const linkedinLoginApi = authFetchUrl("linkedinlogin");
+export const settingApi = fetchUrl("setting");
 
 export const procedureApi = proceduresFetchUrl("procedure");
 export const procedureByIdApi = (id: string) => {

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import classNames from "classnames/bind";
 import Flex from "../../packages/Flex/Flex";
 import Text from "../../packages/Text/Text";
@@ -14,12 +14,19 @@ import RoleScreen from "./RoleScreen";
 import { textShade1, textShade3 } from "../../theme/colors";
 import Button from "../../packages/Button/Button";
 import { HEADER_HEIGHT } from "../../utils/constants";
+import { AppDispatch } from "../../redux/store";
+import { useDispatch } from "react-redux";
+import { getSettingMiddleWare } from "./store/settingsMiddleware";
 
 const cx = classNames.bind(styles);
 
 const SettingsScreen = () => {
+  const dispatch: AppDispatch = useDispatch();
   const [activeModule, setActiveModule] = useState(1);
 
+  useEffect(() => {
+    dispatch(getSettingMiddleWare());
+  }, []);
   const handleChangeSettings = (e: number) => {
     setActiveModule(e);
   };

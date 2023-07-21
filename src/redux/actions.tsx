@@ -14,3 +14,5 @@ export const PROCEDURE_DELETE = "procedure/PROCEDURE_DELETE";
 export const MORE_INFO_LIST = "mypage/MORE_INFO_LIST";
 export const MORE_INFO = "mypage/MORE_INFO";
 export const MORE_INFO_USER = "mypage/MORE_INFO_USER";
+
+export const GET_SETTINGS = "setting/GET_SETTINGS";
