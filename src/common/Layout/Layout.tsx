@@ -1,4 +1,4 @@
-import { ReactChild, useState } from "react";
+import { ReactChild, useEffect, useMemo, useState } from "react";
 import { Layout as LayoutAntd, Menu } from "antd";
 import styles from "./layout.module.css";
 import SvgMenu from "../../icons/SvgMenu";
@@ -29,10 +29,67 @@ import { AUTH_TOKEN } from "../../utils/localStoreConst";
 import InsideClickHandler from "./InsideClickHandler";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../redux/store";
+import { isEmpty } from "../../utils/validators";
+import {
+  authMeMiddleWare,
+  authMeUpdateMiddleWare,
+  uploadMiddleWare,
+} from "../../modules/LoginModule/store/loginMiddleware";
+import {
+  moreInfoListMiddleWare,
+  moreInfoMiddleWare,
+  moreInfoUserMiddleWare,
+} from "../../modules/MyPageModule/store/mypageMiddleware";
+import { useFormik } from "formik";
+import Loader from "../../packages/Loader/Loader";
 
 const cx = classNames.bind(styles);
 
 const { Header, Sider, Content } = LayoutAntd;
+
+export type formType = {
+  firstName: string;
+  lastName: string;
+  email: string;
+  organization: any;
+  department: any;
+  lab: any;
+  profile: any;
+};
+
+const initialValues: formType = {
+  firstName: "",
+  lastName: "",
+  email: "",
+  organization: "",
+  department: "",
+  lab: "",
+  profile: "",
+};
+
+const validate = (values: formType) => {
+  const errors: Partial<formType> = {};
+  if (isEmpty(values.firstName)) {
+    errors.firstName = "First Name field is required";
+  }
+  if (isEmpty(values.lastName)) {
+    errors.lastName = "Last Name field is required";
+  }
+  if (isEmpty(values.email)) {
+    errors.email = "Email field is required";
+  }
+
+  if (isEmpty(values.organization)) {
+    errors.organization = "organization field is required";
+  }
+  if (isEmpty(values.department)) {
+    errors.department = "Department field is required";
+  }
+  if (isEmpty(values.lab)) {
+    errors.lab = "Lab type field is required";
+  }
+  return errors;
+};
 
 type Props = {
   children: ReactChild;
@@ -41,23 +98,164 @@ type Props = {
 const svgFill = (value: boolean) => {
   return value ? textShade1 : gray3;
 };
+
 const Layout = ({ children }: Props) => {
   const dispatch: AppDispatch = useDispatch();
   const [collapsed, setCollapsed] = useState(true);
   const navigate = useNavigate();
   const [isDrawer, setDrawer] = useState(false);
   const [isNoti, setNoti] = useState(false);
+  const [isEdit, setEdit] = useState(true);
 
   const hideLayout =
     window.location.pathname === routes.LOGIN ||
     window.location.pathname === routes.FORGOT_PASSWORD ||
     window.location.pathname === routes.SIGNUP;
 
-  const { data } = useSelector(({ authMeReducers }: RootState) => {
-    return {
-      data: authMeReducers.data,
-    };
+  useEffect(() => {
+    dispatch(moreInfoListMiddleWare());
+  }, []);
+  const {
+    moreInfoData,
+    moreInfoList,
+    uploadLoader,
+    updateLoader,
+    moreInfoUserLoader,
+    authMeLoader,
+    data,
+  } = useSelector(
+    ({
+      authMeReducers,
+      moreInfoUserReducers,
+      moreInfoListReducers,
+      uploadReducers,
+      moreInfoUserUpdateReducers,
+    }: RootState) => {
+      return {
+        moreInfoData: moreInfoUserReducers.data,
+        moreInfoList: moreInfoListReducers.data,
+        uploadLoader: uploadReducers.isLoading,
+        updateLoader: moreInfoUserUpdateReducers.isLoading,
+        authMeLoader: authMeReducers.isLoading,
+        moreInfoUserLoader: moreInfoUserReducers.isLoading,
+        data: authMeReducers.data,
+      };
+    }
+  );
+
+  const handleSubmit = (values: formType) => {
+    if (values.profile?.name) {
+      let formData = new FormData();
+      formData.append("image", values.profile);
+      dispatch(uploadMiddleWare({ formData })).then((res) => {
+        if (res.payload?.imageUrl) {
+          const beforeQuestionMark = res.payload.imageUrl.split("?")[0];
+          dispatch(
+            moreInfoMiddleWare({
+              activeStatus: false,
+              imageUrl: beforeQuestionMark,
+              firstname: values.firstName,
+              lastname: values.lastName,
+              email: values.email,
+              organization: values.organization,
+              department: values.department.value,
+              labtype: values.lab,
+            })
+          ).then(() => {
+            setEdit(true);
+            setDrawer(false);
+            dispatch(moreInfoUserMiddleWare());
+          });
+          dispatch(
+            authMeUpdateMiddleWare({
+              activeStatus: false,
+              imageUrl: beforeQuestionMark,
+              firstname: values.firstName,
+              lastname: values.lastName,
+              email: values.email,
+              organization: values.organization,
+              department: values.department.value,
+              labtype: values.lab,
+            })
+          ).then(() => {
+            dispatch(authMeMiddleWare());
+          });
+        }
+      });
+    } else {
+      dispatch(
+        moreInfoMiddleWare({
+          activeStatus: false,
+          imageUrl: formik.values.profile,
+          firstname: values.firstName,
+          lastname: values.lastName,
+          email: values.email,
+          organization: values.organization,
+          department: values.department,
+          labtype: values.lab,
+        })
+      ).then(() => {
+        setEdit(true);
+        setDrawer(false);
+        dispatch(moreInfoUserMiddleWare());
+      });
+      dispatch(
+        authMeUpdateMiddleWare({
+          activeStatus: false,
+          imageUrl: formik.values.profile,
+          firstname: values.firstName,
+          lastname: values.lastName,
+          email: values.email,
+          organization: values.organization,
+          department: values.department,
+          labtype: values.lab,
+        })
+      ).then(() => {
+        dispatch(authMeMiddleWare());
+      });
+    }
+  };
+
+  const formik = useFormik({
+    initialValues,
+    onSubmit: handleSubmit,
+    validate,
   });
+
+  const getDepartmentOption: any = useMemo(() => {
+    const result = moreInfoList.filter(
+      (list) => list.organization === formik.values.organization?.organization
+    );
+    return result ? result[0] : { department: [], labtype: [] };
+  }, [formik.values.organization]);
+
+  useEffect(() => {
+    if (!isEmpty(moreInfoData?.firstname)) {
+      formik.setFieldValue("firstName", moreInfoData.firstname);
+      formik.setFieldValue("lastName", moreInfoData.lastname);
+      formik.setFieldValue(
+        "organization",
+        typeof moreInfoData.organization === "string"
+          ? {
+              organization: moreInfoData.organization,
+              _id: moreInfoData._id,
+            }
+          : moreInfoData.organization
+      );
+      formik.setFieldValue(
+        "department",
+        typeof moreInfoData.department === "string"
+          ? {
+              label: moreInfoData.department,
+              value: moreInfoData.department,
+            }
+          : moreInfoData.department
+      );
+      formik.setFieldValue("lab", moreInfoData.labtype);
+    }
+    formik.setFieldValue("email", moreInfoData.email);
+    formik.setFieldValue("profile", moreInfoData.imageUrl);
+  }, [moreInfoData]);
 
   const myPage = window.location.pathname === routes.MY_PAGE;
   const runz = window.location.pathname === routes.RUNZ;
@@ -98,10 +296,18 @@ const Layout = ({ children }: Props) => {
 
   return (
     <>
+      {(moreInfoUserLoader || authMeLoader) && <Loader />}
       <ProfileDrawer
+        isLoader={uploadLoader || updateLoader}
+        formik={formik}
         onClose={() => setDrawer(false)}
         open={isDrawer}
         handleLogout={handleLogout}
+        setEdit={setEdit}
+        isEdit={isEdit}
+        moreInfoData={moreInfoData}
+        moreInfoList={moreInfoList}
+        getDepartmentOption={getDepartmentOption}
       />
       <NotificationDrawer onClose={() => setNoti(false)} open={isNoti} />
 
@@ -199,7 +405,19 @@ const Layout = ({ children }: Props) => {
                     className={styles.svgProfile}
                     types="link"
                   >
-                    <SvgUserProfile />
+                    {data.imageUrl ? (
+                      <img
+                        src={data.imageUrl}
+                        style={{
+                          height: 24,
+                          width: 24,
+                          objectFit: "cover",
+                          borderRadius: 100,
+                        }}
+                      />
+                    ) : (
+                      <SvgUserProfile />
+                    )}
                   </Button>
                 </Flex>
               </InsideClickHandler>

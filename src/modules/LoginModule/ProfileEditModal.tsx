@@ -51,11 +51,6 @@ const ProfileEditModal = () => {
   const dispatch: AppDispatch = useDispatch();
   const fileInputRef = useRef<any>(null);
 
-  useEffect(() => {
-    dispatch(moreInfoListMiddleWare());
-    dispatch(moreInfoUserMiddleWare());
-  }, []);
-
   const {
     moreInfoData,
     moreInfoList,
@@ -192,14 +187,24 @@ const ProfileEditModal = () => {
     if (!isEmpty(moreInfoData?.firstname)) {
       formik.setFieldValue("firstName", moreInfoData.firstname);
       formik.setFieldValue("lastName", moreInfoData.lastname);
-      formik.setFieldValue("organization", {
-        organization: moreInfoData.organization,
-        _id: moreInfoData.organization,
-      });
-      formik.setFieldValue("department", {
-        label: moreInfoData.department,
-        value: moreInfoData.department,
-      });
+      formik.setFieldValue(
+        "organization",
+        typeof moreInfoData.organization === "string"
+          ? {
+              organization: moreInfoData.organization,
+              _id: moreInfoData._id,
+            }
+          : moreInfoData.organization
+      );
+      formik.setFieldValue(
+        "department",
+        typeof moreInfoData.department === "string"
+          ? {
+              label: moreInfoData.department,
+              value: moreInfoData.department,
+            }
+          : moreInfoData.department
+      );
       formik.setFieldValue("lab", moreInfoData.labtype);
     }
     formik.setFieldValue("email", moreInfoData.email);
@@ -251,9 +256,10 @@ const ProfileEditModal = () => {
               style={{
                 position: "absolute",
                 borderRadius: 100,
+                objectFit: "cover",
               }}
-              height={165}
-              width={165}
+              height={168}
+              width={168}
               src={URL.createObjectURL(formik.values.profile)}
             />
           ) : (
@@ -261,9 +267,10 @@ const ProfileEditModal = () => {
               style={{
                 position: "absolute",
                 borderRadius: 100,
+                objectFit: "cover",
               }}
-              height={165}
-              width={165}
+              height={168}
+              width={168}
               src={formik.values.profile}
             />
           )}

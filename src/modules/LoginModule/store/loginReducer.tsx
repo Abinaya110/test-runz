@@ -50,6 +50,10 @@ const authMeInitialState: AuthMeReducerState = {
     __v: 0,
     _id: "",
     firstuse: false,
+    activeStatus: false,
+    imageUrl: "",
+    firstname: "",
+    lastname: "",
   },
 };
 

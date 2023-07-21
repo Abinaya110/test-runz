@@ -14,6 +14,10 @@ export interface AuthMe {
   updated_at: string;
   __v: number;
   firstuse: boolean;
+  activeStatus: boolean;
+  imageUrl: string;
+  firstname: string;
+  lastname: string;
 }
 
 export interface AuthMeReducerState {

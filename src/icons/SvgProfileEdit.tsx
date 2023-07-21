@@ -4,10 +4,22 @@ const defaultProps = {
   width: 220,
   height: 220,
   onClick: () => {},
+  isEdit: false,
 };
 
-const SvgProfileEdit = ({ width, height, onClick }: typeof defaultProps) => (
-  <svg width={width} height={height} viewBox="0 0 220 220" fill="none">
+const SvgProfileEdit = ({
+  width,
+  height,
+  onClick,
+  isEdit,
+}: typeof defaultProps) => (
+  <svg
+    style={{ pointerEvents: isEdit ? "none" : "auto" }}
+    width={width}
+    height={height}
+    viewBox="0 0 220 220"
+    fill="none"
+  >
     <circle cx="110" cy="110" r="83.3333" fill="#565656" />
     <mask
       id="mask0_134_2748"
@@ -38,7 +50,7 @@ const SvgProfileEdit = ({ width, height, onClick }: typeof defaultProps) => (
       strokeWidth="5"
     />
     <g
-      style={{ zIndex: 11 }}
+      style={{ zIndex: 11, cursor: "pointer" }}
       onClick={onClick}
       filter="url(#filter0_d_134_2748)"
     >
