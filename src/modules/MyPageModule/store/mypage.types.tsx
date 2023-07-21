@@ -26,10 +26,10 @@ export interface MoreInfoUser {
   name: string;
   role: string;
   updatedAt: string;
-  department?: string;
+  department?: any;
   firstname?: string;
   lastname?: string;
-  organization?: string;
+  organization?: any;
 }
 export interface LabtypeEntity {
   label: string;

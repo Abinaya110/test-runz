@@ -9,7 +9,11 @@ import {
   moreInfoUserUpdateReducers,
 } from "../modules/MyPageModule/store/mypageReducer";
 import { procedureReducers } from "../modules/ProceduresModule/store/proceduresReducers";
-import { getSettingsReducers } from "../modules/SettingsModule/store/settingsReducers";
+import {
+  getSettingsReducers,
+  postSettingsReducers,
+  updateSettingsReducers,
+} from "../modules/SettingsModule/store/settingsReducers";
 
 export const reducers = {
   signUpReducers,
@@ -20,4 +24,6 @@ export const reducers = {
   uploadReducers,
   moreInfoUserUpdateReducers,
   getSettingsReducers,
+  postSettingsReducers,
+  updateSettingsReducers,
 };

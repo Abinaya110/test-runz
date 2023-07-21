@@ -88,7 +88,6 @@ const LoginScreen = () => {
         }
       })
       .catch((error) => {
-        console.log(error.message);
         if (error.code === "auth/user-not-found") {
           formikHelpers.setFieldError("email", "Email is not found");
         } else if (error.code === "auth/wrong-password") {

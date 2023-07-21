@@ -467,53 +467,54 @@ const ProfileScreen = () => {
         </Text>
       ),
       children: (
-        <form autoComplete="off">
-          <Flex>
+        <Flex>
+          <InputText
+            autoComplete="new-password"
+            label="Enter old password"
+            required
+            value={formikPassword.values.oldPassword}
+            onChange={formikPassword.handleChange("oldPassword")}
+          />
+          <Flex marginTop={20} marginBottom={20}>
             <InputText
               autoComplete="new-password"
-              label="Enter old password"
+              label="Enter new password"
               required
-              value={formikPassword.values.oldPassword}
-              onChange={formikPassword.handleChange("oldPassword")}
-            />
-            <Flex marginTop={20} marginBottom={20}>
-              <InputText
-                autoComplete="new-password"
-                value={formikPassword.values.confirmPassword}
-                onChange={formik.handleChange("confirmPassword")}
-                label={"Enter new password"}
-                keyboardType={isVisible ? "text" : "password"}
-                actionRight={visibleIcon}
-                message={
-                  formikPassword.errors.newPassword ||
-                  getPasswordStrength(formikPassword.values.newPassword)
-                }
-                status={
-                  formikPassword.touched.newPassword &&
-                  formikPassword.errors.newPassword
-                    ? "error"
-                    : passwordMessage
-                }
-              />
-            </Flex>
-            <InputText
-              value={formikPassword.values.confirmPassword}
-              onChange={formikPassword.handleChange("confirmPassword")}
-              label={"Enter confirm password"}
-              keyboardType={isVisibleOne ? "text" : "password"}
-              actionRight={visibleIconOne}
+              value={formikPassword.values.newPassword}
+              onChange={formikPassword.handleChange("newPassword")}
+              keyboardType={isVisible ? "text" : "password"}
+              actionRight={visibleIcon}
               message={
-                formikPassword.errors.confirmPassword || confirmPasswordMessage
+                formikPassword.errors.newPassword ||
+                getPasswordStrength(formikPassword.values.newPassword)
               }
               status={
-                formikPassword.touched.confirmPassword &&
-                formikPassword.errors.confirmPassword
+                formikPassword.touched.newPassword &&
+                formikPassword.errors.newPassword
                   ? "error"
-                  : confirmPasswordStatus
+                  : passwordMessage
               }
             />
           </Flex>
-        </form>
+          <InputText
+            autoComplete="new-password"
+            label="Confirm new password"
+            required
+            value={formikPassword.values.confirmPassword}
+            onChange={formikPassword.handleChange("confirmPassword")}
+            keyboardType={isVisibleOne ? "text" : "password"}
+            actionRight={visibleIconOne}
+            message={
+              formikPassword.errors.confirmPassword || confirmPasswordMessage
+            }
+            status={
+              formikPassword.touched.confirmPassword &&
+              formikPassword.errors.confirmPassword
+                ? "error"
+                : confirmPasswordStatus
+            }
+          />
+        </Flex>
       ),
     },
   ];
@@ -571,6 +572,7 @@ const ProfileScreen = () => {
               )}
             </Flex>
           </Flex>
+
           <Collapse
             ghost
             style={{ minWidth: 600 }}

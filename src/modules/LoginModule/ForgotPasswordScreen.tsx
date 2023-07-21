@@ -11,9 +11,13 @@ import { useEffect, useState } from "react";
 import { routes } from "../../routes/routesPath";
 import Button from "../../packages/Button/Button";
 import { isEmpty, isValidEmail } from "../../utils/validators";
-import { useFormik } from "formik";
+import { FormikHelpers, useFormik } from "formik";
 import { getPasswordStrength, useVisibilityIcon } from "../../utils/helpers";
 import { statusType } from "../../packages/InputText/inputTextTypes";
+import { auth } from "../../utils/firebase";
+import Alert from "../../packages/Alert/Alert";
+import Toast from "../../packages/Toast/Toast";
+import Loader from "../../packages/Loader/Loader";
 
 const endTime = 60;
 
@@ -99,6 +103,7 @@ const ForgotPasswordScreen = () => {
   const [isRunning, setIsRunning] = useState(false);
   const { visibleIcon, isVisible, isVisibleOne, visibleIconOne } =
     useVisibilityIcon();
+  const [isLoader, setLoader] = useState(false);
   let getType = searchParams.get("type");
 
   useEffect(() => {
@@ -150,9 +155,40 @@ const ForgotPasswordScreen = () => {
 
   const handleLogin = () => navigate(routes.LOGIN);
 
-  const handleSendOtp = () => {
-    setSearchParams({ type: "enter-otp" });
+  const handleSendOtp = (
+    values: formSendOtpType,
+    formikHelpers: FormikHelpers<any>
+  ) => {
+    setLoader(true);
+    auth
+      .sendPasswordResetEmail(values.email)
+      .then(() => {
+        setLoader(true);
+        Toast(
+          "Password reset email sent. Please check your inbox or spam folder."
+        );
+        navigate(routes.LOGIN);
+        formikHelpers.resetForm();
+      })
+      .catch((error) => {
+        console.log(error.message);
+        if (error.code === "auth/user-not-found") {
+          formikHelpers.setFieldError("email", "Email is not found");
+        } else if (error.code === "auth/wrong-password") {
+          formikHelpers.setFieldError("password", "Invalid password");
+        }
+        if (error.code === "auth/too-many-requests") {
+          Alert(
+            "Access to this account has been temporarily disabled due to many failed login attempts you can try again later",
+            "SHORT",
+            "error"
+          );
+        }
+        setLoader(false);
+      });
+    // setSearchParams({ type: "enter-otp" });
   };
+
   const formikSendOtp = useFormik({
     initialValues: initialValuesSendOtop,
     onSubmit: handleSendOtp,
@@ -220,171 +256,178 @@ const ForgotPasswordScreen = () => {
   }
 
   return (
-    <LoginFrame
-      leftChild={
-        <Flex between flex={1}>
-          <Flex>
-            <Text type={"h4"}>Welcome to</Text>
-            <Text type={"h2"}>Test Runz</Text>
-          </Flex>
-          <Flex>
-            <Text align="right" color="tertiary-shade-2" type="title">
-              Forgot your password?
-            </Text>
-            <Text align="right" color="tertiary-shade-2" type="h4">
-              Don't worry we got you
-            </Text>
-            <Text
-              style={{ marginBottom: 10 }}
-              align="right"
-              color="tertiary-shade-2"
-              type="h1"
-            >
-              Covered
-            </Text>
-            <HelpAndTerms />
-          </Flex>
-        </Flex>
-      }
-      rightChild={
-        <Flex>
-          <Text type="title">{title}</Text>
-          <Text type="bodyMedium" className={styles.inputMargin}>
-            {titleDescription}
-          </Text>
-          {isEmpty(getType) && (
-            <>
-              <InputText
-                value={formikSendOtp.values.email}
-                onChange={formikSendOtp.handleChange("email")}
-                message={formikSendOtp.errors.email}
-                status={
-                  formikSendOtp.touched.email && formikSendOtp.errors.email
-                    ? "error"
-                    : ""
-                }
-                label="Registered email-id"
-              />
-              <Flex className={styles.captchaFlex}>
-                <LabelWrapper>
-                  <Captcha onClick={formikSendOtp.handleSubmit} />
-                </LabelWrapper>
-              </Flex>
-            </>
-          )}
-          {getType === "enter-otp" && (
+    <>
+      {isLoader && <Loader />}
+      <LoginFrame
+        leftChild={
+          <Flex between flex={1}>
             <Flex>
-              <InputText
-                value={formikEnterOtp.values.otp}
-                onChange={formikEnterOtp.handleChange("otp")}
-                label="Enter otp"
-                message={formikEnterOtp.errors.otp}
-                status={
-                  formikEnterOtp.touched.otp && formikEnterOtp.errors.otp
-                    ? "error"
-                    : ""
-                }
-              />
-              <Flex center className={styles.resendFlex}>
-                <Button
-                  types="link"
-                  onClick={() => {}}
-                  style={{
-                    pointerEvents: disableResend ? "none" : "auto",
-                  }}
-                >
-                  <Text
-                    type="captionBold"
-                    color={disableResend ? "shade-3" : "theme"}
-                  >
-                    Resend OTP{" "}
-                    <Text type="captionBold">
-                      {disableResend ? `(${isTime})` : ""}
-                    </Text>
-                  </Text>
-                </Button>
-              </Flex>
-              <Button
-                onClick={formikEnterOtp.handleSubmit}
-                className={styles.inputMargin}
-              >
-                Verify
-              </Button>
+              <Text type={"h4"}>Welcome to</Text>
+              <Text type={"h2"}>Test Runz</Text>
             </Flex>
-          )}
-
-          {getType === "reset-password" && (
-            <form autoComplete="off">
+            <Flex>
+              <Text align="right" color="tertiary-shade-2" type="title">
+                Forgot your password?
+              </Text>
+              <Text align="right" color="tertiary-shade-2" type="h4">
+                Don't worry we got you
+              </Text>
+              <Text
+                style={{ marginBottom: 10 }}
+                align="right"
+                color="tertiary-shade-2"
+                type="h1"
+              >
+                Covered
+              </Text>
+              <HelpAndTerms />
+            </Flex>
+          </Flex>
+        }
+        rightChild={
+          <Flex>
+            <Text type="title">{title}</Text>
+            <Text type="bodyMedium" className={styles.inputMargin}>
+              {titleDescription}
+            </Text>
+            {isEmpty(getType) && (
+              <>
+                <InputText
+                  value={formikSendOtp.values.email}
+                  onChange={formikSendOtp.handleChange("email")}
+                  message={formikSendOtp.errors.email}
+                  status={
+                    formikSendOtp.touched.email && formikSendOtp.errors.email
+                      ? "error"
+                      : ""
+                  }
+                  label="Registered email-id"
+                />
+                <Flex className={styles.captchaFlex}>
+                  <LabelWrapper>
+                    <Captcha onClick={formikSendOtp.handleSubmit} />
+                  </LabelWrapper>
+                </Flex>
+              </>
+            )}
+            {getType === "enter-otp" && (
               <Flex>
                 <InputText
-                  autoComplete="off"
-                  label="Registered email-id"
-                  value={formikRestPassword.values.email}
-                  onChange={formikRestPassword.handleChange("email")}
-                />
-                <div className={styles.inputMargin}>
-                  <InputText
-                    autoComplete="new-password"
-                    label="New Password"
-                    value={formikRestPassword.values.newPassword}
-                    onChange={formikRestPassword.handleChange("newPassword")}
-                    message={
-                      formikRestPassword.errors.newPassword ||
-                      getPasswordStrength(formikRestPassword.values.newPassword)
-                    }
-                    status={
-                      formikRestPassword.touched.newPassword &&
-                      formikRestPassword.errors.newPassword
-                        ? "error"
-                        : passwordMessage
-                    }
-                    keyboardType={isVisible ? "text" : "password"}
-                    actionRight={visibleIcon}
-                  />
-                </div>
-
-                <InputText
-                  label="Confirm password"
-                  value={formikRestPassword.values.confirmPassword}
-                  onChange={formikRestPassword.handleChange("confirmPassword")}
-                  message={
-                    formikRestPassword.errors.confirmPassword ||
-                    confirmPasswordMessage
-                  }
+                  value={formikEnterOtp.values.otp}
+                  onChange={formikEnterOtp.handleChange("otp")}
+                  label="Enter otp"
+                  message={formikEnterOtp.errors.otp}
                   status={
-                    formikRestPassword.touched.confirmPassword &&
-                    formikRestPassword.errors.confirmPassword
+                    formikEnterOtp.touched.otp && formikEnterOtp.errors.otp
                       ? "error"
-                      : confirmPasswordStatus
+                      : ""
                   }
-                  keyboardType={isVisibleOne ? "text" : "password"}
-                  actionRight={visibleIconOne}
                 />
+                <Flex center className={styles.resendFlex}>
+                  <Button
+                    types="link"
+                    onClick={() => {}}
+                    style={{
+                      pointerEvents: disableResend ? "none" : "auto",
+                    }}
+                  >
+                    <Text
+                      type="captionBold"
+                      color={disableResend ? "shade-3" : "theme"}
+                    >
+                      Resend OTP{" "}
+                      <Text type="captionBold">
+                        {disableResend ? `(${isTime})` : ""}
+                      </Text>
+                    </Text>
+                  </Button>
+                </Flex>
                 <Button
-                  onClick={formikRestPassword.handleSubmit}
+                  onClick={formikEnterOtp.handleSubmit}
                   className={styles.inputMargin}
                 >
-                  Reset
+                  Verify
                 </Button>
               </Flex>
-            </form>
-          )}
+            )}
 
-          <Flex row>
-            <Text type="captionRegular">Back to</Text>
-            <Button
-              style={{ marginLeft: 4 }}
-              types="link"
-              onClick={handleLogin}
-            >
-              <Text type="captionBold" color="secondary-shade-1">
-                log in!
-              </Text>
-            </Button>
+            {getType === "reset-password" && (
+              <form autoComplete="off">
+                <Flex>
+                  <InputText
+                    autoComplete="off"
+                    label="Registered email-id"
+                    value={formikRestPassword.values.email}
+                    onChange={formikRestPassword.handleChange("email")}
+                  />
+                  <div className={styles.inputMargin}>
+                    <InputText
+                      autoComplete="new-password"
+                      label="New Password"
+                      value={formikRestPassword.values.newPassword}
+                      onChange={formikRestPassword.handleChange("newPassword")}
+                      message={
+                        formikRestPassword.errors.newPassword ||
+                        getPasswordStrength(
+                          formikRestPassword.values.newPassword
+                        )
+                      }
+                      status={
+                        formikRestPassword.touched.newPassword &&
+                        formikRestPassword.errors.newPassword
+                          ? "error"
+                          : passwordMessage
+                      }
+                      keyboardType={isVisible ? "text" : "password"}
+                      actionRight={visibleIcon}
+                    />
+                  </div>
+
+                  <InputText
+                    label="Confirm password"
+                    value={formikRestPassword.values.confirmPassword}
+                    onChange={formikRestPassword.handleChange(
+                      "confirmPassword"
+                    )}
+                    message={
+                      formikRestPassword.errors.confirmPassword ||
+                      confirmPasswordMessage
+                    }
+                    status={
+                      formikRestPassword.touched.confirmPassword &&
+                      formikRestPassword.errors.confirmPassword
+                        ? "error"
+                        : confirmPasswordStatus
+                    }
+                    keyboardType={isVisibleOne ? "text" : "password"}
+                    actionRight={visibleIconOne}
+                  />
+                  <Button
+                    onClick={formikRestPassword.handleSubmit}
+                    className={styles.inputMargin}
+                  >
+                    Reset
+                  </Button>
+                </Flex>
+              </form>
+            )}
+
+            <Flex row>
+              <Text type="captionRegular">Back to</Text>
+              <Button
+                style={{ marginLeft: 4 }}
+                types="link"
+                onClick={handleLogin}
+              >
+                <Text type="captionBold" color="secondary-shade-1">
+                  log in!
+                </Text>
+              </Button>
+            </Flex>
           </Flex>
-        </Flex>
-      }
-    />
+        }
+      />
+    </>
   );
 };
 

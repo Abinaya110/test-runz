@@ -14,43 +14,68 @@ import RoleScreen from "./RoleScreen";
 import { textShade1, textShade3 } from "../../theme/colors";
 import Button from "../../packages/Button/Button";
 import { HEADER_HEIGHT } from "../../utils/constants";
-import { AppDispatch } from "../../redux/store";
-import { useDispatch } from "react-redux";
+import { AppDispatch, RootState } from "../../redux/store";
+import { useDispatch, useSelector } from "react-redux";
 import { getSettingMiddleWare } from "./store/settingsMiddleware";
+import { isEmpty } from "../../utils/validators";
+import Loader from "../../packages/Loader/Loader";
+import { useSearchParams } from "react-router-dom";
 
 const cx = classNames.bind(styles);
 
 const SettingsScreen = () => {
   const dispatch: AppDispatch = useDispatch();
-  const [activeModule, setActiveModule] = useState(1);
+  let [searchParams, setSearchParams] = useSearchParams({
+    type: "notification",
+  });
+
+  let getType = searchParams.get("type");
+
+  const { moreInfoData, isLoading } = useSelector(
+    ({ moreInfoUserReducers, getSettingsReducers }: RootState) => {
+      return {
+        moreInfoData: moreInfoUserReducers.data,
+        isLoading: getSettingsReducers.isLoading,
+      };
+    }
+  );
 
   useEffect(() => {
-    // dispatch(getSettingMiddleWare());
-  }, []);
-  const handleChangeSettings = (e: number) => {
-    setActiveModule(e);
+    if (!isEmpty(moreInfoData.organization?._id)) {
+      // dispatch(getSettingMiddleWare({ id: moreInfoData.organization?._id }));
+    }
+  }, [moreInfoData.organization]);
+
+  const handleChangeSettings = (value: string) => {
+    setSearchParams({ type: value });
   };
 
   const settingsModuleList = [
     {
-      id: 1,
+      id: "notification",
       title: "Notification Settings",
-      icon: <SvgNotify fill={activeModule === 1 ? textShade1 : textShade3} />,
+      icon: (
+        <SvgNotify
+          fill={getType === "notification" ? textShade1 : textShade3}
+        />
+      ),
     },
     {
-      id: 2,
+      id: "profile",
       title: "Profile Settings",
-      icon: <SvgProfile fill={activeModule === 2 ? textShade1 : textShade3} />,
+      icon: (
+        <SvgProfile fill={getType === "profile" ? textShade1 : textShade3} />
+      ),
     },
     {
-      id: 3,
+      id: "user",
       title: "User Management",
-      icon: <SvgUser fill={activeModule === 3 ? textShade1 : textShade3} />,
+      icon: <SvgUser fill={getType === "user" ? textShade1 : textShade3} />,
     },
     {
-      id: 4,
+      id: "role",
       title: "Role Management",
-      icon: <SvgRole fill={activeModule === 4 ? textShade1 : textShade3} />,
+      icon: <SvgRole fill={getType === "role" ? textShade1 : textShade3} />,
     },
   ];
 
@@ -59,6 +84,7 @@ const SettingsScreen = () => {
       className={styles.overAll}
       height={window.innerHeight - HEADER_HEIGHT}
     >
+      {isLoading && <Loader />}
       <Flex row flex={1}>
         <Flex width={300} className={styles.leftContainer}>
           <Text type="subTitle" color="shade-2" className={styles.settingText}>
@@ -71,14 +97,14 @@ const SettingsScreen = () => {
                 types="link"
                 onClick={() => handleChangeSettings(list.id)}
                 className={cx("listText", {
-                  activeModule: activeModule === list.id,
+                  activeModule: getType === list.id,
                 })}
               >
                 <Flex row>
                   {list.icon}
                   <Text
                     align="start"
-                    color={activeModule === list.id ? "primary" : "shade-3"}
+                    color={getType === list.id ? "primary" : "shade-3"}
                     style={{ marginLeft: 8 }}
                     type="bodyBold"
                   >
@@ -91,10 +117,10 @@ const SettingsScreen = () => {
         </Flex>
 
         <Flex className={styles.rightOverall}>
-          {activeModule === 1 && <NotificationScreen />}
-          {activeModule === 2 && <ProfileScreen />}
-          {activeModule === 3 && <UserScreen />}
-          {activeModule === 4 && <RoleScreen />}
+          {getType === "notification" && <NotificationScreen />}
+          {getType === "profile" && <ProfileScreen />}
+          {getType === "user" && <UserScreen />}
+          {getType === "role" && <RoleScreen />}
         </Flex>
       </Flex>
     </Flex>

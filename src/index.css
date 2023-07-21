@@ -184,6 +184,7 @@ input:-webkit-autofill:focus {
   padding-bottom: 8px;
   padding-top: 8px;
   margin-right: 16px;
+  font-family: "Poppins-Medium";
 }
 
 .show-tost-anim {

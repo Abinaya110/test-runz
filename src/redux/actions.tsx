@@ -16,3 +16,5 @@ export const MORE_INFO = "mypage/MORE_INFO";
 export const MORE_INFO_USER = "mypage/MORE_INFO_USER";
 
 export const GET_SETTINGS = "setting/GET_SETTINGS";
+export const POST_SETTINGS = "setting/POST_SETTINGS";
+export const UPDATE_SETTINGS = "setting/UPDATE_SETTINGS";
