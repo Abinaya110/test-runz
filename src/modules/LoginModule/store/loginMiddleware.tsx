@@ -6,13 +6,16 @@ import {
   GOOGLE_SIGNUP,
   MICROSOFT_SIGNIN,
   SIGNUP,
+  UPLOAD,
 } from "../../../redux/actions";
 import {
   authMeApi,
   googleLoginApi,
   microsoftLoginApi,
   signUpApi,
+  uploadApi,
 } from "../../../routes/apiRoutes";
+import { MoreInfoPayload } from "../../MyPageModule/store/mypage.types";
 
 export const signUpMiddleWare = createAsyncThunk(
   SIGNUP,
@@ -108,9 +111,45 @@ export const authMeMiddleWare = createAsyncThunk(
 
 export const authMeUpdateMiddleWare = createAsyncThunk(
   AUTH_ME_UPDATE,
-  async ({ firstuse }: { firstuse: boolean }, { rejectWithValue }) => {
+  async (
+    {
+      activeStatus,
+      imageUrl,
+      firstname,
+      lastname,
+      email,
+      organization,
+      department,
+      labtype,
+    }: MoreInfoPayload,
+    { rejectWithValue }
+  ) => {
     try {
-      const { data } = await axios.patch(authMeApi, { firstuse });
+      const { data } = await axios.patch(authMeApi, {
+        activeStatus,
+        imageUrl,
+        firstname,
+        lastname,
+        email,
+        organization,
+        department,
+        labtype,
+      });
+      return data;
+    } catch (error: any) {
+      const typedError = error as Error;
+      return rejectWithValue(typedError);
+    }
+  }
+);
+
+export const uploadMiddleWare = createAsyncThunk(
+  UPLOAD,
+  async ({ formData }: { formData: any }, { rejectWithValue }) => {
+    try {
+      const { data } = await axios.post(uploadApi, formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
       return data;
     } catch (error: any) {
       const typedError = error as Error;

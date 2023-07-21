@@ -17,24 +17,17 @@ const ProtectedRoutes = () => {
   const location = useLocation();
   const isAuth = useAuth();
 
-  const { data, authLoader } = useSelector(({ authMeReducers }: RootState) => {
-    return {
-      data: authMeReducers.data,
-      authLoader: authMeReducers.isLoading,
-    };
-  });
+  const { data, authLoader } = useSelector(
+    ({ moreInfoUserReducers }: RootState) => {
+      return {
+        data: moreInfoUserReducers.data,
+        authLoader: moreInfoUserReducers.isLoading,
+      };
+    }
+  );
 
   return isAuth ? (
-    <>
-      {" "}
-      {data.firstuse || authLoader ? (
-        <>
-          <Outlet />
-        </>
-      ) : (
-        <Outlet />
-      )}
-    </>
+    <> {data.activeStatus || authLoader ? <></> : <Outlet />}</>
   ) : (
     <Navigate to={routes.LOGIN} state={{ from: location }} replace />
   );

@@ -1,6 +1,14 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { authMeMiddleWare, signUpMiddleWare } from "./loginMiddleware";
-import type { AuthMeReducerState, signUpReducerState } from "./login.types";
+import {
+  authMeMiddleWare,
+  signUpMiddleWare,
+  uploadMiddleWare,
+} from "./loginMiddleware";
+import type {
+  AuthMeReducerState,
+  UploadReducerState,
+  signUpReducerState,
+} from "./login.types";
 
 const signUpInitialState: signUpReducerState = {
   isLoading: false,
@@ -67,5 +75,34 @@ const authMeReducer = createSlice({
   },
 });
 
+const uploadInitialState: UploadReducerState = {
+  isLoading: false,
+  error: "",
+  imageUrl: "",
+};
+
+const uploadReducer = createSlice({
+  name: "upload",
+  initialState: uploadInitialState,
+  reducers: {},
+  extraReducers: (builder) => {
+    builder.addCase(uploadMiddleWare.pending, (state) => {
+      state.isLoading = true;
+      state.error = "";
+    });
+    builder.addCase(uploadMiddleWare.fulfilled, (state, action) => {
+      state.isLoading = false;
+      state.imageUrl = action.payload.imageUrl;
+    });
+    builder.addCase(uploadMiddleWare.rejected, (state, action) => {
+      state.isLoading = false;
+      if (typeof action.payload === "string") {
+        state.error = action.payload;
+      }
+    });
+  },
+});
+
 export const signUpReducers = signUpReducer.reducer;
 export const authMeReducers = authMeReducer.reducer;
+export const uploadReducers = uploadReducer.reducer;

@@ -3,9 +3,10 @@ import React, { memo } from "react";
 const defaultProps = {
   width: 220,
   height: 220,
+  onClick: () => {},
 };
 
-const SvgProfileEdit = ({ width, height }: typeof defaultProps) => (
+const SvgProfileEdit = ({ width, height, onClick }: typeof defaultProps) => (
   <svg width={width} height={height} viewBox="0 0 220 220" fill="none">
     <circle cx="110" cy="110" r="83.3333" fill="#565656" />
     <mask
@@ -36,7 +37,11 @@ const SvgProfileEdit = ({ width, height }: typeof defaultProps) => (
       stroke="#F3F3F3"
       strokeWidth="5"
     />
-    <g filter="url(#filter0_d_134_2748)">
+    <g
+      style={{ zIndex: 11 }}
+      onClick={onClick}
+      filter="url(#filter0_d_134_2748)"
+    >
       <rect
         x="166"
         y="166"

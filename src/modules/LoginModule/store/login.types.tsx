@@ -21,3 +21,9 @@ export interface AuthMeReducerState {
   error: string;
   data: AuthMe;
 }
+
+export interface UploadReducerState {
+  isLoading: boolean;
+  error: string;
+  imageUrl: string;
+}

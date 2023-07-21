@@ -51,6 +51,7 @@ type Props = {
   inputId?: string;
   inputColor?: inputColors;
   inputHeight?: number;
+  isMulti?: boolean;
 };
 
 const SelectTag = (
@@ -79,6 +80,7 @@ const SelectTag = (
     inputId,
     inputColor = "white",
     inputHeight = 43,
+    isMulti,
   }: Props,
   ref: Ref<any> | undefined
 ) => {
@@ -95,6 +97,7 @@ const SelectTag = (
   return (
     <LabelWrapper required={required} label={label}>
       <Select
+        isMulti={isMulti}
         inputId={inputId}
         ref={ref}
         id={id}

@@ -1,4 +1,11 @@
-import { authFetchUrl, proceduresFetchUrl } from "../utils/apiConfig";
+import {
+  authFetchUrl,
+  fetchUrl,
+  moreInfoFetchUrl,
+  proceduresFetchUrl,
+} from "../utils/apiConfig";
+
+export const uploadApi = fetchUrl("upload");
 
 export const signUpApi = authFetchUrl("register");
 export const authMeApi = authFetchUrl("me");
@@ -16,3 +23,7 @@ export const procedureByTitleApi = (title: string) => {
 export const procedureUpdateAndDeleteApi = (id: string) => {
   return proceduresFetchUrl(`procedure/${id}`);
 };
+
+export const moreInfoListApi = moreInfoFetchUrl(`moreinfo/list`);
+export const moreInfoUserApi = moreInfoFetchUrl(`moreinfo/user`);
+export const moreInfoApi = moreInfoFetchUrl(`moreinfo`);

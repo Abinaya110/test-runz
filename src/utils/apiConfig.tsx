@@ -9,6 +9,10 @@ export const setAuthorization = (token: string) => {
   }
 };
 
+export const fetchUrl = (url: string) => {
+  const result = `https://testrunzauthserve.onrender.com/${url}`;
+  return result;
+};
 export const authFetchUrl = (url: string) => {
   const result = `https://testrunzauthserve.onrender.com/auth/${url}`;
   return result;
@@ -16,5 +20,10 @@ export const authFetchUrl = (url: string) => {
 
 export const proceduresFetchUrl = (url: string) => {
   const result = `https://testrunzproceserv.onrender.com/${url}`;
+  return result;
+};
+
+export const moreInfoFetchUrl = (url: string) => {
+  const result = `https://testrunzmoreinfoserve.onrender.com/${url}`;
   return result;
 };

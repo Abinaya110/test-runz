@@ -29,6 +29,7 @@ import { auth, microProvider, provider } from "../../utils/firebase";
 import { setAuthorization } from "../../utils/apiConfig";
 import { AUTH_TOKEN } from "../../utils/localStoreConst";
 import { getAuth, signInWithPopup } from "firebase/auth";
+import { moreInfoUserMiddleWare } from "../MyPageModule/store/mypageMiddleware";
 
 type formType = {
   email: string;
@@ -179,7 +180,6 @@ const SignUpScreen = () => {
         })
       )
         .then((res: any) => {
-          setLoader(false);
           if (res?.payload?.success) {
             Toast(res.payload.success);
             setAuthorization(result.user?._delegate?.accessToken);
@@ -187,10 +187,17 @@ const SignUpScreen = () => {
               AUTH_TOKEN,
               result.user?._delegate?.accessToken
             );
-            dispatch(authMeMiddleWare()).then(() => {
-              navigate(routes.MY_PAGE);
-              formik.resetForm();
-            });
+            dispatch(authMeMiddleWare())
+              .then(() => {
+                dispatch(moreInfoUserMiddleWare())
+                  .then(() => {
+                    setLoader(false);
+                    navigate(routes.MY_PAGE);
+                    formik.resetForm();
+                  })
+                  .catch(() => setLoader(false));
+              })
+              .catch(() => setLoader(false));
           } else {
             Toast(res.payload.error, "LONG", "error");
           }
@@ -214,17 +221,21 @@ const SignUpScreen = () => {
           })
         )
           .then((res: any) => {
-            setLoader(false);
             if (res?.payload?.success) {
               Toast(res.payload.success);
               setAuthorization(result.user.accessToken);
               localStorage.setItem(AUTH_TOKEN, result.user.accessToken);
-              setTimeout(() => {
-                dispatch(authMeMiddleWare()).then(() => {
-                  navigate(routes.MY_PAGE);
-                  formik.resetForm();
-                });
-              }, 200);
+              dispatch(authMeMiddleWare())
+                .then(() => {
+                  dispatch(moreInfoUserMiddleWare())
+                    .then(() => {
+                      setLoader(false);
+                      navigate(routes.MY_PAGE);
+                      formik.resetForm();
+                    })
+                    .catch(() => setLoader(false));
+                })
+                .catch(() => setLoader(false));
             } else {
               Toast(res.payload.error, "LONG", "error");
             }

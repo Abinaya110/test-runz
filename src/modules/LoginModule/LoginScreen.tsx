@@ -20,6 +20,7 @@ import { useDispatch } from "react-redux";
 import { AppDispatch } from "../../redux/store";
 import { authMeMiddleWare } from "./store/loginMiddleware";
 import Alert from "../../packages/Alert/Alert";
+import { moreInfoUserMiddleWare } from "../MyPageModule/store/mypageMiddleware";
 
 type formType = {
   email: string;
@@ -62,7 +63,6 @@ const LoginScreen = () => {
     auth
       .signInWithEmailAndPassword(values.email, values.password)
       .then((res: any) => {
-        setLoader(false);
         if (res.user?._delegate?.accessToken) {
           if (!isEmpty(formik.values.remember)) {
             localStorage.setItem(REMEMBER_ME, JSON.stringify(formik.values));
@@ -71,8 +71,20 @@ const LoginScreen = () => {
           }
           setAuthorization(res.user?._delegate?.accessToken);
           localStorage.setItem(AUTH_TOKEN, res.user?._delegate?.accessToken);
-          dispatch(authMeMiddleWare());
-          navigate(routes.MY_PAGE);
+          dispatch(authMeMiddleWare())
+            .then(() => {
+              dispatch(moreInfoUserMiddleWare())
+                .then(() => {
+                  setLoader(false);
+                  navigate(routes.MY_PAGE);
+                })
+                .catch(() => {
+                  setLoader(false);
+                });
+            })
+            .catch(() => {
+              setLoader(false);
+            });
         }
       })
       .catch((error) => {

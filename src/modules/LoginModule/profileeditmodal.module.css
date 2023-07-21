@@ -34,6 +34,7 @@
 .profileEdit {
   z-index: 2;
   margin-bottom: 30px;
+  position: relative;
 }
 .footer {
   /* box-shadow: -3px 0px 16px 0px #0000001a; */
