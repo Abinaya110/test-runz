@@ -29,7 +29,7 @@ export const moreInfoUserApi = moreInfoFetchUrl(`moreinfo/user`);
 export const moreInfoApi = moreInfoFetchUrl(`moreinfo`);
 
 export const settingApi = (id: string) => {
-  const result = fetchUrl(`setting`);
+  const result = fetchUrl(`setting/${id}`);
   return result;
 };
 

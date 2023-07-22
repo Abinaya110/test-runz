@@ -296,7 +296,7 @@ const Layout = ({ children }: Props) => {
 
   return (
     <>
-      {(moreInfoUserLoader || authMeLoader) && <Loader />}
+      {/* {(moreInfoUserLoader || authMeLoader) && <Loader />} */}
       <ProfileDrawer
         isLoader={uploadLoader || updateLoader}
         formik={formik}

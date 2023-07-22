@@ -7,7 +7,7 @@ import SvgNotify from "../../icons/SvgNotify";
 import SvgProfile from "../../icons/SvgProfile";
 import SvgUser from "../../icons/SvgUser";
 import SvgRole from "../../icons/SvgRole";
-import NotificationScreen from "./NotificationScreen";
+import NotificationTab from "./NotificationTab";
 import ProfileScreen from "./ProfileScreen";
 import UserScreen from "./UserScreen";
 import RoleScreen from "./RoleScreen";
@@ -31,18 +31,23 @@ const SettingsScreen = () => {
 
   let getType = searchParams.get("type");
 
-  const { moreInfoData, isLoading } = useSelector(
-    ({ moreInfoUserReducers, getSettingsReducers }: RootState) => {
+  const { moreInfoData, isLoading, updateLoading } = useSelector(
+    ({
+      moreInfoUserReducers,
+      getSettingsReducers,
+      updateSettingsReducers,
+    }: RootState) => {
       return {
         moreInfoData: moreInfoUserReducers.data,
         isLoading: getSettingsReducers.isLoading,
+        updateLoading: updateSettingsReducers.isLoading,
       };
     }
   );
 
   useEffect(() => {
     if (!isEmpty(moreInfoData.organization?._id)) {
-      // dispatch(getSettingMiddleWare({ id: moreInfoData.organization?._id }));
+      dispatch(getSettingMiddleWare({ id: moreInfoData.organization?._id }));
     }
   }, [moreInfoData.organization]);
 
@@ -84,7 +89,7 @@ const SettingsScreen = () => {
       className={styles.overAll}
       height={window.innerHeight - HEADER_HEIGHT}
     >
-      {isLoading && <Loader />}
+      {(isLoading || updateLoading) && <Loader />}
       <Flex row flex={1}>
         <Flex width={300} className={styles.leftContainer}>
           <Text type="subTitle" color="shade-2" className={styles.settingText}>
@@ -117,7 +122,7 @@ const SettingsScreen = () => {
         </Flex>
 
         <Flex className={styles.rightOverall}>
-          {getType === "notification" && <NotificationScreen />}
+          {getType === "notification" && <NotificationTab />}
           {getType === "profile" && <ProfileScreen />}
           {getType === "user" && <UserScreen />}
           {getType === "role" && <RoleScreen />}

@@ -13,7 +13,6 @@ import ErrorMessage from "../../packages/ErrorMessage/ErrorMessage";
 import { AppDispatch, RootState } from "../../redux/store";
 import { useDispatch, useSelector } from "react-redux";
 import {
-  moreInfoListMiddleWare,
   moreInfoMiddleWare,
   moreInfoUserMiddleWare,
 } from "../MyPageModule/store/mypageMiddleware";

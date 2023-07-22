@@ -35,9 +35,19 @@ export const postSettingMiddleWare = createAsyncThunk(
 
 export const updateSettingMiddleWare = createAsyncThunk(
   UPDATE_SETTINGS,
-  async ({ id }: { id: string }, { rejectWithValue }) => {
+  async (
+    {
+      id,
+      notification,
+      roleSetting,
+    }: { id: string; notification?: any; roleSetting?: any },
+    { rejectWithValue }
+  ) => {
     try {
-      const { data } = await axios.patch(settingUpdateApi(id));
+      const { data } = await axios.patch(settingUpdateApi(id), {
+        notification,
+        roleSetting,
+      });
       return data;
     } catch (error: any) {
       const typedError = error as Error;

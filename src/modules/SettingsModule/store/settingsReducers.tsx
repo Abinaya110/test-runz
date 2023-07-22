@@ -22,6 +22,7 @@ const getSettingsReducer = createSlice({
     });
     builder.addCase(getSettingMiddleWare.fulfilled, (state, action) => {
       state.isLoading = false;
+      state.data = action.payload[0];
     });
     builder.addCase(getSettingMiddleWare.rejected, (state, action) => {
       state.isLoading = false;

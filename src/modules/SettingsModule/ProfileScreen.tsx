@@ -525,9 +525,7 @@ const ProfileScreen = () => {
 
   return (
     <Flex className={styles.overAll} flex={1} between>
-      {(uploadLoader || updateLoader || moreInfoUserLoader || authMeLoader) && (
-        <Loader />
-      )}
+      {(uploadLoader || updateLoader) && <Loader />}
       <Flex>
         <ScreenHeader
           title={"Profile Settings"}
