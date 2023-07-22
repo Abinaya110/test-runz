@@ -1,7 +1,12 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { SettingsReducerState, UpdateReducerState } from "./settings.types";
+import {
+  GetUserListReducerState,
+  SettingsReducerState,
+  UpdateReducerState,
+} from "./settings.types";
 import {
   getSettingMiddleWare,
+  getUserListMiddleWare,
   postSettingMiddleWare,
   updateSettingMiddleWare,
 } from "./settingsMiddleware";
@@ -83,6 +88,35 @@ const updateSettingsReducer = createSlice({
   },
 });
 
+const getUserListInitialState: GetUserListReducerState = {
+  isLoading: false,
+  error: "",
+  data: [],
+};
+
+const getUserListReducer = createSlice({
+  name: "get_user_list",
+  initialState: getUserListInitialState,
+  reducers: {},
+  extraReducers: (builder) => {
+    builder.addCase(getUserListMiddleWare.pending, (state) => {
+      state.isLoading = true;
+      state.error = "";
+    });
+    builder.addCase(getUserListMiddleWare.fulfilled, (state, action) => {
+      state.isLoading = false;
+      state.data = action.payload;
+    });
+    builder.addCase(getUserListMiddleWare.rejected, (state, action) => {
+      state.isLoading = false;
+      if (typeof action.payload === "string") {
+        state.error = action.payload;
+      }
+    });
+  },
+});
+
 export const getSettingsReducers = getSettingsReducer.reducer;
 export const postSettingsReducers = postSettingsReducer.reducer;
 export const updateSettingsReducers = updateSettingsReducer.reducer;
+export const getUserListReducers = getUserListReducer.reducer;

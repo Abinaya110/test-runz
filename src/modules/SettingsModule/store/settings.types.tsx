@@ -52,3 +52,26 @@ export interface UpdateReducerState {
   isLoading: boolean;
   error: string;
 }
+
+export interface GetUserList {
+  _id: string;
+  activeStatus: boolean;
+  imageUrl: string;
+  name: string;
+  email: string;
+  firebaseId: string;
+  timeZone: string;
+  firstuse: boolean;
+  role: string;
+  created_at: string;
+  updated_at: string;
+  __v: number;
+  firstname?: string | null;
+  lastname?: string | null;
+}
+
+export interface GetUserListReducerState {
+  isLoading: boolean;
+  error: string;
+  data: GetUserList[];
+}

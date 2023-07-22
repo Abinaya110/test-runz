@@ -9,14 +9,17 @@ import SvgUser from "../../icons/SvgUser";
 import SvgRole from "../../icons/SvgRole";
 import NotificationTab from "./NotificationTab";
 import ProfileTab from "./ProfileTab";
-import UserScreen from "./UserScreen";
+import UserTab from "./UserTab";
 import RolesTab from "./RolesTab";
 import { textShade1, textShade3 } from "../../theme/colors";
 import Button from "../../packages/Button/Button";
 import { HEADER_HEIGHT } from "../../utils/constants";
 import { AppDispatch, RootState } from "../../redux/store";
 import { useDispatch, useSelector } from "react-redux";
-import { getSettingMiddleWare } from "./store/settingsMiddleware";
+import {
+  getSettingMiddleWare,
+  getUserListMiddleWare,
+} from "./store/settingsMiddleware";
 import { isEmpty } from "../../utils/validators";
 import Loader from "../../packages/Loader/Loader";
 import { useSearchParams } from "react-router-dom";
@@ -31,24 +34,28 @@ const SettingsScreen = () => {
 
   let getType = searchParams.get("type");
 
-  const { moreInfoData, isLoading, updateLoading } = useSelector(
-    ({
-      moreInfoUserReducers,
-      getSettingsReducers,
-      updateSettingsReducers,
-    }: RootState) => {
-      return {
-        moreInfoData: moreInfoUserReducers.data,
-        isLoading: getSettingsReducers.isLoading,
-        updateLoading: updateSettingsReducers.isLoading,
-      };
-    }
-  );
+  const { moreInfoData, isLoading, updateLoading, getUserListLoader } =
+    useSelector(
+      ({
+        moreInfoUserReducers,
+        getSettingsReducers,
+        updateSettingsReducers,
+        getUserListReducers,
+      }: RootState) => {
+        return {
+          moreInfoData: moreInfoUserReducers.data,
+          isLoading: getSettingsReducers.isLoading,
+          updateLoading: updateSettingsReducers.isLoading,
+          getUserListLoader: getUserListReducers.isLoading,
+        };
+      }
+    );
 
   useEffect(() => {
     if (!isEmpty(moreInfoData.organization?._id)) {
       dispatch(getSettingMiddleWare({ id: moreInfoData.organization?._id }));
     }
+    dispatch(getUserListMiddleWare());
   }, [moreInfoData.organization]);
 
   const handleChangeSettings = (value: string) => {
@@ -89,7 +96,7 @@ const SettingsScreen = () => {
       className={styles.overAll}
       height={window.innerHeight - HEADER_HEIGHT}
     >
-      {(isLoading || updateLoading) && <Loader />}
+      {(isLoading || updateLoading || getUserListLoader) && <Loader />}
       <Flex row flex={1}>
         <Flex width={300} className={styles.leftContainer}>
           <Text type="subTitle" color="shade-2" className={styles.settingText}>
@@ -124,7 +131,7 @@ const SettingsScreen = () => {
         <Flex className={styles.rightOverall}>
           {getType === "notification" && <NotificationTab />}
           {getType === "profile" && <ProfileTab />}
-          {getType === "user" && <UserScreen />}
+          {getType === "user" && <UserTab />}
           {getType === "role" && <RolesTab />}
         </Flex>
       </Flex>

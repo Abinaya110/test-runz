@@ -11,6 +11,7 @@ import {
 import { procedureReducers } from "../modules/ProceduresModule/store/proceduresReducers";
 import {
   getSettingsReducers,
+  getUserListReducers,
   postSettingsReducers,
   updateSettingsReducers,
 } from "../modules/SettingsModule/store/settingsReducers";
@@ -26,4 +27,5 @@ export const reducers = {
   getSettingsReducers,
   postSettingsReducers,
   updateSettingsReducers,
+  getUserListReducers,
 };

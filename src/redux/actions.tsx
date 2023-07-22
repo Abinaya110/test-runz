@@ -18,3 +18,4 @@ export const MORE_INFO_USER = "mypage/MORE_INFO_USER";
 export const GET_SETTINGS = "setting/GET_SETTINGS";
 export const POST_SETTINGS = "setting/POST_SETTINGS";
 export const UPDATE_SETTINGS = "setting/UPDATE_SETTINGS";
+export const GET_USER_LIST = "setting/GET_USER_LIST";

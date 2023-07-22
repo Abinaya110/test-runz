@@ -37,3 +37,5 @@ export const settingUpdateApi = (id: string) => {
   const result = fetchUrl(`setting/${id}`);
   return result;
 };
+
+export const getUserListApi = fetchUrl("users");

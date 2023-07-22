@@ -1,7 +1,7 @@
 import { useState } from "react";
 import CheckBox from "../../packages/CheckBox/CheckBox";
 import Flex from "../../packages/Flex/Flex";
-import styles from "./userscreen.module.css";
+import styles from "./userstab.module.css";
 import { ACTIVE_USER_DATA } from "../RunzModule/mock";
 import { isEmpty } from "../../utils/validators";
 import ScreenHeader from "./SettingScreenHeader";
@@ -12,15 +12,24 @@ import {
   StatusHeader,
   UserDetailsHeader,
 } from "./UserScreenTableHeader";
+import { useSelector } from "react-redux";
+import { RootState } from "../../redux/store";
 
-const UserScreen = () => {
+const UserTab = () => {
   const [selectedRows, setSelectedRows] = useState<any[]>([]);
-
   const [currentPage, setCurrentPage] = useState(1);
   const [deleteModal, setDeleteModal] = useState(false);
   const [submitModal, setSubmitModal] = useState(false);
   const [shareModal, setShareModal] = useState(false);
   const [createNewRunz, setCreateNewRunz] = useState(false);
+
+  const { data } = useSelector(({ getUserListReducers }: RootState) => {
+    return {
+      data: getUserListReducers.data,
+    };
+  });
+
+  console.log("data", data);
 
   const columns = [
     {
@@ -183,4 +192,4 @@ const UserScreen = () => {
   );
 };
 
-export default UserScreen;
+export default UserTab;
