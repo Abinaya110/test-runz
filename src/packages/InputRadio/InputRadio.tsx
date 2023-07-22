@@ -2,7 +2,7 @@ import React, { memo, useCallback } from "react";
 import SvgRadioBox from "../../icons/SvgRadioBox";
 import SvgRadioOutline from "../../icons/SvgRadioOutline";
 import InputRadioLabel from "./InputRadioLabel";
-import styles from "./radiobutton.module.css";
+import styles from "./inputradio.module.css";
 import { textColorsType } from "../Text/textTypes";
 
 type DefaultPropsTypes = {

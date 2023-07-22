@@ -1,5 +1,5 @@
 import Flex from "../../packages/Flex/Flex";
-import styles from "./profilescreen.module.css";
+import styles from "./profiletab.module.css";
 import InputText from "../../packages/InputText/InputText";
 import SvgDesignation from "../../icons/SvgDesignation";
 import SvgOrganisation from "../../icons/SvgOrganisation";
@@ -116,7 +116,7 @@ const validatePassword = (values: formTypePassword) => {
   return errors;
 };
 
-const ProfileScreen = () => {
+const ProfileTab = () => {
   const { visibleIcon, isVisible, visibleIconOne, isVisibleOne } =
     useVisibilityIcon();
   const dispatch: AppDispatch = useDispatch();
@@ -597,4 +597,4 @@ const ProfileScreen = () => {
   );
 };
 
-export default ProfileScreen;
+export default ProfileTab;

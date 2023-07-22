@@ -11,9 +11,11 @@ import {
   updateSettingMiddleWare,
 } from "./store/settingsMiddleware";
 import Button from "../../packages/Button/Button";
+import { NOTIFICATION_LIST } from "./mock";
 
 const NotificationTab = () => {
   const dispatch: AppDispatch = useDispatch();
+  const [cardDetails, setCardDetails] = useState<any>(NOTIFICATION_LIST);
 
   const { data, moreInfoData } = useSelector(
     ({ getSettingsReducers, moreInfoUserReducers }: RootState) => {
@@ -23,35 +25,6 @@ const NotificationTab = () => {
       };
     }
   );
-
-  const notifyCard = [
-    {
-      id: 1,
-      heading: "New procedure created",
-      subHead:
-        "You will receive notifications whenever a new procedure is created.",
-      isNotifyActive: true,
-      isEmailActive: false,
-    },
-    {
-      id: 2,
-      heading: "Task submitted",
-      subHead:
-        "You will receive notifications whenever an assigned task is submitted.",
-      isNotifyActive: true,
-      isEmailActive: true,
-    },
-    {
-      id: 3,
-      heading: "Messages",
-      subHead:
-        "You will receive notifications whenever a new message or comment is received on runz.",
-      isNotifyActive: false,
-      isEmailActive: false,
-    },
-  ];
-
-  const [cardDetails, setCardDetails] = useState<any>(notifyCard);
 
   useEffect(() => {
     let result = cardDetails.map((list: any) => {
@@ -90,6 +63,29 @@ const NotificationTab = () => {
     setCardDetails(updated);
   };
 
+  const handleSave = () => {
+    dispatch(
+      updateSettingMiddleWare({
+        id: moreInfoData.organization?._id,
+        notification: {
+          procdure: {
+            notification: cardDetails[0].isNotifyActive,
+            mail: cardDetails[0].isEmailActive,
+          },
+          tasksubmit: {
+            notification: cardDetails[1].isNotifyActive,
+            mail: cardDetails[1].isEmailActive,
+          },
+          message: {
+            notification: cardDetails[2].isNotifyActive,
+            mail: cardDetails[2].isEmailActive,
+          },
+        },
+      })
+    ).then(() => {
+      dispatch(getSettingMiddleWare({ id: moreInfoData.organization?._id }));
+    });
+  };
   return (
     <Flex between flex={1}>
       <Flex>
@@ -157,35 +153,7 @@ const NotificationTab = () => {
         })}
       </Flex>
       <Flex end className={styles.btnContainer}>
-        <Button
-          onClick={() => {
-            dispatch(
-              updateSettingMiddleWare({
-                id: moreInfoData.organization?._id,
-                notification: {
-                  procdure: {
-                    notification: cardDetails[0].isNotifyActive,
-                    mail: cardDetails[0].isEmailActive,
-                  },
-                  tasksubmit: {
-                    notification: cardDetails[1].isNotifyActive,
-                    mail: cardDetails[1].isEmailActive,
-                  },
-                  message: {
-                    notification: cardDetails[2].isNotifyActive,
-                    mail: cardDetails[2].isEmailActive,
-                  },
-                },
-              })
-            ).then(() => {
-              dispatch(
-                getSettingMiddleWare({ id: moreInfoData.organization?._id })
-              );
-            });
-          }}
-        >
-          Save
-        </Button>
+        <Button onClick={handleSave}>Save</Button>
       </Flex>
     </Flex>
   );

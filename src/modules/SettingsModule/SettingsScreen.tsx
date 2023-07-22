@@ -8,9 +8,9 @@ import SvgProfile from "../../icons/SvgProfile";
 import SvgUser from "../../icons/SvgUser";
 import SvgRole from "../../icons/SvgRole";
 import NotificationTab from "./NotificationTab";
-import ProfileScreen from "./ProfileScreen";
+import ProfileTab from "./ProfileTab";
 import UserScreen from "./UserScreen";
-import RoleScreen from "./RoleScreen";
+import RolesTab from "./RolesTab";
 import { textShade1, textShade3 } from "../../theme/colors";
 import Button from "../../packages/Button/Button";
 import { HEADER_HEIGHT } from "../../utils/constants";
@@ -123,9 +123,9 @@ const SettingsScreen = () => {
 
         <Flex className={styles.rightOverall}>
           {getType === "notification" && <NotificationTab />}
-          {getType === "profile" && <ProfileScreen />}
+          {getType === "profile" && <ProfileTab />}
           {getType === "user" && <UserScreen />}
-          {getType === "role" && <RoleScreen />}
+          {getType === "role" && <RolesTab />}
         </Flex>
       </Flex>
     </Flex>
