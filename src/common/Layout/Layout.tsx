@@ -115,33 +115,26 @@ const Layout = ({ children }: Props) => {
   useEffect(() => {
     dispatch(moreInfoListMiddleWare());
   }, []);
-  const {
-    moreInfoData,
-    moreInfoList,
-    uploadLoader,
-    updateLoader,
-    moreInfoUserLoader,
-    authMeLoader,
-    data,
-  } = useSelector(
-    ({
-      authMeReducers,
-      moreInfoUserReducers,
-      moreInfoListReducers,
-      uploadReducers,
-      moreInfoUserUpdateReducers,
-    }: RootState) => {
-      return {
-        moreInfoData: moreInfoUserReducers.data,
-        moreInfoList: moreInfoListReducers.data,
-        uploadLoader: uploadReducers.isLoading,
-        updateLoader: moreInfoUserUpdateReducers.isLoading,
-        authMeLoader: authMeReducers.isLoading,
-        moreInfoUserLoader: moreInfoUserReducers.isLoading,
-        data: authMeReducers.data,
-      };
-    }
-  );
+  const { moreInfoData, moreInfoList, uploadLoader, updateLoader, data } =
+    useSelector(
+      ({
+        authMeReducers,
+        moreInfoUserReducers,
+        moreInfoListReducers,
+        uploadReducers,
+        moreInfoUserUpdateReducers,
+      }: RootState) => {
+        return {
+          moreInfoData: moreInfoUserReducers.data,
+          moreInfoList: moreInfoListReducers.data,
+          uploadLoader: uploadReducers.isLoading,
+          updateLoader: moreInfoUserUpdateReducers.isLoading,
+          authMeLoader: authMeReducers.isLoading,
+          moreInfoUserLoader: moreInfoUserReducers.isLoading,
+          data: authMeReducers.data,
+        };
+      }
+    );
 
   const handleSubmit = (values: formType) => {
     if (values.profile?.name) {
@@ -230,28 +223,35 @@ const Layout = ({ children }: Props) => {
   }, [formik.values.organization]);
 
   useEffect(() => {
-    if (!isEmpty(moreInfoData?.firstname)) {
+    if (isEmpty(moreInfoData?.firstname) && !isEmpty(moreInfoData.name)) {
+      const nameArray = moreInfoData.name.split(" ");
+      const firstName = nameArray[0];
+      const lastName = nameArray[nameArray.length - 1];
+      formik.setFieldValue("firstName", firstName);
+      formik.setFieldValue("lastName", lastName);
+    } else if (!isEmpty(moreInfoData?.firstname)) {
       formik.setFieldValue("firstName", moreInfoData.firstname);
       formik.setFieldValue("lastName", moreInfoData.lastname);
-      formik.setFieldValue(
-        "organization",
-        typeof moreInfoData.organization === "string"
-          ? {
-              organization: moreInfoData.organization,
-              _id: moreInfoData._id,
-            }
-          : moreInfoData.organization
+    }
+    if (!isEmpty(moreInfoData.organization)) {
+      const getOrganization = moreInfoList.filter(
+        (list) => list.organization === moreInfoData.organization
       );
-      formik.setFieldValue(
-        "department",
-        typeof moreInfoData.department === "string"
-          ? {
-              label: moreInfoData.department,
-              value: moreInfoData.department,
-            }
-          : moreInfoData.department
-      );
-      formik.setFieldValue("lab", moreInfoData.labtype);
+
+      formik.setFieldValue("organization", {
+        organization: getOrganization[0].organization,
+        _id: getOrganization[0]._id,
+      });
+
+      const getDepartment = moreInfoData.department.map((list: any) => {
+        return { label: list, value: list };
+      });
+
+      formik.setFieldValue("department", getDepartment);
+      const getLab = moreInfoData.labtype.map((list: any) => {
+        return { label: list, value: list };
+      });
+      formik.setFieldValue("lab", getLab);
     }
     formik.setFieldValue("email", moreInfoData.email);
     formik.setFieldValue("profile", moreInfoData.imageUrl);

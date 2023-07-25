@@ -1,12 +1,9 @@
 import Flex from "../../packages/Flex/Flex";
 import styles from "./profiletab.module.css";
 import InputText from "../../packages/InputText/InputText";
-import SvgDesignation from "../../icons/SvgDesignation";
-import SvgOrganisation from "../../icons/SvgOrganisation";
 import SvgUserInput from "../../icons/SvgUserInput";
 import SvgProfileEdit from "../../icons/SvgProfileEdit";
 import ScreenHeader from "./SettingScreenHeader";
-import Accordion from "../../packages/Accordian/Accordian";
 import { getPasswordStrength, useVisibilityIcon } from "../../utils/helpers";
 import { Collapse, CollapseProps } from "antd";
 import SvgArrowDown from "../../icons/SvgArrowDown";
@@ -32,7 +29,6 @@ import SelectTag from "../../packages/SelectTag/SelectTag";
 import { designationOptions } from "../LoginModule/mock";
 import Button from "../../packages/Button/Button";
 import Loader from "../../packages/Loader/Loader";
-import { useNavigate } from "react-router-dom";
 import { statusType } from "../../packages/InputText/inputTextTypes";
 import { auth } from "../../utils/firebase";
 
@@ -132,31 +128,23 @@ const ProfileTab = () => {
     dispatch(moreInfoListMiddleWare());
   }, []);
 
-  const {
-    moreInfoData,
-    moreInfoList,
-    uploadLoader,
-    updateLoader,
-    moreInfoUserLoader,
-    authMeLoader,
-  } = useSelector(
-    ({
-      authMeReducers,
-      moreInfoUserReducers,
-      moreInfoListReducers,
-      uploadReducers,
-      moreInfoUserUpdateReducers,
-    }: RootState) => {
-      return {
-        moreInfoData: moreInfoUserReducers.data,
-        moreInfoList: moreInfoListReducers.data,
-        uploadLoader: uploadReducers.isLoading,
-        updateLoader: moreInfoUserUpdateReducers.isLoading,
-        authMeLoader: authMeReducers.isLoading,
-        moreInfoUserLoader: moreInfoUserReducers.isLoading,
-      };
-    }
-  );
+  const { moreInfoData, moreInfoList, uploadLoader, updateLoader } =
+    useSelector(
+      ({
+        authMeReducers,
+        moreInfoUserReducers,
+        moreInfoListReducers,
+        uploadReducers,
+        moreInfoUserUpdateReducers,
+      }: RootState) => {
+        return {
+          moreInfoData: moreInfoUserReducers.data,
+          moreInfoList: moreInfoListReducers.data,
+          uploadLoader: uploadReducers.isLoading,
+          updateLoader: moreInfoUserUpdateReducers.isLoading,
+        };
+      }
+    );
 
   const handleSubmit = (values: formType) => {
     if (values.profile?.name) {
@@ -250,70 +238,39 @@ const ProfileTab = () => {
   }, [formik.values.organization]);
 
   useEffect(() => {
-    if (!isEmpty(moreInfoData?.firstname)) {
+    if (isEmpty(moreInfoData?.firstname) && !isEmpty(moreInfoData.name)) {
+      const nameArray = moreInfoData.name.split(" ");
+      const firstName = nameArray[0];
+      const lastName = nameArray[nameArray.length - 1];
+      formik.setFieldValue("firstName", firstName);
+      formik.setFieldValue("lastName", lastName);
+    } else if (!isEmpty(moreInfoData?.firstname)) {
       formik.setFieldValue("firstName", moreInfoData.firstname);
       formik.setFieldValue("lastName", moreInfoData.lastname);
-      formik.setFieldValue(
-        "organization",
-        typeof moreInfoData.organization === "string"
-          ? {
-              organization: moreInfoData.organization,
-              _id: moreInfoData._id,
-            }
-          : moreInfoData.organization
+    }
+    if (!isEmpty(moreInfoData.organization)) {
+      const getOrganization = moreInfoList.filter(
+        (list) => list.organization === moreInfoData.organization
       );
-      formik.setFieldValue(
-        "department",
-        typeof moreInfoData.department === "string"
-          ? {
-              label: moreInfoData.department,
-              value: moreInfoData.department,
-            }
-          : moreInfoData.department
-      );
-      formik.setFieldValue("lab", moreInfoData.labtype);
+
+      formik.setFieldValue("organization", {
+        organization: getOrganization[0].organization,
+        _id: getOrganization[0]._id,
+      });
+
+      const getDepartment = moreInfoData.department.map((list: any) => {
+        return { label: list, value: list };
+      });
+
+      formik.setFieldValue("department", getDepartment);
+      const getLab = moreInfoData.labtype.map((list: any) => {
+        return { label: list, value: list };
+      });
+      formik.setFieldValue("lab", getLab);
     }
     formik.setFieldValue("email", moreInfoData.email);
     formik.setFieldValue("profile", moreInfoData.imageUrl);
   }, [moreInfoData]);
-
-  let passwordMessage: statusType = "";
-  if (
-    getPasswordStrength(formikPassword.values.newPassword) ===
-      "Weak strength" &&
-    formikPassword.values.newPassword.length > 0
-  ) {
-    passwordMessage = "error";
-  } else if (
-    getPasswordStrength(formikPassword.values.newPassword) === "Medium strength"
-  ) {
-    passwordMessage = "theme";
-  } else if (
-    getPasswordStrength(formikPassword.values.newPassword) === "Strong strength"
-  ) {
-    passwordMessage = "success";
-  } else {
-    passwordMessage = "";
-  }
-
-  let confirmPasswordStatus: statusType = "";
-  let confirmPasswordMessage = "";
-  if (
-    formikPassword.values.newPassword.length !== 0 &&
-    formikPassword.values.newPassword === formikPassword.values.confirmPassword
-  ) {
-    confirmPasswordStatus = "success";
-    confirmPasswordMessage = "Password matched";
-  } else if (
-    formikPassword.values.newPassword.length !== 0 &&
-    formikPassword.values.confirmPassword.length !== 0 &&
-    formikPassword.values.newPassword !== formikPassword.values.confirmPassword
-  ) {
-    confirmPasswordStatus = "error";
-  } else {
-    confirmPasswordStatus = "";
-    confirmPasswordMessage = "";
-  }
 
   const items: CollapseProps["items"] = [
     {
@@ -397,6 +354,7 @@ const ProfileTab = () => {
 
           <div style={{ flex: 1 }} className={styles.marginVer}>
             <SelectTag
+              isMulti
               required
               value={formik.values.department}
               onChange={(event) => {
@@ -425,9 +383,7 @@ const ProfileTab = () => {
                 formik.setFieldValue("lab", event);
               }}
               options={
-                getDepartmentOption?.department
-                  ? getDepartmentOption?.department
-                  : []
+                getDepartmentOption?.labtype ? getDepartmentOption?.labtype : []
               }
               placeholder="Select"
               label="Lab Types"
@@ -463,64 +419,6 @@ const ProfileTab = () => {
         </Flex>
       ),
     },
-    // {
-    //   key: "2",
-    //   label: (
-    //     <Text type="subTitle" color="shade-2">
-    //       Change password
-    //     </Text>
-    //   ),
-    //   children: (
-    //     <Flex>
-    //       <InputText
-    //         autoComplete="new-password"
-    //         label="Enter old password"
-    //         required
-    //         value={formikPassword.values.oldPassword}
-    //         onChange={formikPassword.handleChange("oldPassword")}
-    //       />
-    //       <Flex marginTop={20} marginBottom={20}>
-    //         <InputText
-    //           autoComplete="new-password"
-    //           label="Enter new password"
-    //           required
-    //           value={formikPassword.values.newPassword}
-    //           onChange={formikPassword.handleChange("newPassword")}
-    //           keyboardType={isVisible ? "text" : "password"}
-    //           actionRight={visibleIcon}
-    //           message={
-    //             formikPassword.errors.newPassword ||
-    //             getPasswordStrength(formikPassword.values.newPassword)
-    //           }
-    //           status={
-    //             formikPassword.touched.newPassword &&
-    //             formikPassword.errors.newPassword
-    //               ? "error"
-    //               : passwordMessage
-    //           }
-    //         />
-    //       </Flex>
-    //       <InputText
-    //         autoComplete="new-password"
-    //         label="Confirm new password"
-    //         required
-    //         value={formikPassword.values.confirmPassword}
-    //         onChange={formikPassword.handleChange("confirmPassword")}
-    //         keyboardType={isVisibleOne ? "text" : "password"}
-    //         actionRight={visibleIconOne}
-    //         message={
-    //           formikPassword.errors.confirmPassword || confirmPasswordMessage
-    //         }
-    //         status={
-    //           formikPassword.touched.confirmPassword &&
-    //           formikPassword.errors.confirmPassword
-    //             ? "error"
-    //             : confirmPasswordStatus
-    //         }
-    //       />
-    //     </Flex>
-    //   ),
-    // },
   ];
 
   return (

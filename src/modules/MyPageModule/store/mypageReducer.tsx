@@ -56,7 +56,7 @@ const moreInfoUserInitialState: MoreInfoUserState = {
     email: "",
     userId: "",
     __v: 0,
-    activeStatus: false,
+    activeStatus: true,
     createdAt: "",
     imageUrl: "",
     labtype: [],

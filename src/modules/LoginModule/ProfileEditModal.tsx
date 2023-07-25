@@ -183,28 +183,35 @@ const ProfileEditModal = () => {
   }, [formik.values.organization]);
 
   useEffect(() => {
-    if (!isEmpty(moreInfoData?.firstname)) {
+    if (isEmpty(moreInfoData?.firstname) && !isEmpty(moreInfoData.name)) {
+      const nameArray = moreInfoData.name.split(" ");
+      const firstName = nameArray[0];
+      const lastName = nameArray[nameArray.length - 1];
+      formik.setFieldValue("firstName", firstName);
+      formik.setFieldValue("lastName", lastName);
+    } else if (!isEmpty(moreInfoData?.firstname)) {
       formik.setFieldValue("firstName", moreInfoData.firstname);
       formik.setFieldValue("lastName", moreInfoData.lastname);
-      formik.setFieldValue(
-        "organization",
-        typeof moreInfoData.organization === "string"
-          ? {
-              organization: moreInfoData.organization,
-              _id: moreInfoData._id,
-            }
-          : moreInfoData.organization
+    }
+    if (!isEmpty(moreInfoData.organization)) {
+      const getOrganization = moreInfoList.filter(
+        (list) => list.organization === moreInfoData.organization
       );
-      formik.setFieldValue(
-        "department",
-        typeof moreInfoData.department === "string"
-          ? {
-              label: moreInfoData.department,
-              value: moreInfoData.department,
-            }
-          : moreInfoData.department
-      );
-      formik.setFieldValue("lab", moreInfoData.labtype);
+
+      formik.setFieldValue("organization", {
+        organization: getOrganization[0].organization,
+        _id: getOrganization[0]._id,
+      });
+
+      const getDepartment = moreInfoData.department.map((list: any) => {
+        return { label: list, value: list };
+      });
+
+      formik.setFieldValue("department", getDepartment);
+      const getLab = moreInfoData.labtype.map((list: any) => {
+        return { label: list, value: list };
+      });
+      formik.setFieldValue("lab", getLab);
     }
     formik.setFieldValue("email", moreInfoData.email);
     formik.setFieldValue("profile", moreInfoData.imageUrl);
@@ -357,6 +364,7 @@ const ProfileEditModal = () => {
             }
             placeholder="Select"
             label="Department"
+            isMulti
           />
           <ErrorMessage
             name="department"
@@ -373,9 +381,7 @@ const ProfileEditModal = () => {
               formik.setFieldValue("lab", event);
             }}
             options={
-              getDepartmentOption?.department
-                ? getDepartmentOption?.department
-                : []
+              getDepartmentOption?.labtype ? getDepartmentOption?.labtype : []
             }
             placeholder="Select"
             label="Lab Types"

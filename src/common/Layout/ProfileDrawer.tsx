@@ -201,6 +201,7 @@ const ProfileDrawer = ({
 
         <div style={{ flex: 1 }} className={styles.marginVer}>
           <SelectTag
+            isMulti
             isDisabled={isEdit}
             required
             value={formik.values.department}
@@ -231,9 +232,7 @@ const ProfileDrawer = ({
               formik.setFieldValue("lab", event);
             }}
             options={
-              getDepartmentOption?.department
-                ? getDepartmentOption?.department
-                : []
+              getDepartmentOption?.labtype ? getDepartmentOption?.labtype : []
             }
             placeholder="Select"
             label="Lab Types"
