@@ -150,9 +150,9 @@ const Layout = ({ children }: Props) => {
               firstname: values.firstName,
               lastname: values.lastName,
               email: values.email,
-              organization: values.organization,
+              organization: values.organization._id,
               department: values.department.value,
-              labtype: values.lab,
+              labtype: values.lab.value,
             })
           ).then(() => {
             setEdit(true);
@@ -166,9 +166,9 @@ const Layout = ({ children }: Props) => {
               firstname: values.firstName,
               lastname: values.lastName,
               email: values.email,
-              organization: values.organization,
+              organization: values.organization._id,
               department: values.department.value,
-              labtype: values.lab,
+              labtype: values.lab.value,
             })
           ).then(() => {
             dispatch(authMeMiddleWare());
@@ -183,9 +183,9 @@ const Layout = ({ children }: Props) => {
           firstname: values.firstName,
           lastname: values.lastName,
           email: values.email,
-          organization: values.organization,
-          department: values.department,
-          labtype: values.lab,
+          organization: values.organization._id,
+          department: values.department.value,
+          labtype: values.lab.value,
         })
       ).then(() => {
         setEdit(true);
@@ -199,9 +199,9 @@ const Layout = ({ children }: Props) => {
           firstname: values.firstName,
           lastname: values.lastName,
           email: values.email,
-          organization: values.organization,
-          department: values.department,
-          labtype: values.lab,
+          organization: values.organization._id,
+          department: values.department.value,
+          labtype: values.lab.value,
         })
       ).then(() => {
         dispatch(authMeMiddleWare());

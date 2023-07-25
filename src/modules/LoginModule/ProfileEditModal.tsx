@@ -114,9 +114,9 @@ const ProfileEditModal = () => {
               firstname: values.firstName,
               lastname: values.lastName,
               email: values.email,
-              organization: values.organization.organization,
+              organization: values.organization._id,
               department: values.department.value,
-              labtype: values.lab,
+              labtype: values.lab.value,
             })
           ).then(() => {
             dispatch(moreInfoUserMiddleWare());
@@ -128,9 +128,9 @@ const ProfileEditModal = () => {
               firstname: values.firstName,
               lastname: values.lastName,
               email: values.email,
-              organization: values.organization.organization,
+              organization: values.organization._id,
               department: values.department.value,
-              labtype: values.lab,
+              labtype: values.lab.value,
             })
           ).then(() => {
             dispatch(authMeMiddleWare());
@@ -145,9 +145,9 @@ const ProfileEditModal = () => {
           firstname: values.firstName,
           lastname: values.lastName,
           email: values.email,
-          organization: values.organization,
-          department: values.department,
-          labtype: values.lab,
+          organization: values.organization._id,
+          department: values.department.value,
+          labtype: values.lab.value,
         })
       ).then(() => {
         dispatch(moreInfoUserMiddleWare());
@@ -159,9 +159,9 @@ const ProfileEditModal = () => {
           firstname: values.firstName,
           lastname: values.lastName,
           email: values.email,
-          organization: values.organization,
-          department: values.department,
-          labtype: values.lab,
+          organization: values.organization._id,
+          department: values.department.value,
+          labtype: values.lab.value,
         })
       ).then(() => {
         dispatch(authMeMiddleWare());
