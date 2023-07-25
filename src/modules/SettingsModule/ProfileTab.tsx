@@ -29,7 +29,6 @@ import SelectTag from "../../packages/SelectTag/SelectTag";
 import { designationOptions } from "../LoginModule/mock";
 import Button from "../../packages/Button/Button";
 import Loader from "../../packages/Loader/Loader";
-import { statusType } from "../../packages/InputText/inputTextTypes";
 import { auth } from "../../utils/firebase";
 
 export type formType = {

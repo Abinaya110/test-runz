@@ -14,6 +14,8 @@ import {
 } from "./UserScreenTableHeader";
 import { useSelector } from "react-redux";
 import { RootState } from "../../redux/store";
+import moment from "moment";
+import Text from "../../packages/Text/Text";
 
 const UserTab = () => {
   const [selectedRows, setSelectedRows] = useState<any[]>([]);
@@ -46,6 +48,11 @@ const UserTab = () => {
       align: "center",
       flex: 1.5,
       renderTitle: () => <AddOnHeader />,
+      render: (value: string) => (
+        <Text type="bodyMedium" align="center">
+          {moment(value).format("L")}
+        </Text>
+      ),
     },
     {
       title: "Role",
@@ -54,14 +61,24 @@ const UserTab = () => {
       align: "center",
       flex: 1.5,
       renderTitle: () => <RoleHeader />,
+      render: (value: string) => (
+        <Text type="bodyMedium" align="center" transform="capitalize">
+          {value}
+        </Text>
+      ),
     },
     {
       title: "Status",
-      dataIndex: "status",
-      key: "status",
+      dataIndex: "activeStatus",
+      key: "activeStatus",
       align: "center",
       flex: 1.5,
       renderTitle: () => <StatusHeader />,
+      render: (value: string) => (
+        <Text type="bodyMedium" align="center">
+          {value ? "Active" : "InActive"}
+        </Text>
+      ),
     },
   ];
 
@@ -176,11 +193,9 @@ const UserTab = () => {
           onPageChange={handlePage}
           currentPage={currentPage}
           hideActions={selectedRows.length === 0}
-          // showHeader={false}
-          // customHeader={<CustomSettingHeader />}
           rowSelection={handleSelections}
           rowSelectionAll={handleAllSelections}
-          dataSource={ACTIVE_USER_DATA}
+          dataSource={data}
           columns={columns}
           rowUnSelectAll={handleAllUnSelections}
           rowDeleteAction={handleDeleteOpen}
