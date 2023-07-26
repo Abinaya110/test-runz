@@ -34,14 +34,6 @@ export const UserDetailsHeader = () => {
             placeholder="Department"
           />
         </Flex>
-        <Flex flex={1}>
-          <InputText
-            white
-            size="small"
-            placeholder="Procedure"
-            actionRight={() => <SvgSearch height={20} width={20} />}
-          />
-        </Flex>
       </Flex>
     </Flex>
   );
@@ -78,13 +70,13 @@ export const RoleHeader = () => {
         color="shade-3"
         actionRight={() => <SvgSort />}
       />
-
-      <InputText
-        white
-        size="small"
-        placeholder="Select Role"
-        actionRight={() => <SvgSearch height={20} width={20} />}
-      />
+      <div style={{ flex: 1 }}>
+        <SelectTag
+          options={[{ label: "ss", value: "11" }]}
+          inputHeight={35}
+          placeholder="Select Role"
+        />
+      </div>
     </Flex>
   );
 };
@@ -99,13 +91,13 @@ export const StatusHeader = () => {
         color="shade-3"
         actionRight={() => <SvgSort />}
       />
-
-      <InputText
-        white
-        size="small"
-        placeholder="Select status"
-        actionRight={() => <SvgSearch height={20} width={20} />}
-      />
+      <div style={{ flex: 1 }}>
+        <SelectTag
+          options={[{ label: "ss", value: "11" }]}
+          inputHeight={35}
+          placeholder="Select status"
+        />
+      </div>
     </Flex>
   );
 };

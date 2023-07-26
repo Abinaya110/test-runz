@@ -1,8 +1,7 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import CheckBox from "../../packages/CheckBox/CheckBox";
 import Flex from "../../packages/Flex/Flex";
 import styles from "./userstab.module.css";
-import { ACTIVE_USER_DATA } from "../RunzModule/mock";
 import { isEmpty } from "../../utils/validators";
 import ScreenHeader from "./SettingScreenHeader";
 import Table from "../../packages/Table/Table";
@@ -12,26 +11,85 @@ import {
   StatusHeader,
   UserDetailsHeader,
 } from "./UserScreenTableHeader";
-import { useSelector } from "react-redux";
-import { RootState } from "../../redux/store";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "../../redux/store";
 import moment from "moment";
 import Text from "../../packages/Text/Text";
+import CreateNewUserModal from "./CreateNewUserModal";
+import { FormikHelpers, useFormik } from "formik";
+import YesOrNo from "../../common/YesOrNo";
+import SvgDelete1 from "../../icons/SvgDelete1";
+import Alert from "../../packages/Alert/Alert";
+
+export type formType = {
+  firstName: string;
+  lastName: string;
+  email: string;
+  organization: any;
+  department: any;
+  lab: any;
+  role: any;
+  status: any;
+};
+
+const initialValues: formType = {
+  firstName: "",
+  lastName: "",
+  email: "",
+  organization: "",
+  department: "",
+  lab: "",
+  role: "",
+  status: "",
+};
+
+const validate = (values: formType) => {
+  const errors: Partial<formType> = {};
+  if (isEmpty(values.firstName)) {
+    errors.firstName = "First Name field is required";
+  }
+  if (isEmpty(values.lastName)) {
+    errors.lastName = "Last Name field is required";
+  }
+  if (isEmpty(values.email)) {
+    errors.email = "Email field is required";
+  }
+
+  if (isEmpty(values.organization)) {
+    errors.organization = "organization field is required";
+  }
+  if (isEmpty(values.department)) {
+    errors.department = "Department field is required";
+  }
+  if (isEmpty(values.lab)) {
+    errors.lab = "Lab type field is required";
+  }
+  if (isEmpty(values.role)) {
+    errors.role = "Role field is required";
+  }
+  if (isEmpty(values.status)) {
+    errors.status = "Status field is required";
+  }
+  return errors;
+};
 
 const UserTab = () => {
+  const dispatch: AppDispatch = useDispatch();
   const [selectedRows, setSelectedRows] = useState<any[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [deleteModal, setDeleteModal] = useState(false);
   const [submitModal, setSubmitModal] = useState(false);
   const [shareModal, setShareModal] = useState(false);
-  const [createNewRunz, setCreateNewRunz] = useState(false);
+  const [createNew, setCreateNew] = useState(false);
 
-  const { data } = useSelector(({ getUserListReducers }: RootState) => {
-    return {
-      data: getUserListReducers.data,
-    };
-  });
-
-  console.log("data", data);
+  const { data, moreInfoList } = useSelector(
+    ({ getUserListReducers, moreInfoListReducers }: RootState) => {
+      return {
+        data: getUserListReducers.data,
+        moreInfoList: moreInfoListReducers.data,
+      };
+    }
+  );
 
   const columns = [
     {
@@ -39,17 +97,27 @@ const UserTab = () => {
       dataIndex: "name",
       key: "name",
       renderTitle: () => <UserDetailsHeader />,
-      flex: 7,
+      flex: 6,
+      render: (value: string, row: any) => {
+        return (
+          <Flex>
+            <Text color="shade-3" type="captionBold">
+              {value}
+            </Text>
+            <Text type="bodyBold">{value}</Text>
+          </Flex>
+        );
+      },
     },
     {
       title: "Time Remaining",
       dataIndex: "time",
       key: "time",
       align: "center",
-      flex: 1.5,
+      flex: 2,
       renderTitle: () => <AddOnHeader />,
       render: (value: string) => (
-        <Text type="bodyMedium" align="center">
+        <Text type="bodyBold" align="center">
           {moment(value).format("L")}
         </Text>
       ),
@@ -59,10 +127,10 @@ const UserTab = () => {
       dataIndex: "role",
       key: "role",
       align: "center",
-      flex: 1.5,
+      flex: 2,
       renderTitle: () => <RoleHeader />,
       render: (value: string) => (
-        <Text type="bodyMedium" align="center" transform="capitalize">
+        <Text type="bodyBold" align="center" transform="capitalize">
           {value}
         </Text>
       ),
@@ -72,10 +140,10 @@ const UserTab = () => {
       dataIndex: "activeStatus",
       key: "activeStatus",
       align: "center",
-      flex: 1.5,
+      flex: 2,
       renderTitle: () => <StatusHeader />,
       render: (value: string) => (
-        <Text type="bodyMedium" align="center">
+        <Text type="bodyBold" align="center">
           {value ? "Active" : "InActive"}
         </Text>
       ),
@@ -180,13 +248,59 @@ const UserTab = () => {
   const handleDeleteOpen = () => setDeleteModal(true);
   const handleSubmitOpen = () => setSubmitModal(true);
   const handleShareOpen = () => setShareModal(true);
+
+  const handleSubmitUser = (
+    values: formType,
+    formikHelpers: FormikHelpers<formType>
+  ) => {
+    Alert("User created successfully.");
+    formikHelpers.resetForm();
+    setCreateNew(false);
+  };
+  const formik = useFormik({
+    initialValues,
+    onSubmit: handleSubmitUser,
+    validate,
+  });
+
+  const getDepartmentOption: any = useMemo(() => {
+    const result = moreInfoList.filter(
+      (list) => list.organization === formik.values.organization?.organization
+    );
+    return result ? result[0] : { department: [], labtype: [] };
+  }, [formik.values.organization]);
+
   return (
     <Flex>
+      <YesOrNo
+        title="Confirmation"
+        icon={<SvgDelete1 />}
+        open={deleteModal}
+        yesClick={() => {
+          Alert("User deleted successfully.");
+          setDeleteModal(false);
+        }}
+        noClick={() => {
+          setDeleteModal(false);
+        }}
+        description="Are you sure you want to delete the user?"
+      />
+
+      <CreateNewUserModal
+        open={createNew}
+        submit={formik.handleSubmit}
+        cancel={() => {
+          formik.resetForm();
+          setCreateNew(false);
+        }}
+        formik={formik}
+        getDepartmentOption={getDepartmentOption}
+        moreInfoList={moreInfoList}
+      />
       <ScreenHeader
         title={"User Management"}
         description={"Add edit and delete users."}
-        isSearch={false}
-        isBtn={true}
+        onClick={() => setCreateNew(true)}
       />
       <Flex className={styles.tableOverall}>
         <Table
@@ -199,8 +313,6 @@ const UserTab = () => {
           columns={columns}
           rowUnSelectAll={handleAllUnSelections}
           rowDeleteAction={handleDeleteOpen}
-          rowSubmitAction={handleSubmitOpen}
-          rowShareAction={handleShareOpen}
         />
       </Flex>
     </Flex>

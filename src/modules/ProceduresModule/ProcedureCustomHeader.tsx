@@ -41,14 +41,6 @@ export const ProcedureHeader = () => {
             placeholder="Lab"
           />
         </div>
-        <div className={styles.inputMargin}>
-          <InputText
-            white
-            size="small"
-            placeholder="Procedure"
-            actionRight={() => <SvgSearch height={20} width={20} />}
-          />
-        </div>
       </Flex>
     </Flex>
   );
@@ -90,7 +82,7 @@ export const CreatedByHeader = () => {
         white
         size="small"
         placeholder="DD/MM/YYYY"
-        actionRight={() => <SvgSearch />}
+        actionRight={() => <SvgCalendar />}
       />
     </Flex>
   );

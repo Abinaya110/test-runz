@@ -5,10 +5,18 @@ import InputText from "../../packages/InputText/InputText";
 import Button from "../../packages/Button/Button";
 import SvgSearch from "../../icons/SvgSearch";
 
-const SettingScreenHeader = (props: any) => {
-  const { title, description, isSearch, isBtn } = props;
-
-  const handleLogin = () => {};
+type Props = {
+  title: string;
+  description: string;
+  isSearch?: boolean;
+  onClick?: () => void;
+};
+const SettingScreenHeader = ({
+  title,
+  description,
+  isSearch,
+  onClick,
+}: Props) => {
   return (
     <Flex row between className={styles.overAll}>
       <Flex>
@@ -26,12 +34,8 @@ const SettingScreenHeader = (props: any) => {
           <InputText placeholder="Search" actionRight={() => <SvgSearch />} />
         )}
 
-        {isBtn && (
-          <Button
-            style={{ marginLeft: 4 }}
-            types="primary"
-            onClick={handleLogin}
-          >
+        {onClick && (
+          <Button style={{ marginLeft: 4 }} types="primary" onClick={onClick}>
             + Add New
           </Button>
         )}

@@ -19,7 +19,6 @@ import Layout from "./common/Layout/Layout";
 import { useInterceptors } from "./utils/interceptors";
 import { AppDispatch, RootState } from "./redux/store";
 import Loader from "./packages/Loader/Loader";
-import ProfileEditModal from "./modules/LoginModule/ProfileEditModal";
 import { Fragment, useEffect } from "react";
 import { authMeMiddleWare } from "./modules/LoginModule/store/loginMiddleware";
 import { moreInfoUserMiddleWare } from "./modules/MyPageModule/store/mypageMiddleware";
@@ -36,10 +35,9 @@ const AppProvider = () => {
     }
   }, [isAuth]);
 
-  const { data, authLoader, moreInfoUserLoader } = useSelector(
+  const { authLoader, moreInfoUserLoader } = useSelector(
     ({ authMeReducers, moreInfoUserReducers }: RootState) => {
       return {
-        data: moreInfoUserReducers.data,
         authLoader: authMeReducers.isLoading,
         moreInfoUserLoader: moreInfoUserReducers.isLoading,
       };
@@ -49,7 +47,6 @@ const AppProvider = () => {
   return (
     <Fragment>
       {(authLoader || moreInfoUserLoader) && <Loader />}
-      {!data?.activeStatus && isAuth && <ProfileEditModal />}
       <Router>
         <Layout>
           <Routes>

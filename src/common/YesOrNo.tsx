@@ -36,7 +36,7 @@ const YesOrNo = ({
       open={open}
       footer={
         <Flex row center middle className={styles.footer}>
-          <Button onClick={noClick} className={styles.noBtn} types="tertiary">
+          <Button onClick={noClick} className={styles.noBtn} types="tertiary-1">
             {noBtnTitle}
           </Button>
           <Button onClick={yesClick} className={styles.yesBtn}>
@@ -45,7 +45,7 @@ const YesOrNo = ({
         </Flex>
       }
     >
-      <Flex center middle>
+      <Flex center middle marginTop={20}>
         {icon}
         {typeof description === "string" ? (
           <Text

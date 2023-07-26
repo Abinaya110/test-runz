@@ -149,8 +149,8 @@ const Table = ({
               </div>
             ))
           ) : (
-            <Flex center>
-              <Text color="error" bold="bold">
+            <Flex center height={200} middle>
+              <Text color="shade-3" type="bodyMedium">
                 No Records to display!!
               </Text>
             </Flex>

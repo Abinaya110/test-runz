@@ -93,3 +93,8 @@ export const NOTIFICATION_LIST = [
     isEmailActive: true,
   },
 ];
+
+export const STATUS_OPTIONS = [
+  { label: "Active", value: "Active" },
+  { label: "InActive", value: "InActive" },
+];

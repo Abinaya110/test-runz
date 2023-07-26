@@ -5,6 +5,7 @@ import { procedureMiddleWare } from "./proceduresMiddleware";
 const authMeInitialState: ProceduresReducerState = {
   isLoading: false,
   error: "",
+  data: [],
 };
 
 const procedureReducer = createSlice({
@@ -18,6 +19,7 @@ const procedureReducer = createSlice({
     });
     builder.addCase(procedureMiddleWare.fulfilled, (state, action) => {
       state.isLoading = false;
+      state.data = action.payload;
     });
     builder.addCase(procedureMiddleWare.rejected, (state, action) => {
       state.isLoading = false;

@@ -31,23 +31,6 @@ import { useFormik } from "formik";
 import { HEADER_HEIGHT, ROLE_STUDENT } from "../../utils/constants";
 import NotAuthorizedModal from "../../common/NotAuthorizedModal";
 
-export const ACTIVE_BACKING_BOARD: any = [
-  {
-    eventType: "PoID023659ADN/Dept-Computer science/Lab-Data structureker",
-    eventName: "Bubble sort",
-    date: "02/05/2022",
-    Username: "Username",
-    id: "1",
-  },
-  {
-    eventType: "PoID023659ADN/Dept-Computer science/Lab-Data structureker",
-    eventName: "Bubble sort",
-    date: "02/05/2022",
-    Username: "Username",
-    id: "2",
-  },
-];
-
 export type formType = {
   title: string;
   html: string;
@@ -77,11 +60,12 @@ const ProceduresScreen = () => {
     dispatch(procedureMiddleWare());
   }, []);
 
-  const { isLoading, authMeData } = useSelector(
+  const { isLoading, authMeData, data } = useSelector(
     ({ procedureReducers, authMeReducers }: RootState) => {
       return {
         isLoading: procedureReducers.isLoading,
         authMeData: authMeReducers.data,
+        data: procedureReducers.data,
       };
     }
   );
@@ -90,8 +74,8 @@ const ProceduresScreen = () => {
     {
       title: "",
       renderTitle: () => <ProcedureHeader />,
-      dataIndex: "eventType",
-      key: "eventType",
+      dataIndex: "title",
+      key: "title",
       flex: 8,
       rowOnClick: (a: any) => {
         navigate(routes.PROCEDURE_EDIT);
@@ -102,7 +86,7 @@ const ProceduresScreen = () => {
             <Text color="shade-3" type="captionBold">
               {value}
             </Text>
-            <Text type="bodyBold">{row.eventName}</Text>
+            <Text type="bodyBold">{value}</Text>
           </Flex>
         );
       },
@@ -324,7 +308,7 @@ const ProceduresScreen = () => {
         }}
         rowSelection={handleSelections}
         rowSelectionAll={handleAllSelections}
-        dataSource={ACTIVE_BACKING_BOARD}
+        dataSource={data}
         columns={columns}
         rowUnSelectAll={handleAllUnSelections}
         rowDeleteAction={handleDeleteOpen}
