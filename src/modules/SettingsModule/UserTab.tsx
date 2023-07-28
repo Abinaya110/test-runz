@@ -73,13 +73,19 @@ const validate = (values: formType) => {
   return errors;
 };
 
+export type filterFormType = {
+  organisation: any;
+  department: any;
+  lab: any;
+  addOn: string;
+  role: any;
+  status: any;
+};
 const UserTab = () => {
   const dispatch: AppDispatch = useDispatch();
   const [selectedRows, setSelectedRows] = useState<any[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [deleteModal, setDeleteModal] = useState(false);
-  const [submitModal, setSubmitModal] = useState(false);
-  const [shareModal, setShareModal] = useState(false);
   const [createNew, setCreateNew] = useState(false);
 
   const { data, moreInfoList } = useSelector(
@@ -91,12 +97,26 @@ const UserTab = () => {
     }
   );
 
+  const formikFilter = useFormik({
+    initialValues: {
+      organisation: "",
+      department: "",
+      lab: "",
+      addOn: "",
+      role: "",
+      status: "",
+    },
+    onSubmit: () => {},
+  });
+
   const columns = [
     {
       title: "Name",
       dataIndex: "name",
       key: "name",
-      renderTitle: () => <UserDetailsHeader />,
+      renderTitle: () => (
+        <UserDetailsHeader moreInfoList={moreInfoList} formik={formikFilter} />
+      ),
       flex: 6,
       render: (value: string, row: any) => {
         return (
@@ -246,8 +266,6 @@ const UserTab = () => {
   };
 
   const handleDeleteOpen = () => setDeleteModal(true);
-  const handleSubmitOpen = () => setSubmitModal(true);
-  const handleShareOpen = () => setShareModal(true);
 
   const handleSubmitUser = (
     values: formType,

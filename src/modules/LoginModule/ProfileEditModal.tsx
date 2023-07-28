@@ -195,14 +195,14 @@ const ProfileEditModal = () => {
     }
     if (!isEmpty(moreInfoData.organization)) {
       const getOrganization = moreInfoList.filter(
-        (list) => list.organization === moreInfoData.organization
+        (list) => list._id === moreInfoData.organization
       );
-
-      formik.setFieldValue("organization", {
-        organization: getOrganization[0].organization,
-        _id: getOrganization[0]._id,
-      });
-
+      if (getOrganization.length > 0) {
+        formik.setFieldValue("organization", {
+          organization: getOrganization[0].organization,
+          _id: getOrganization[0]._id,
+        });
+      }
       const getDepartment = moreInfoData.department.map((list: any) => {
         return { label: list, value: list };
       });

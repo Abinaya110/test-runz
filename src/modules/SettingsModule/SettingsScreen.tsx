@@ -1,4 +1,5 @@
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
+import { useSearchParams } from "react-router-dom";
 import classNames from "classnames/bind";
 import Flex from "../../packages/Flex/Flex";
 import Text from "../../packages/Text/Text";
@@ -22,7 +23,6 @@ import {
 } from "./store/settingsMiddleware";
 import { isEmpty } from "../../utils/validators";
 import Loader from "../../packages/Loader/Loader";
-import { useSearchParams } from "react-router-dom";
 
 const cx = classNames.bind(styles);
 

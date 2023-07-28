@@ -30,6 +30,7 @@ export interface MoreInfoUser {
   firstname?: string;
   lastname?: string;
   organization?: any;
+  userCounter?: string;
 }
 export interface LabtypeEntity {
   label: string;

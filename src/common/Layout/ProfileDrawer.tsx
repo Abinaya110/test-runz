@@ -258,7 +258,7 @@ const ProfileDrawer = ({
           <Flex flex={1} className={styles.inputFlexMarginLeft}>
             <InputText
               disabled
-              value={moreInfoData.userId}
+              value={moreInfoData.userCounter}
               label="Requestor ID/Tester ID"
               required
               actionLeft={() => <SvgUserInput />}

@@ -105,6 +105,8 @@ const ProfileTab = () => {
     );
 
   const handleSubmit = (values: formType) => {
+    const getDepartment = values.department.map((list: any) => list.value);
+    const getLab = values.lab.map((list: any) => list.value);
     if (values.profile?.name) {
       let formData = new FormData();
       formData.append("image", values.profile);
@@ -119,8 +121,8 @@ const ProfileTab = () => {
               lastname: values.lastName,
               email: values.email,
               organization: values.organization._id,
-              department: values.department.value,
-              labtype: values.lab.value,
+              department: getDepartment,
+              labtype: getLab,
             })
           ).then(() => {
             dispatch(moreInfoUserMiddleWare());
@@ -133,8 +135,8 @@ const ProfileTab = () => {
               lastname: values.lastName,
               email: values.email,
               organization: values.organization._id,
-              department: values.department.value,
-              labtype: values.lab.value,
+              department: getDepartment,
+              labtype: getLab,
             })
           ).then(() => {
             dispatch(authMeMiddleWare());
@@ -150,8 +152,8 @@ const ProfileTab = () => {
           lastname: values.lastName,
           email: values.email,
           organization: values.organization._id,
-          department: values.department.value,
-          labtype: values.lab.value,
+          department: getDepartment,
+          labtype: getLab,
         })
       ).then(() => {
         dispatch(moreInfoUserMiddleWare());
@@ -164,8 +166,8 @@ const ProfileTab = () => {
           lastname: values.lastName,
           email: values.email,
           organization: values.organization._id,
-          department: values.department.value,
-          labtype: values.lab.value,
+          department: getDepartment,
+          labtype: getLab,
         })
       ).then(() => {
         dispatch(authMeMiddleWare());
@@ -199,13 +201,15 @@ const ProfileTab = () => {
     }
     if (!isEmpty(moreInfoData.organization)) {
       const getOrganization = moreInfoList.filter(
-        (list) => list.organization === moreInfoData.organization
+        (list) => list._id === moreInfoData.organization
       );
 
-      formik.setFieldValue("organization", {
-        organization: getOrganization[0].organization,
-        _id: getOrganization[0]._id,
-      });
+      if (getOrganization.length > 0) {
+        formik.setFieldValue("organization", {
+          organization: getOrganization[0].organization,
+          _id: getOrganization[0]._id,
+        });
+      }
 
       const getDepartment = moreInfoData.department.map((list: any) => {
         return { label: list, value: list };
@@ -402,7 +406,7 @@ const ProfileTab = () => {
               <Flex flex={1} className={styles.inputFlexMarginLeft}>
                 <InputText
                   disabled
-                  value={moreInfoData.userId}
+                  value={moreInfoData.userCounter}
                   label="Requestor ID/Tester ID"
                   required
                   actionLeft={() => <SvgUserInput />}
