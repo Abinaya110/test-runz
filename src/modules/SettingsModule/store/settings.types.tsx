@@ -55,19 +55,21 @@ export interface UpdateReducerState {
 
 export interface GetUserList {
   _id: string;
-  activeStatus: boolean;
-  imageUrl: string;
-  name: string;
   email: string;
-  firebaseId: string;
-  timeZone: string;
-  firstuse: boolean;
-  role: string;
-  created_at: string;
-  updated_at: string;
+  userId: string;
   __v: number;
-  firstname?: string | null;
-  lastname?: string | null;
+  activeStatus: boolean;
+  createdAt: string;
+  department?: string[];
+  imageUrl: string;
+  labtype?: string[];
+  name: string;
+  organization: string;
+  role: string;
+  updatedAt: string;
+  userCounter: string;
+  firstname?: string;
+  lastname?: string;
 }
 
 export interface GetUserListReducerState {

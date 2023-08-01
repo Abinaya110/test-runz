@@ -29,6 +29,7 @@ type Props = {
   transform?: textTransform;
   type?: textType;
   style?: CSSProperties;
+  onClick?: () => void;
 } & typeof defaultProps;
 
 const Text = ({
@@ -42,6 +43,7 @@ const Text = ({
   transform,
   type,
   style,
+  onClick,
 }: Props) => {
   const textClassName = cx(
     {
@@ -56,7 +58,7 @@ const Text = ({
     styles.common
   );
   return (
-    <Element style={style} className={textClassName}>
+    <Element onClick={onClick} style={style} className={textClassName}>
       {children}
     </Element>
   );

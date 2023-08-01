@@ -10,6 +10,8 @@ import styles from "./userscreentableheader.module.css";
 import { FormikProps } from "formik";
 import { filterFormType } from "./UserTab";
 import { isEmpty } from "../../utils/validators";
+import { designationOptions } from "../LoginModule/mock";
+import { STATUS_OPTIONS } from "./mock";
 
 export const UserDetailsHeader = ({
   moreInfoList,
@@ -45,7 +47,7 @@ export const UserDetailsHeader = ({
               formik.setFieldValue("department", "");
               formik.setFieldValue("lab", "");
               formik.setFieldValue("organisation", {
-                organization: event.organisation,
+                organization: event.organization,
                 _id: event._id,
               });
             }}
@@ -126,7 +128,7 @@ export const RoleHeader = () => {
       />
       <div style={{ flex: 1 }}>
         <SelectTag
-          options={[{ label: "ss", value: "11" }]}
+          options={designationOptions}
           inputHeight={35}
           placeholder="Select Role"
         />
@@ -147,7 +149,7 @@ export const StatusHeader = () => {
       />
       <div style={{ flex: 1 }}>
         <SelectTag
-          options={[{ label: "ss", value: "11" }]}
+          options={STATUS_OPTIONS}
           inputHeight={35}
           placeholder="Select status"
         />

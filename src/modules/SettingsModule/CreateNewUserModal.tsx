@@ -11,6 +11,7 @@ import { MoreInfoList } from "../MyPageModule/store/mypage.types";
 import ErrorMessage from "../../packages/ErrorMessage/ErrorMessage";
 import { designationOptions } from "../LoginModule/mock";
 import { STATUS_OPTIONS } from "./mock";
+import Loader from "../../packages/Loader/Loader";
 
 type Props = {
   open: boolean;
@@ -19,6 +20,7 @@ type Props = {
   formik: FormikProps<any>;
   getDepartmentOption: any;
   moreInfoList: MoreInfoList[];
+  isLoader: boolean;
 };
 const CreateNewUserModal = ({
   open,
@@ -27,6 +29,7 @@ const CreateNewUserModal = ({
   formik,
   getDepartmentOption,
   moreInfoList,
+  isLoader,
 }: Props) => {
   return (
     <Modal
@@ -38,6 +41,7 @@ const CreateNewUserModal = ({
       open={open}
       footer={
         <Flex row end center className={styles.footer}>
+          {isLoader && <Loader />}
           <Button
             onClick={cancel}
             className={styles.cancelBtn}

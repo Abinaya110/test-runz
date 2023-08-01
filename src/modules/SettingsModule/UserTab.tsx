@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import CheckBox from "../../packages/CheckBox/CheckBox";
 import Flex from "../../packages/Flex/Flex";
 import styles from "./userstab.module.css";
@@ -11,8 +11,8 @@ import {
   StatusHeader,
   UserDetailsHeader,
 } from "./UserScreenTableHeader";
-import { useDispatch, useSelector } from "react-redux";
-import { AppDispatch, RootState } from "../../redux/store";
+import { useSelector } from "react-redux";
+import store, { RootState } from "../../redux/store";
 import moment from "moment";
 import Text from "../../packages/Text/Text";
 import CreateNewUserModal from "./CreateNewUserModal";
@@ -20,6 +20,15 @@ import { FormikHelpers, useFormik } from "formik";
 import YesOrNo from "../../common/YesOrNo";
 import SvgDelete1 from "../../icons/SvgDelete1";
 import Alert from "../../packages/Alert/Alert";
+import { error, success, white } from "../../theme/colors";
+import SvgArrowDown from "../../icons/SvgArrowDown";
+import {
+  authCreateMiddleWare,
+  authDisableMiddleWare,
+  getUserListMiddleWare,
+  getUserListUpdateMiddleWare,
+} from "./store/settingsMiddleware";
+import Toast from "../../packages/Toast/Toast";
 
 export type formType = {
   firstName: string;
@@ -81,13 +90,110 @@ export type filterFormType = {
   role: any;
   status: any;
 };
+
+const Status = ({ value, row }: any) => {
+  const [isOpen, setOpen] = useState(false);
+  const wrapperRef = useRef<any>(null);
+
+  const useOutsideAlerter = (ref: any) => {
+    useEffect(() => {
+      const handleClickOutside = (event: any) => {
+        if (ref.current && !ref.current.contains(event.target)) {
+          setOpen(false);
+        }
+      };
+      document.addEventListener("mousedown", handleClickOutside);
+      return () => {
+        document.removeEventListener("mousedown", handleClickOutside);
+      };
+    }, [ref]);
+  };
+  useOutsideAlerter(wrapperRef);
+  const handleUpdate = (value: boolean) => {
+    store
+      .dispatch(
+        getUserListUpdateMiddleWare({ id: row.userId, activeStatus: value })
+      )
+      .then(() => {
+        store.dispatch(getUserListMiddleWare());
+      });
+  };
+
+  return (
+    <div
+      style={{
+        position: "relative",
+      }}
+    >
+      <Flex row center middle>
+        <Text
+          color="white"
+          type="smallBold"
+          align="center"
+          size={12}
+          style={{
+            backgroundColor: value ? success : error,
+            borderRadius: 20,
+            padding: "4px 10px",
+            width: 80,
+            marginRight: 8,
+          }}
+        >
+          {value ? "Active" : "InActive"}
+        </Text>
+        <div
+          style={{ cursor: "pointer" }}
+          ref={wrapperRef}
+          onClick={() => setOpen(true)}
+        >
+          <SvgArrowDown />
+        </div>
+      </Flex>
+      {isOpen && (
+        <div
+          ref={wrapperRef}
+          style={{
+            position: "absolute",
+            display: "flex",
+            flexDirection: "column",
+            background: white,
+            zIndex: 99,
+            border: "1px solid",
+            borderRadius: 4,
+            cursor: "pointer",
+            right: 20,
+          }}
+        >
+          <Text
+            onClick={() => {
+              handleUpdate(true);
+              setOpen(false);
+            }}
+            style={{ padding: 8, borderBottom: "1px solid" }}
+          >
+            Active
+          </Text>
+          <Text
+            onClick={() => {
+              handleUpdate(false);
+              setOpen(false);
+            }}
+            style={{ padding: 8 }}
+          >
+            InActive
+          </Text>
+        </div>
+      )}
+    </div>
+  );
+};
+
 const UserTab = () => {
-  const dispatch: AppDispatch = useDispatch();
   const [selectedRows, setSelectedRows] = useState<any[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [deleteModal, setDeleteModal] = useState(false);
   const [createNew, setCreateNew] = useState(false);
-
+  const [isLoader, setLoader] = useState(false);
   const { data, moreInfoList } = useSelector(
     ({ getUserListReducers, moreInfoListReducers }: RootState) => {
       return {
@@ -119,12 +225,20 @@ const UserTab = () => {
       ),
       flex: 6,
       render: (value: string, row: any) => {
+        const myDepartmentArray = row?.department;
+        const resultDepartment = myDepartmentArray.join(",");
+
+        const myLabArray = row?.labtype;
+        const resultLab = myLabArray.join(",");
         return (
           <Flex>
             <Text color="shade-3" type="captionBold">
+              {row?.userCounter} / {resultDepartment} / {resultLab} /{" "}
+              {row?.organization}
+            </Text>
+            <Text transform="capitalize" type="bodyBold">
               {value}
             </Text>
-            <Text type="bodyBold">{value}</Text>
           </Flex>
         );
       },
@@ -162,11 +276,7 @@ const UserTab = () => {
       align: "center",
       flex: 2,
       renderTitle: () => <StatusHeader />,
-      render: (value: string) => (
-        <Text type="bodyBold" align="center">
-          {value ? "Active" : "InActive"}
-        </Text>
-      ),
+      render: (value: string, row: any) => <Status value={value} row={row} />,
     },
   ];
 
@@ -187,20 +297,18 @@ const UserTab = () => {
     return count === perPage;
   };
 
-  const handleChecked = (row: {
-    id: any;
-    filter: (arg0: (r: any) => boolean) => any[];
-    length: number;
-  }) => {
+  const handleChecked = (row: any) => {
     if (!Array.isArray(row)) {
-      if (selectedRows.includes(row.id)) {
-        const updatedRow = selectedRows.filter((s) => s !== row.id);
+      if (selectedRows.includes(row.userId)) {
+        const updatedRow = selectedRows.filter((s) => s !== row.userId);
         setSelectedRows(updatedRow);
       } else {
-        setSelectedRows([...selectedRows, row.id]);
+        setSelectedRows([...selectedRows, row.userId]);
       }
     } else if (Array.isArray(row)) {
-      const orderNumbers = row.filter((r) => !isEmpty(r.id)).map((r) => r.id);
+      const orderNumbers = row
+        .filter((r) => !isEmpty(r.userId))
+        .map((r) => r.userId);
       if (isAllRowChecked(selectedRows, row, row.length)) {
         setSelectedRows([]);
       } else {
@@ -215,14 +323,16 @@ const UserTab = () => {
     length: number;
   }) => {
     if (Array.isArray(row)) {
-      const orderNumbers = row.filter((r) => !isEmpty(r.id)).map((r) => r.id);
+      const orderNumbers = row
+        .filter((r) => !isEmpty(r.userId))
+        .map((r) => r.userId);
       setSelectedRows([...orderNumbers]);
     }
   };
 
   const handleSelections = (row: any) => {
     const isChecked = !Array.isArray(row)
-      ? selectedRows.includes(row.id)
+      ? selectedRows.includes(row.userId)
       : isAllRowChecked(selectedRows, row, row.length);
     return (
       <Flex>
@@ -271,9 +381,42 @@ const UserTab = () => {
     values: formType,
     formikHelpers: FormikHelpers<formType>
   ) => {
-    Alert("User created successfully.");
-    formikHelpers.resetForm();
-    setCreateNew(false);
+    setLoader(true);
+    const getDepartment = values.department.map((list: any) => list.value);
+    const getLab = values.lab.map((list: any) => list.value);
+    store
+      .dispatch(
+        authCreateMiddleWare({
+          firstName: values.firstName,
+          lastName: values.lastName,
+          email: values.email,
+          organization: values.organization._id,
+          department: getDepartment,
+          lab: getLab,
+          role: values.role.value,
+          activeStatus: values.status.value === "Active" ? true : false,
+        })
+      )
+      .then((res) => {
+        setLoader(false);
+        if (res.payload) {
+          Alert("User created successfully.");
+          formikHelpers.resetForm();
+          setCreateNew(false);
+          store.dispatch(getUserListMiddleWare());
+        } else {
+          Toast(
+            "User account already exists at email address.",
+            "LONG",
+            "error"
+          );
+        }
+      })
+      .catch((error) => {
+        setLoader(false);
+
+        console.log("error", error);
+      });
   };
   const formik = useFormik({
     initialValues,
@@ -288,20 +431,34 @@ const UserTab = () => {
     return result ? result[0] : { department: [], labtype: [] };
   }, [formik.values.organization]);
 
+  const handleDelete = () => {
+    setLoader(true);
+    store
+      .dispatch(authDisableMiddleWare({ id: selectedRows }))
+      .then((res) => {
+        if (res.payload) {
+          Alert("User deleted successfully.");
+          setDeleteModal(false);
+          store.dispatch(getUserListMiddleWare());
+        }
+        setLoader(false);
+      })
+      .catch(() => {
+        setLoader(false);
+      });
+  };
   return (
     <Flex>
       <YesOrNo
         title="Confirmation"
         icon={<SvgDelete1 />}
         open={deleteModal}
-        yesClick={() => {
-          Alert("User deleted successfully.");
-          setDeleteModal(false);
-        }}
+        yesClick={handleDelete}
         noClick={() => {
           setDeleteModal(false);
         }}
         description="Are you sure you want to delete the user?"
+        isLoader={isLoader}
       />
 
       <CreateNewUserModal
@@ -314,6 +471,7 @@ const UserTab = () => {
         formik={formik}
         getDepartmentOption={getDepartmentOption}
         moreInfoList={moreInfoList}
+        isLoader={isLoader}
       />
       <ScreenHeader
         title={"User Management"}
@@ -331,6 +489,7 @@ const UserTab = () => {
           columns={columns}
           rowUnSelectAll={handleAllUnSelections}
           rowDeleteAction={handleDeleteOpen}
+          closeAction={() => setSelectedRows([])}
         />
       </Flex>
     </Flex>

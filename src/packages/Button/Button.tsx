@@ -20,6 +20,7 @@ type Props = {
   type?: "button" | "submit" | "reset";
   height?: "small" | "medium" | "large";
   textColors?: textColorsType;
+  ref?: any;
 };
 
 const Button = ({
@@ -35,6 +36,7 @@ const Button = ({
   type,
   height,
   textColors,
+  ref,
 }: Props) => {
   const buttonClassName = cx(
     {
@@ -58,6 +60,7 @@ const Button = ({
 
   return (
     <button
+      ref={ref}
       id={id}
       type={type}
       onClick={onClick}

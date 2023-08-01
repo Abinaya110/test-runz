@@ -5,6 +5,7 @@ import SvgClose from "../icons/SvgClose";
 import Flex from "../packages/Flex/Flex";
 import styles from "./yesorno.module.css";
 import Button from "../packages/Button/Button";
+import Loader from "../packages/Loader/Loader";
 
 type Props = {
   open: boolean;
@@ -15,6 +16,7 @@ type Props = {
   title: string;
   noBtnTitle?: string;
   yesBtnTitle?: string;
+  isLoader?: boolean;
 };
 
 const YesOrNo = ({
@@ -26,6 +28,7 @@ const YesOrNo = ({
   title,
   noBtnTitle = "No",
   yesBtnTitle = "Yes",
+  isLoader,
 }: Props) => {
   return (
     <Modal
@@ -46,6 +49,7 @@ const YesOrNo = ({
       }
     >
       <Flex center middle marginTop={20}>
+        {isLoader && <Loader />}
         {icon}
         {typeof description === "string" ? (
           <Text
