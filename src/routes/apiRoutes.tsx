@@ -31,6 +31,7 @@ export const getUserListApi = moreInfoFetchUrl("moreinfo");
 export const getUserListUpdateApi = (id: string) => {
   return moreInfoFetchUrl(`moreinfo/${id}`);
 };
+export const moreinfoDisableuserApi = moreInfoFetchUrl("moreinfo/disableuser");
 
 export const settingApi = (id: string) => {
   const result = fetchUrl(`setting/${id}`);
@@ -43,4 +44,3 @@ export const settingUpdateApi = (id: string) => {
 };
 
 export const authCreateApi = authFetchUrl("create");
-export const authDisableApi = authFetchUrl("remove");

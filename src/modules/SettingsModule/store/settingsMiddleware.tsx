@@ -10,11 +10,11 @@ import {
 } from "../../../redux/actions";
 import {
   authCreateApi,
-  authDisableApi,
   getUserListApi,
   getUserListUpdateApi,
   settingApi,
   settingUpdateApi,
+  moreinfoDisableuserApi,
 } from "../../../routes/apiRoutes";
 import axios from "axios";
 
@@ -102,8 +102,8 @@ export const authCreateMiddleWare = createAsyncThunk(
   AUTH_CREATE,
   async (
     {
-      firstName,
-      lastName,
+      firstname,
+      lastname,
       email,
       organization,
       department,
@@ -111,8 +111,8 @@ export const authCreateMiddleWare = createAsyncThunk(
       role,
       activeStatus,
     }: {
-      firstName: string;
-      lastName: string;
+      firstname: string;
+      lastname: string;
       email: string;
       organization: string;
       department: string[];
@@ -123,17 +123,23 @@ export const authCreateMiddleWare = createAsyncThunk(
     { rejectWithValue }
   ) => {
     try {
-      const { data } = await axios.post(authCreateApi, {
-        lastName,
-        firstName,
+      const data: any = await axios.post(authCreateApi, {
+        lastname,
+        firstname,
         email,
         lab,
         organization,
         department,
         role,
         activeStatus,
+        timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+        name: `${firstname} ${lastname}`,
       });
-      return data;
+      if (data.data) {
+        return data.data;
+      } else {
+        return data?.response?.data;
+      }
     } catch (error: any) {
       const typedError = error as Error;
       return rejectWithValue(typedError);
@@ -143,10 +149,10 @@ export const authCreateMiddleWare = createAsyncThunk(
 
 export const authDisableMiddleWare = createAsyncThunk(
   AUTH_DISABLE,
-  async ({ id }: { id: string[] }, { rejectWithValue }) => {
+  async ({ ids }: { ids: string[] }, { rejectWithValue }) => {
     try {
-      const { data } = await axios.patch(authDisableApi, {
-        id,
+      const { data } = await axios.patch(moreinfoDisableuserApi, {
+        ids,
       });
       return data;
     } catch (error: any) {

@@ -387,8 +387,8 @@ const UserTab = () => {
     store
       .dispatch(
         authCreateMiddleWare({
-          firstName: values.firstName,
-          lastName: values.lastName,
+          firstname: values.firstName,
+          lastname: values.lastName,
           email: values.email,
           organization: values.organization._id,
           department: getDepartment,
@@ -399,23 +399,17 @@ const UserTab = () => {
       )
       .then((res) => {
         setLoader(false);
-        if (res.payload) {
+        if (!isEmpty(res.payload?.error)) {
+          Toast(res.payload?.error, "LONG", "error");
+        } else if (res.payload) {
           Alert("User created successfully.");
           formikHelpers.resetForm();
           setCreateNew(false);
           store.dispatch(getUserListMiddleWare());
-        } else {
-          Toast(
-            "User account already exists at email address.",
-            "LONG",
-            "error"
-          );
         }
       })
       .catch((error) => {
         setLoader(false);
-
-        console.log("error", error);
       });
   };
   const formik = useFormik({
@@ -434,7 +428,7 @@ const UserTab = () => {
   const handleDelete = () => {
     setLoader(true);
     store
-      .dispatch(authDisableMiddleWare({ id: selectedRows }))
+      .dispatch(authDisableMiddleWare({ ids: selectedRows }))
       .then((res) => {
         if (res.payload) {
           Alert("User deleted successfully.");
