@@ -80,7 +80,7 @@ export const UserDetailsHeader = ({
             isDisabled={isEmpty(formik.values.organisation)}
             inputHeight={35}
             placeholder="Select lab"
-            isMulti
+            // isMulti
             value={formik.values.lab}
             onChange={(event) => {
               formik.setFieldValue("lab", event);
@@ -95,7 +95,11 @@ export const UserDetailsHeader = ({
   );
 };
 
-export const AddOnHeader = () => {
+export const AddOnHeader = ({
+  formik,
+}: {
+  formik: FormikProps<filterFormType>;
+}) => {
   return (
     <Flex className={styles.createdFlex} flex={1}>
       <LableWithIcon
@@ -107,16 +111,23 @@ export const AddOnHeader = () => {
       />
 
       <InputText
+        keyboardType="date"
+        value={formik.values.addOn}
+        onChange={formik.handleChange("addOn")}
         white
         size="small"
         placeholder="DD/MM/YYYY"
-        actionRight={() => <SvgCalendar />}
+        // actionRight={() => <SvgCalendar />}
       />
     </Flex>
   );
 };
 
-export const RoleHeader = () => {
+export const RoleHeader = ({
+  formik,
+}: {
+  formik: FormikProps<filterFormType>;
+}) => {
   return (
     <Flex flex={1} className={styles.inputMarginSettings}>
       <LableWithIcon
@@ -128,6 +139,10 @@ export const RoleHeader = () => {
       />
       <div style={{ flex: 1 }}>
         <SelectTag
+          value={formik.values.role}
+          onChange={(event) => {
+            formik.setFieldValue("role", event);
+          }}
           options={designationOptions}
           inputHeight={35}
           placeholder="Select Role"
@@ -137,7 +152,11 @@ export const RoleHeader = () => {
   );
 };
 
-export const StatusHeader = () => {
+export const StatusHeader = ({
+  formik,
+}: {
+  formik: FormikProps<filterFormType>;
+}) => {
   return (
     <Flex flex={1} className={styles.inputMarginSettings}>
       <LableWithIcon
@@ -149,6 +168,10 @@ export const StatusHeader = () => {
       />
       <div style={{ flex: 1 }}>
         <SelectTag
+          value={formik.values.status}
+          onChange={(event) => {
+            formik.setFieldValue("status", event);
+          }}
           options={STATUS_OPTIONS}
           inputHeight={35}
           placeholder="Select status"

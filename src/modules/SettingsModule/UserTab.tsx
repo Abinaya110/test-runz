@@ -91,7 +91,15 @@ export type filterFormType = {
   status: any;
 };
 
-const Status = ({ value, row }: any) => {
+const filterFormTypeInitialValues: filterFormType = {
+  organisation: "",
+  department: "",
+  lab: "",
+  addOn: "",
+  role: "",
+  status: "",
+};
+const Status = ({ value, row, formikFilter }: any) => {
   const [isOpen, setOpen] = useState(false);
   const wrapperRef = useRef<any>(null);
 
@@ -108,7 +116,9 @@ const Status = ({ value, row }: any) => {
       };
     }, [ref]);
   };
+
   useOutsideAlerter(wrapperRef);
+
   const handleUpdate = (value: boolean) => {
     if (row.activeStatus === value) {
       setOpen(false);
@@ -118,7 +128,29 @@ const Status = ({ value, row }: any) => {
           getUserListUpdateMiddleWare({ id: row.userId, activeStatus: value })
         )
         .then(() => {
-          store.dispatch(getUserListMiddleWare());
+          const datePicker = formikFilter.values.addOn
+            ? moment(formikFilter.values.addOn).startOf("day").toISOString()
+            : "";
+          store.dispatch(
+            getUserListMiddleWare({
+              department: formikFilter.values.department?.label
+                ? formikFilter.values.department.label
+                : "",
+              labtype: formikFilter.values.lab?.label
+                ? formikFilter.values.lab.label
+                : "",
+              organization: formikFilter.values.organisation?.organization
+                ? formikFilter.values.organisation?.organization
+                : "",
+              createdAt: datePicker,
+              role: formikFilter.values.role?.value,
+              activeStatus: formikFilter.values.role?.value
+                ? formikFilter.values.role?.value
+                  ? true
+                  : false
+                : "",
+            })
+          );
         });
     }
   };
@@ -208,14 +240,7 @@ const UserTab = () => {
   );
 
   const formikFilter = useFormik({
-    initialValues: {
-      organisation: "",
-      department: "",
-      lab: "",
-      addOn: "",
-      role: "",
-      status: "",
-    },
+    initialValues: filterFormTypeInitialValues,
     onSubmit: () => {},
   });
 
@@ -231,7 +256,6 @@ const UserTab = () => {
       render: (value: string, row: any) => {
         const myDepartmentArray = row?.department;
         const resultDepartment = myDepartmentArray.join(",");
-
         const myLabArray = row?.labtype;
         const resultLab = myLabArray.join(",");
         return (
@@ -253,7 +277,7 @@ const UserTab = () => {
       key: "time",
       align: "center",
       flex: 2,
-      renderTitle: () => <AddOnHeader />,
+      renderTitle: () => <AddOnHeader formik={formikFilter} />,
       render: (value: string) => (
         <Text type="bodyBold" align="center">
           {moment(value).format("L")}
@@ -266,7 +290,7 @@ const UserTab = () => {
       key: "role",
       align: "center",
       flex: 2,
-      renderTitle: () => <RoleHeader />,
+      renderTitle: () => <RoleHeader formik={formikFilter} />,
       render: (value: string) => (
         <Text type="bodyBold" align="center" transform="capitalize">
           {value}
@@ -279,8 +303,10 @@ const UserTab = () => {
       key: "activeStatus",
       align: "center",
       flex: 2,
-      renderTitle: () => <StatusHeader />,
-      render: (value: string, row: any) => <Status value={value} row={row} />,
+      renderTitle: () => <StatusHeader formik={formikFilter} />,
+      render: (value: string, row: any) => (
+        <Status value={value} row={row} formikFilter={formikFilter} />
+      ),
     },
   ];
 
@@ -409,13 +435,14 @@ const UserTab = () => {
           Alert("User created successfully.");
           formikHelpers.resetForm();
           setCreateNew(false);
-          store.dispatch(getUserListMiddleWare());
+          store.dispatch(getUserListMiddleWare({}));
         }
       })
       .catch((error) => {
         setLoader(false);
       });
   };
+
   const formik = useFormik({
     initialValues,
     onSubmit: handleSubmitUser,
@@ -437,7 +464,7 @@ const UserTab = () => {
         if (res.payload) {
           Alert("User deleted successfully.");
           setDeleteModal(false);
-          store.dispatch(getUserListMiddleWare());
+          store.dispatch(getUserListMiddleWare({}));
         }
         setLoader(false);
       })
@@ -445,6 +472,33 @@ const UserTab = () => {
         setLoader(false);
       });
   };
+
+  useEffect(() => {
+    const datePicker = formikFilter.values.addOn
+      ? moment(formikFilter.values.addOn).startOf("day").toISOString()
+      : "";
+    store.dispatch(
+      getUserListMiddleWare({
+        department: formikFilter.values.department?.label
+          ? formikFilter.values.department.label
+          : "",
+        labtype: formikFilter.values.lab?.label
+          ? formikFilter.values.lab.label
+          : "",
+        organization: formikFilter.values.organisation?.organization
+          ? formikFilter.values.organisation?.organization
+          : "",
+        createdAt: datePicker,
+        role: formikFilter.values.role?.value,
+        activeStatus: formikFilter.values.role?.value
+          ? formikFilter.values.role?.value
+            ? true
+            : false
+          : "",
+      })
+    );
+  }, [formikFilter.values]);
+
   return (
     <Flex>
       <YesOrNo

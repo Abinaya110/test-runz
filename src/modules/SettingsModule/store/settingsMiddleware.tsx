@@ -69,9 +69,35 @@ export const updateSettingMiddleWare = createAsyncThunk(
 
 export const getUserListMiddleWare = createAsyncThunk(
   GET_USER_LIST,
-  async (_a, { rejectWithValue }) => {
+  async (
+    {
+      department,
+      labtype,
+      organization,
+      role,
+      activeStatus,
+      createdAt,
+    }: {
+      department?: string;
+      labtype?: string;
+      organization?: string;
+      role?: string;
+      activeStatus?: any;
+      createdAt?: string;
+    },
+    { rejectWithValue }
+  ) => {
     try {
-      const { data } = await axios.get(getUserListApi);
+      const { data } = await axios.get(getUserListApi, {
+        params: {
+          department,
+          labtype,
+          organization,
+          role,
+          activeStatus,
+          createdAt,
+        },
+      });
       return data;
     } catch (error: any) {
       const typedError = error as Error;

@@ -5,7 +5,20 @@ import { procedureMiddleWare } from "./proceduresMiddleware";
 const authMeInitialState: ProceduresReducerState = {
   isLoading: false,
   error: "",
-  data: [],
+  data: {
+    user: {
+      _id: "",
+      email: "",
+      userId: "",
+      __v: 0,
+      createdAt: "",
+      name: "",
+      organization: "",
+      role: "",
+      updatedAt: "",
+      userCounter: "",
+    },
+  },
 };
 
 const procedureReducer = createSlice({

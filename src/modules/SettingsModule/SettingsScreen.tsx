@@ -55,7 +55,6 @@ const SettingsScreen = () => {
     if (!isEmpty(moreInfoData.organization?._id)) {
       dispatch(getSettingMiddleWare({ id: moreInfoData.organization?._id }));
     }
-    dispatch(getUserListMiddleWare());
   }, [moreInfoData.organization]);
 
   const handleChangeSettings = (value: string) => {

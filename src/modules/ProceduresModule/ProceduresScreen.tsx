@@ -60,12 +60,12 @@ const ProceduresScreen = () => {
     dispatch(procedureMiddleWare());
   }, []);
 
-  const { isLoading, authMeData, data } = useSelector(
+  const { isLoading, authMeData, dataList } = useSelector(
     ({ procedureReducers, authMeReducers }: RootState) => {
       return {
         isLoading: procedureReducers.isLoading,
         authMeData: authMeReducers.data,
-        data: procedureReducers.data,
+        dataList: procedureReducers.data,
       };
     }
   );
@@ -80,13 +80,21 @@ const ProceduresScreen = () => {
       rowOnClick: (a: any) => {
         navigate(routes.PROCEDURE_EDIT);
       },
-      render: (value: string, row: any) => {
+      render: (value: string) => {
+        const myDepartmentArray = dataList?.user?.department;
+        const resultDepartment = myDepartmentArray?.join(",");
+
+        const myLabArray = dataList?.user?.labtype;
+        const resultLab = myLabArray?.join(",");
         return (
           <Flex>
             <Text color="shade-3" type="captionBold">
+              {dataList?.user?.userCounter} / {resultDepartment} / {resultLab} /{" "}
+              {dataList?.user?.organization}
+            </Text>
+            <Text transform="capitalize" type="bodyBold">
               {value}
             </Text>
-            <Text type="bodyBold">{value}</Text>
           </Flex>
         );
       },
@@ -308,7 +316,7 @@ const ProceduresScreen = () => {
         }}
         rowSelection={handleSelections}
         rowSelectionAll={handleAllSelections}
-        dataSource={data}
+        dataSource={dataList?.data ? dataList.data : []}
         columns={columns}
         rowUnSelectAll={handleAllUnSelections}
         rowDeleteAction={handleDeleteOpen}
