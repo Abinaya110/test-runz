@@ -110,13 +110,17 @@ const Status = ({ value, row }: any) => {
   };
   useOutsideAlerter(wrapperRef);
   const handleUpdate = (value: boolean) => {
-    store
-      .dispatch(
-        getUserListUpdateMiddleWare({ id: row.userId, activeStatus: value })
-      )
-      .then(() => {
-        store.dispatch(getUserListMiddleWare());
-      });
+    if (row.activeStatus === value) {
+      setOpen(false);
+    } else {
+      store
+        .dispatch(
+          getUserListUpdateMiddleWare({ id: row.userId, activeStatus: value })
+        )
+        .then(() => {
+          store.dispatch(getUserListMiddleWare());
+        });
+    }
   };
 
   return (
