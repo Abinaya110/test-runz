@@ -12,6 +12,7 @@ import { filterFormType } from "./UserTab";
 import { isEmpty } from "../../utils/validators";
 import { designationOptions } from "../LoginModule/mock";
 import { STATUS_OPTIONS } from "./mock";
+import DatePicker from "../../packages/DatePicker/DatePicker";
 
 export const UserDetailsHeader = ({
   moreInfoList,
@@ -109,6 +110,8 @@ export const AddOnHeader = ({
         color="shade-3"
         actionRight={() => <SvgSort />}
       />
+
+      {/* <DatePicker style={{ height: 40 }} label="Created on" /> */}
 
       <InputText
         keyboardType="date"

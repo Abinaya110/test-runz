@@ -23,6 +23,7 @@ import { routes } from "../../routes/routesPath";
 import { AppDispatch, RootState } from "../../redux/store";
 import { useDispatch, useSelector } from "react-redux";
 import {
+  procedureByIdMiddleWare,
   procedureCreateMiddleWare,
   procedureMiddleWare,
 } from "./store/proceduresMiddleware";
@@ -35,10 +36,12 @@ export type formType = {
   title: string;
   html: string;
 };
+
 const initialValues: formType = {
   title: "",
-  html: "",
+  html: " ",
 };
+
 const validate = (values: formType) => {
   const errors: Partial<formType> = {};
   if (isEmpty(values.title)) {
@@ -55,20 +58,26 @@ const ProceduresScreen = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [createProcedure, setCreateProcedure] = useState(false);
   const [isPermission, setPermission] = useState(false);
-
+  const [isLoader, setLoader] = useState(false);
   useEffect(() => {
     dispatch(procedureMiddleWare());
   }, []);
 
-  const { isLoading, authMeData, dataList } = useSelector(
-    ({ procedureReducers, authMeReducers }: RootState) => {
-      return {
-        isLoading: procedureReducers.isLoading,
-        authMeData: authMeReducers.data,
-        dataList: procedureReducers.data,
-      };
-    }
-  );
+  const { isLoading, authMeData, dataList, procedureByIDisLoading } =
+    useSelector(
+      ({
+        procedureReducers,
+        authMeReducers,
+        procedureByIDReducers,
+      }: RootState) => {
+        return {
+          isLoading: procedureReducers.isLoading,
+          authMeData: authMeReducers.data,
+          dataList: procedureReducers.data,
+          procedureByIDisLoading: procedureByIDReducers.isLoading,
+        };
+      }
+    );
 
   const columns = [
     {
@@ -77,10 +86,12 @@ const ProceduresScreen = () => {
       dataIndex: "title",
       key: "title",
       flex: 8,
-      rowOnClick: (a: any) => {
-        navigate(routes.PROCEDURE_EDIT);
+      rowOnClick: (row: any) => {
+        dispatch(procedureByIdMiddleWare({ id: row.id })).then(() => {
+          navigate(routes.PROCEDURE_EDIT);
+        });
       },
-      render: (value: string) => {
+      render: (value: string, row: any) => {
         const myDepartmentArray = dataList?.user?.department;
         const resultDepartment = myDepartmentArray?.join(",");
 
@@ -89,7 +100,7 @@ const ProceduresScreen = () => {
         return (
           <Flex>
             <Text color="shade-3" type="captionBold">
-              {dataList?.user?.userCounter} / {resultDepartment} / {resultLab} /{" "}
+              {row?.id} / {resultDepartment} / {resultLab} /{" "}
               {dataList?.user?.organization}
             </Text>
             <Text transform="capitalize" type="bodyBold">
@@ -106,8 +117,10 @@ const ProceduresScreen = () => {
       key: "date",
       flex: 2,
       align: "center",
-      rowOnClick: (a: any) => {
-        console.log("a", a);
+      rowOnClick: (row: any) => {
+        dispatch(procedureByIdMiddleWare({ id: row.id })).then(() => {
+          navigate(routes.PROCEDURE_EDIT);
+        });
       },
     },
     {
@@ -117,8 +130,10 @@ const ProceduresScreen = () => {
       key: "Username",
       flex: 2,
       align: "center",
-      rowOnClick: (a: any) => {
-        console.log("a", a);
+      rowOnClick: (row: any) => {
+        dispatch(procedureByIdMiddleWare({ id: row.id })).then(() => {
+          navigate(routes.PROCEDURE_EDIT);
+        });
       },
     },
   ];
@@ -216,15 +231,23 @@ const ProceduresScreen = () => {
     setCurrentPage(page);
   };
   const handleSubmit = (values: formType) => {
-    dispatch(procedureCreateMiddleWare({ title: values.title, html: "" })).then(
-      (res) => {
-        console.log("res", res);
-
-        // setCreateProcedure(false);
-        // Alert("Procedure created successfully.");
-        // console.log("values", values);
-      }
-    );
+    setLoader(true);
+    dispatch(
+      procedureCreateMiddleWare({
+        title: values.title,
+        html: "",
+        createdBy: authMeData.name,
+      })
+    )
+      .then((res) => {
+        if (res.payload?._doc) {
+          dispatch(procedureMiddleWare());
+          setCreateProcedure(false);
+          Alert("Procedure created successfully.");
+        }
+        setLoader(false);
+      })
+      .catch(() => setLoader(false));
   };
 
   const formik = useFormik({
@@ -238,7 +261,7 @@ const ProceduresScreen = () => {
       className={styles.overAll}
       height={window.innerHeight - HEADER_HEIGHT}
     >
-      {isLoading && <Loader />}
+      {(isLoading || procedureByIDisLoading) && <Loader />}
       {/* <NotAuthorizedModal open onClick={() => {}} /> */}
       <CreateOrEditProcedure
         formik={formik}
@@ -248,6 +271,8 @@ const ProceduresScreen = () => {
         cancelClick={() => {
           setCreateProcedure(false);
         }}
+        dataList={dataList}
+        isLoader={isLoader}
       />
       <YesOrNo
         title="Confirmation"

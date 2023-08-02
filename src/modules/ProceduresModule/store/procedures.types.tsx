@@ -27,3 +27,24 @@ export interface ProceduresReducerState {
   error: string;
   data: Procedures;
 }
+
+export interface ProceduresID {
+  user?: User;
+  procedure?: Procedure;
+}
+
+export interface Procedure {
+  _id: string;
+  title: string;
+  html: string;
+  createdBy: string;
+  createdAt: string;
+  updatedAt: string;
+  __v: number;
+}
+
+export interface ProcedureByIdReducerState {
+  isLoading: boolean;
+  error: string;
+  data: ProceduresID;
+}

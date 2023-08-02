@@ -29,13 +29,18 @@ export const procedureMiddleWare = createAsyncThunk(
 export const procedureCreateMiddleWare = createAsyncThunk(
   PROCEDURE_CREATE,
   async (
-    { title, html }: { title: string; html: string },
+    {
+      title,
+      html,
+      createdBy,
+    }: { title: string; html: string; createdBy: string },
     { rejectWithValue }
   ) => {
     try {
       const { data } = await axios.post(procedureApi, {
         title,
         html,
+        createdBy,
       });
       return data;
     } catch (error: any) {
@@ -47,7 +52,7 @@ export const procedureCreateMiddleWare = createAsyncThunk(
 
 export const procedureByIdMiddleWare = createAsyncThunk(
   PROCEDURE_ID_LIST,
-  async ({ id }: { id: string }, { rejectWithValue }) => {
+  async ({ id }: { id: any }, { rejectWithValue }) => {
     try {
       const { data } = await axios.get(procedureByIdApi(id));
       return data;
@@ -60,9 +65,15 @@ export const procedureByIdMiddleWare = createAsyncThunk(
 
 export const procedureUpdateMiddleWare = createAsyncThunk(
   PROCEDURE_UPDATE,
-  async ({ id }: { id: string }, { rejectWithValue }) => {
+  async (
+    { id, html, title }: { id: any; title: any; html: any },
+    { rejectWithValue }
+  ) => {
     try {
-      const { data } = await axios.patch(procedureUpdateAndDeleteApi(id));
+      const { data } = await axios.patch(procedureUpdateAndDeleteApi(id), {
+        title,
+        html,
+      });
       return data;
     } catch (error: any) {
       const typedError = error as Error;

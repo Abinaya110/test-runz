@@ -6,40 +6,79 @@ import styles from "./procedureseditscreen.module.css";
 import Button from "../../packages/Button/Button";
 import SvgPrint from "../../icons/SvgPrint";
 import CreateOrEditProcedure from "./CreateOrEditProcedure";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Alert from "../../packages/Alert/Alert";
 import ProceduresRichText from "./ProceduresRichText";
 import { formType } from "./ProceduresScreen";
 import { useFormik } from "formik";
 import { isEmpty } from "../../utils/validators";
 import { HEADER_HEIGHT } from "../../utils/constants";
+import { useSelector } from "react-redux";
+import store, { RootState } from "../../redux/store";
+import {
+  procedureByIdMiddleWare,
+  procedureUpdateMiddleWare,
+} from "./store/proceduresMiddleware";
+import Loader from "../../packages/Loader/Loader";
+
+const initialValues: formType = {
+  title: "",
+  html: "",
+};
+
+const validate = (values: formType) => {
+  const errors: Partial<formType> = {};
+  if (isEmpty(values.title)) {
+    errors.title = "This field is required";
+  }
+  return errors;
+};
 
 const ProceduresEditScreen = () => {
   const [editdProcedure, setEditdProcedure] = useState(false);
-
-  const initialValues: formType = {
-    title: "",
-    html: "",
-  };
-  const validate = (values: formType) => {
-    const errors: Partial<formType> = {};
-    if (isEmpty(values.title)) {
-      errors.title = "This field is required";
+  const [isLoader, setLoader] = useState(false);
+  const { procedureByIDData, procedureByIDisLoading } = useSelector(
+    ({ procedureByIDReducers }: RootState) => {
+      return {
+        procedureByIDData: procedureByIDReducers.data,
+        procedureByIDisLoading: procedureByIDReducers.isLoading,
+      };
     }
-    return errors;
-  };
+  );
+
   const handleSubmit = (values: formType) => {
-    setEditdProcedure(false);
-    Alert("Procedure saved successfully.");
-    console.log("values", values);
+    setLoader(true);
+    store
+      .dispatch(
+        procedureUpdateMiddleWare({
+          id: procedureByIDData?.procedure?._id,
+          title: values.title,
+          html: values.html,
+        })
+      )
+      .then(() => {
+        store.dispatch(
+          procedureByIdMiddleWare({ id: procedureByIDData?.procedure?._id })
+        );
+        setEditdProcedure(false);
+        Alert("Procedure saved successfully.");
+        setLoader(false);
+      });
   };
+
   const formik = useFormik({
     initialValues,
     onSubmit: handleSubmit,
     validate,
   });
+
+  useEffect(() => {
+    formik.setFieldValue("title", procedureByIDData?.procedure?.title);
+  }, [procedureByIDData]);
+
   return (
     <Flex height={window.innerHeight - HEADER_HEIGHT}>
+      {procedureByIDisLoading && <Loader />}
       <CreateOrEditProcedure
         formik={formik}
         title="Edit procedure"
@@ -48,6 +87,9 @@ const ProceduresEditScreen = () => {
         cancelClick={() => {
           setEditdProcedure(false);
         }}
+        isLoader={isLoader}
+        isEdit
+        dataList={procedureByIDData}
       />
       <Flex className={styles.overAll}>
         <Flex row between center>

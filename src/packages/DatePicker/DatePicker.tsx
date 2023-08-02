@@ -10,11 +10,13 @@ type Props = {
   disabled?: boolean;
   value?: any;
   onChange?: (a: any) => void;
+  style?: React.CSSProperties;
 };
-const DatePicker = ({ label, disabled, value, onChange }: Props) => {
+const DatePicker = ({ label, disabled, value, onChange, style }: Props) => {
   return (
     <LabelWrapper label={label}>
       <DatePickerAntd
+        style={style}
         disabled={disabled}
         className={cx("datepicker", { disabled })}
         suffixIcon={<SvgCalendar />}

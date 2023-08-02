@@ -255,9 +255,9 @@ const UserTab = () => {
       flex: 6,
       render: (value: string, row: any) => {
         const myDepartmentArray = row?.department;
-        const resultDepartment = myDepartmentArray.join(",");
+        const resultDepartment = myDepartmentArray?.join(",");
         const myLabArray = row?.labtype;
-        const resultLab = myLabArray.join(",");
+        const resultLab = myLabArray?.join(",");
         return (
           <Flex>
             <Text color="shade-3" type="captionBold">
