@@ -144,8 +144,8 @@ const Status = ({ value, row, formikFilter }: any) => {
                 : "",
               createdAt: datePicker,
               role: formikFilter.values.role?.value,
-              activeStatus: formikFilter.values.role?.value
-                ? formikFilter.values.role?.value
+              activeStatus: formikFilter.values.status?.value
+                ? formikFilter.values.status?.value === "Active"
                   ? true
                   : false
                 : "",
@@ -490,8 +490,8 @@ const UserTab = () => {
           : "",
         createdAt: datePicker,
         role: formikFilter.values.role?.value,
-        activeStatus: formikFilter.values.role?.value
-          ? formikFilter.values.role?.value
+        activeStatus: formikFilter.values.status?.value
+          ? formikFilter.values.status?.value === "Active"
             ? true
             : false
           : "",
