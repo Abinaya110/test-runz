@@ -139,8 +139,8 @@ const Status = ({ value, row, formikFilter }: any) => {
               labtype: formikFilter.values.lab?.label
                 ? formikFilter.values.lab.label
                 : "",
-              organization: formikFilter.values.organisation?.organization
-                ? formikFilter.values.organisation?.organization
+              organization: formikFilter.values.organisation?._id
+                ? formikFilter.values.organisation?._id
                 : "",
               createdAt: datePicker,
               role: formikFilter.values.role?.value,
@@ -485,8 +485,8 @@ const UserTab = () => {
         labtype: formikFilter.values.lab?.label
           ? formikFilter.values.lab.label
           : "",
-        organization: formikFilter.values.organisation?.organization
-          ? formikFilter.values.organisation?.organization
+        organization: formikFilter.values.organisation?._id
+          ? formikFilter.values.organisation?._id
           : "",
         createdAt: datePicker,
         role: formikFilter.values.role?.value,
