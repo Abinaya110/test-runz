@@ -1,6 +1,12 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { ProceduresReducerState } from "./procedures.types";
-import { procedureMiddleWare } from "./proceduresMiddleware";
+import {
+  ProcedureByIdReducerState,
+  ProceduresReducerState,
+} from "./procedures.types";
+import {
+  procedureMiddleWare,
+  procedureByIdMiddleWare,
+} from "./proceduresMiddleware";
 
 const authMeInitialState: ProceduresReducerState = {
   isLoading: false,
@@ -43,4 +49,33 @@ const procedureReducer = createSlice({
   },
 });
 
+const procedureByIdInitialState: ProcedureByIdReducerState = {
+  isLoading: false,
+  error: "",
+  data: {},
+};
+
+const procedureByIDReducer = createSlice({
+  name: "procedureByID_list",
+  initialState: procedureByIdInitialState,
+  reducers: {},
+  extraReducers: (builder) => {
+    builder.addCase(procedureByIdMiddleWare.pending, (state) => {
+      state.isLoading = true;
+      state.error = "";
+    });
+    builder.addCase(procedureByIdMiddleWare.fulfilled, (state, action) => {
+      state.isLoading = false;
+      state.data = action.payload;
+    });
+    builder.addCase(procedureByIdMiddleWare.rejected, (state, action) => {
+      state.isLoading = false;
+      if (typeof action.payload === "string") {
+        state.error = action.payload;
+      }
+    });
+  },
+});
+
 export const procedureReducers = procedureReducer.reducer;
+export const procedureByIDReducers = procedureByIDReducer.reducer;

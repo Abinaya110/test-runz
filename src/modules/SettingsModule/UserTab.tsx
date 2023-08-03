@@ -129,7 +129,10 @@ const Status = ({ value, row, formikFilter }: any) => {
         )
         .then(() => {
           const datePicker = formikFilter.values.addOn
-            ? moment(formikFilter.values.addOn).startOf("day").toISOString()
+            ? moment(formikFilter.values.addOn)
+                .local()
+                .startOf("day")
+                .toISOString()
             : "";
           store.dispatch(
             getUserListMiddleWare({
@@ -139,8 +142,8 @@ const Status = ({ value, row, formikFilter }: any) => {
               labtype: formikFilter.values.lab?.label
                 ? formikFilter.values.lab.label
                 : "",
-              organization: formikFilter.values.organisation?.organization
-                ? formikFilter.values.organisation?.organization
+              organization: formikFilter.values.organisation?._id
+                ? formikFilter.values.organisation?._id
                 : "",
               createdAt: datePicker,
               role: formikFilter.values.role?.value,
@@ -254,15 +257,20 @@ const UserTab = () => {
       ),
       flex: 6,
       render: (value: string, row: any) => {
+        const getOrganization = moreInfoList?.filter(
+          (list) => list._id === row?.organization
+        );
         const myDepartmentArray = row?.department;
-        const resultDepartment = myDepartmentArray.join(",");
+        const resultDepartment = myDepartmentArray?.join(",");
         const myLabArray = row?.labtype;
-        const resultLab = myLabArray.join(",");
+        const resultLab = myLabArray?.join(",");
         return (
           <Flex>
             <Text color="shade-3" type="captionBold">
               {row?.userCounter} / {resultDepartment} / {resultLab} /{" "}
-              {row?.organization}
+              {getOrganization &&
+                getOrganization.length === 1 &&
+                getOrganization[0]?.organization}
             </Text>
             <Text transform="capitalize" type="bodyBold">
               {value}
@@ -485,8 +493,8 @@ const UserTab = () => {
         labtype: formikFilter.values.lab?.label
           ? formikFilter.values.lab.label
           : "",
-        organization: formikFilter.values.organisation?.organization
-          ? formikFilter.values.organisation?.organization
+        organization: formikFilter.values.organisation?._id
+          ? formikFilter.values.organisation?._id
           : "",
         createdAt: datePicker,
         role: formikFilter.values.role?.value,
