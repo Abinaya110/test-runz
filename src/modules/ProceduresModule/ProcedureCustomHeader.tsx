@@ -1,6 +1,4 @@
 import LableWithIcon from "../../common/LableWithIcon";
-import SvgCalendar from "../../icons/SvgCalendar";
-import SvgSearch from "../../icons/SvgSearch";
 import SvgSort from "../../icons/SvgSort";
 import Flex from "../../packages/Flex/Flex";
 import InputText from "../../packages/InputText/InputText";
@@ -48,7 +46,7 @@ export const ProcedureHeader = () => {
 
 export const CreatedOnHeader = () => {
   return (
-    <Flex className={styles.createdFlex}>
+    <Flex center middle className={styles.createdFlex}>
       <LableWithIcon
         containerClassName={styles.sortTitleFlex}
         label="Created on"
@@ -58,10 +56,10 @@ export const CreatedOnHeader = () => {
       />
 
       <InputText
+        keyboardType="date"
         white
         size="small"
         placeholder="DD/MM/YYYY"
-        actionRight={() => <SvgCalendar />}
       />
     </Flex>
   );
@@ -69,7 +67,7 @@ export const CreatedOnHeader = () => {
 
 export const CreatedByHeader = () => {
   return (
-    <Flex className={styles.createdFlex}>
+    <Flex center middle className={styles.createdFlex}>
       <LableWithIcon
         containerClassName={styles.sortTitleFlex}
         label="Created By"
@@ -79,10 +77,10 @@ export const CreatedByHeader = () => {
       />
 
       <InputText
+        keyboardType="date"
         white
         size="small"
         placeholder="DD/MM/YYYY"
-        actionRight={() => <SvgCalendar />}
       />
     </Flex>
   );

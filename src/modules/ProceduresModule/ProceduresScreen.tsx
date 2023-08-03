@@ -18,7 +18,7 @@ import SvgDelete1 from "../../icons/SvgDelete1";
 import Alert from "../../packages/Alert/Alert";
 import CreateOrEditProcedure from "./CreateOrEditProcedure";
 import SvgCancel from "../../icons/SvgCancel";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { routes } from "../../routes/routesPath";
 import { AppDispatch, RootState } from "../../redux/store";
 import { useDispatch, useSelector } from "react-redux";
@@ -60,28 +60,21 @@ const ProceduresScreen = () => {
   const [createProcedure, setCreateProcedure] = useState(false);
   const [isPermission, setPermission] = useState(false);
   const [isLoader, setLoader] = useState(false);
+
   useEffect(() => {
     dispatch(procedureMiddleWare());
   }, []);
 
-  const {
-    isLoading,
-    authMeData,
-    dataList,
-    procedureByIDisLoading,
-    moreInfoList,
-  } = useSelector(
+  const { isLoading, authMeData, dataList, moreInfoList } = useSelector(
     ({
       procedureReducers,
       authMeReducers,
-      procedureByIDReducers,
       moreInfoListReducers,
     }: RootState) => {
       return {
         isLoading: procedureReducers.isLoading,
         authMeData: authMeReducers.data,
         dataList: procedureReducers.data,
-        procedureByIDisLoading: procedureByIDReducers.isLoading,
         moreInfoList: moreInfoListReducers.data,
       };
     }
@@ -95,9 +88,7 @@ const ProceduresScreen = () => {
       key: "title",
       flex: 8,
       rowOnClick: (row: any) => {
-        dispatch(procedureByIdMiddleWare({ id: row.id })).then(() => {
-          navigate(routes.PROCEDURE_EDIT);
-        });
+        navigate(`${routes.PROCEDURE_EDIT}?id=${row.id}`);
       },
       render: (value: string, row: any) => {
         const getOrganization = moreInfoList?.filter(
@@ -130,15 +121,13 @@ const ProceduresScreen = () => {
       key: "createdAt",
       flex: 2,
       render: (value: string) => (
-        <Text transform="capitalize" type="bodyBold">
+        <Text align="center" transform="capitalize" type="bodyBold">
           {moment(value).format("DD/MM/YYYY")}
         </Text>
       ),
       align: "center",
       rowOnClick: (row: any) => {
-        dispatch(procedureByIdMiddleWare({ id: row.id })).then(() => {
-          navigate(routes.PROCEDURE_EDIT);
-        });
+        navigate(routes.PROCEDURE_EDIT);
       },
     },
     {
@@ -149,9 +138,7 @@ const ProceduresScreen = () => {
       flex: 2,
       align: "center",
       rowOnClick: (row: any) => {
-        dispatch(procedureByIdMiddleWare({ id: row.id })).then(() => {
-          navigate(routes.PROCEDURE_EDIT);
-        });
+        navigate(routes.PROCEDURE_EDIT);
       },
     },
   ];
@@ -279,7 +266,7 @@ const ProceduresScreen = () => {
       className={styles.overAll}
       height={window.innerHeight - HEADER_HEIGHT}
     >
-      {(isLoading || procedureByIDisLoading) && <Loader />}
+      {isLoading && <Loader />}
       {/* <NotAuthorizedModal open onClick={() => {}} /> */}
       <CreateOrEditProcedure
         formik={formik}

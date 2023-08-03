@@ -1,6 +1,5 @@
 import { useMemo } from "react";
 import LableWithIcon from "../../common/LableWithIcon";
-import SvgCalendar from "../../icons/SvgCalendar";
 import SvgSort from "../../icons/SvgSort";
 import Flex from "../../packages/Flex/Flex";
 import InputText from "../../packages/InputText/InputText";
@@ -12,7 +11,6 @@ import { filterFormType } from "./UserTab";
 import { isEmpty } from "../../utils/validators";
 import { designationOptions } from "../LoginModule/mock";
 import { STATUS_OPTIONS } from "./mock";
-import DatePicker from "../../packages/DatePicker/DatePicker";
 
 export const UserDetailsHeader = ({
   moreInfoList,
@@ -102,7 +100,7 @@ export const AddOnHeader = ({
   formik: FormikProps<filterFormType>;
 }) => {
   return (
-    <Flex className={styles.createdFlex} flex={1}>
+    <Flex center middle className={styles.createdFlex} flex={1}>
       <LableWithIcon
         containerClassName={styles.sortTitleFlexSettings}
         label="Created on"
@@ -111,8 +109,6 @@ export const AddOnHeader = ({
         actionRight={() => <SvgSort />}
       />
 
-      {/* <DatePicker style={{ height: 40 }} label="Created on" /> */}
-
       <InputText
         keyboardType="date"
         value={formik.values.addOn}
@@ -120,7 +116,6 @@ export const AddOnHeader = ({
         white
         size="small"
         placeholder="DD/MM/YYYY"
-        // actionRight={() => <SvgCalendar />}
       />
     </Flex>
   );
@@ -132,7 +127,7 @@ export const RoleHeader = ({
   formik: FormikProps<filterFormType>;
 }) => {
   return (
-    <Flex flex={1} className={styles.inputMarginSettings}>
+    <Flex center middle flex={1} className={styles.inputMarginSettings}>
       <LableWithIcon
         containerClassName={styles.sortTitleFlexSettings}
         label="Role"
@@ -161,7 +156,7 @@ export const StatusHeader = ({
   formik: FormikProps<filterFormType>;
 }) => {
   return (
-    <Flex flex={1} className={styles.inputMarginSettings}>
+    <Flex center middle flex={1} className={styles.inputMarginSettings}>
       <LableWithIcon
         containerClassName={styles.sortTitleFlexSettings}
         label="Status"

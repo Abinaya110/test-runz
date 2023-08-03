@@ -17,10 +17,7 @@ import Button from "../../packages/Button/Button";
 import { HEADER_HEIGHT } from "../../utils/constants";
 import { AppDispatch, RootState } from "../../redux/store";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  getSettingMiddleWare,
-  getUserListMiddleWare,
-} from "./store/settingsMiddleware";
+import { getSettingMiddleWare } from "./store/settingsMiddleware";
 import { isEmpty } from "../../utils/validators";
 import Loader from "../../packages/Loader/Loader";
 

@@ -20,6 +20,9 @@ import {
   procedureUpdateMiddleWare,
 } from "./store/proceduresMiddleware";
 import Loader from "../../packages/Loader/Loader";
+import moment from "moment";
+import { useNavigate, useSearchParams } from "react-router-dom";
+import { routes } from "../../routes/routesPath";
 
 const initialValues: formType = {
   title: "",
@@ -37,6 +40,13 @@ const validate = (values: formType) => {
 const ProceduresEditScreen = () => {
   const [editdProcedure, setEditdProcedure] = useState(false);
   const [isLoader, setLoader] = useState(false);
+  const navigate = useNavigate();
+  let [searchParams] = useSearchParams();
+
+  useEffect(() => {
+    store.dispatch(procedureByIdMiddleWare({ id: searchParams.get("id") }));
+  }, []);
+
   const { procedureByIDData, procedureByIDisLoading, moreInfoList } =
     useSelector(
       ({ procedureByIDReducers, moreInfoListReducers }: RootState) => {
@@ -76,6 +86,7 @@ const ProceduresEditScreen = () => {
 
   useEffect(() => {
     formik.setFieldValue("title", procedureByIDData?.procedure?.title);
+    formik.setFieldValue("html", procedureByIDData?.procedure?.html);
   }, [procedureByIDData]);
 
   const getOrganization = moreInfoList?.filter(
@@ -86,10 +97,11 @@ const ProceduresEditScreen = () => {
 
   const myLabArray = procedureByIDData?.user?.labtype;
   const resultLab = myLabArray?.join(",");
+  console.log("formik", formik.values.html);
 
   return (
     <Flex height={window.innerHeight - HEADER_HEIGHT}>
-      {procedureByIDisLoading && <Loader />}
+      {(procedureByIDisLoading || isLoader) && <Loader />}
       <CreateOrEditProcedure
         formik={formik}
         title="Edit procedure"
@@ -138,7 +150,7 @@ const ProceduresEditScreen = () => {
               Created by
             </Text>
             <Text type="button-3" color="shade-3">
-              Teacher A
+              {procedureByIDData?.procedure?.createdBy}
             </Text>
           </Flex>
           <Flex>
@@ -150,23 +162,38 @@ const ProceduresEditScreen = () => {
               Created on
             </Text>
             <Text type="button-3" color="shade-3">
-              28/05/2023 (Wed)
+              {moment(procedureByIDData?.procedure?.createdAt).format(
+                "DD/MM/YYYY (ddd)"
+              )}
             </Text>
           </Flex>
         </Flex>
         <Text className={styles.fullText} type="captionBold">
           Full procedure
         </Text>
-
-        <ProceduresRichText />
+        <div>
+          <ProceduresRichText
+            value={formik.values.html}
+            onEditorChange={(event: any) => formik.setFieldValue("html", event)}
+          />
+        </div>
       </Flex>
       <Flex row center between className={styles.footerContainer}>
-        <Button types="tertiary-1">Back</Button>
+        <Button onClick={() => navigate(routes.PROCEDURES)} types="tertiary-1">
+          Back
+        </Button>
         <Flex row center>
-          <Button types="link">
+          <Button
+            types="link"
+            onClick={() => {
+              window.print();
+            }}
+          >
             <SvgPrint />
           </Button>
-          <Button style={{ marginLeft: 20 }}>Save</Button>
+          <Button onClick={formik.handleSubmit} style={{ marginLeft: 20 }}>
+            Save
+          </Button>
         </Flex>
       </Flex>
     </Flex>
