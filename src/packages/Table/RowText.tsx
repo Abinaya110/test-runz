@@ -13,7 +13,7 @@ const RowText = ({ columnData, center }: Props) => {
   }
   return (
     <Text
-      type="bodyMedium"
+      type="bodyBold"
       align={center ? "center" : "start"}
       className={styles.textStyle}
     >

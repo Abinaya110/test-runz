@@ -31,6 +31,7 @@ import Loader from "../../packages/Loader/Loader";
 import { useFormik } from "formik";
 import { HEADER_HEIGHT, ROLE_STUDENT } from "../../utils/constants";
 import NotAuthorizedModal from "../../common/NotAuthorizedModal";
+import moment from "moment";
 
 export type formType = {
   title: string;
@@ -63,21 +64,28 @@ const ProceduresScreen = () => {
     dispatch(procedureMiddleWare());
   }, []);
 
-  const { isLoading, authMeData, dataList, procedureByIDisLoading } =
-    useSelector(
-      ({
-        procedureReducers,
-        authMeReducers,
-        procedureByIDReducers,
-      }: RootState) => {
-        return {
-          isLoading: procedureReducers.isLoading,
-          authMeData: authMeReducers.data,
-          dataList: procedureReducers.data,
-          procedureByIDisLoading: procedureByIDReducers.isLoading,
-        };
-      }
-    );
+  const {
+    isLoading,
+    authMeData,
+    dataList,
+    procedureByIDisLoading,
+    moreInfoList,
+  } = useSelector(
+    ({
+      procedureReducers,
+      authMeReducers,
+      procedureByIDReducers,
+      moreInfoListReducers,
+    }: RootState) => {
+      return {
+        isLoading: procedureReducers.isLoading,
+        authMeData: authMeReducers.data,
+        dataList: procedureReducers.data,
+        procedureByIDisLoading: procedureByIDReducers.isLoading,
+        moreInfoList: moreInfoListReducers.data,
+      };
+    }
+  );
 
   const columns = [
     {
@@ -92,6 +100,9 @@ const ProceduresScreen = () => {
         });
       },
       render: (value: string, row: any) => {
+        const getOrganization = moreInfoList?.filter(
+          (list) => list._id === dataList?.user?.organization
+        );
         const myDepartmentArray = dataList?.user?.department;
         const resultDepartment = myDepartmentArray?.join(",");
 
@@ -101,7 +112,9 @@ const ProceduresScreen = () => {
           <Flex>
             <Text color="shade-3" type="captionBold">
               {row?.id} / {resultDepartment} / {resultLab} /{" "}
-              {dataList?.user?.organization}
+              {getOrganization &&
+                getOrganization.length === 1 &&
+                getOrganization[0]?.organization}
             </Text>
             <Text transform="capitalize" type="bodyBold">
               {value}
@@ -113,9 +126,14 @@ const ProceduresScreen = () => {
     {
       title: "",
       renderTitle: () => <CreatedOnHeader />,
-      dataIndex: "date",
-      key: "date",
+      dataIndex: "createdAt",
+      key: "createdAt",
       flex: 2,
+      render: (value: string) => (
+        <Text transform="capitalize" type="bodyBold">
+          {moment(value).format("DD/MM/YYYY")}
+        </Text>
+      ),
       align: "center",
       rowOnClick: (row: any) => {
         dispatch(procedureByIdMiddleWare({ id: row.id })).then(() => {
@@ -126,8 +144,8 @@ const ProceduresScreen = () => {
     {
       title: "",
       renderTitle: () => <CreatedByHeader />,
-      dataIndex: "Username",
-      key: "Username",
+      dataIndex: "createdBy",
+      key: "createdBy",
       flex: 2,
       align: "center",
       rowOnClick: (row: any) => {
