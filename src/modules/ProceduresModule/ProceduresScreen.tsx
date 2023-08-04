@@ -20,15 +20,16 @@ import CreateOrEditProcedure from "./CreateOrEditProcedure";
 import SvgCancel from "../../icons/SvgCancel";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { routes } from "../../routes/routesPath";
-import { AppDispatch, RootState } from "../../redux/store";
+import store, { AppDispatch, RootState } from "../../redux/store";
 import { useDispatch, useSelector } from "react-redux";
 import {
   procedureByIdMiddleWare,
   procedureCreateMiddleWare,
+  procedureDeleteMiddleWare,
   procedureMiddleWare,
 } from "./store/proceduresMiddleware";
 import Loader from "../../packages/Loader/Loader";
-import { useFormik } from "formik";
+import { FormikHelpers, useFormik } from "formik";
 import { HEADER_HEIGHT, ROLE_STUDENT } from "../../utils/constants";
 import NotAuthorizedModal from "../../common/NotAuthorizedModal";
 import moment from "moment";
@@ -235,7 +236,10 @@ const ProceduresScreen = () => {
     setSelectedRows([]);
     setCurrentPage(page);
   };
-  const handleSubmit = (values: formType) => {
+  const handleSubmit = (
+    values: formType,
+    formikHelpers: FormikHelpers<formType>
+  ) => {
     setLoader(true);
     dispatch(
       procedureCreateMiddleWare({
@@ -246,6 +250,7 @@ const ProceduresScreen = () => {
     )
       .then((res) => {
         if (res.payload?._doc) {
+          formikHelpers.resetForm();
           dispatch(procedureMiddleWare());
           setCreateProcedure(false);
           Alert("Procedure created successfully.");
@@ -260,6 +265,21 @@ const ProceduresScreen = () => {
     onSubmit: handleSubmit,
     validate,
   });
+
+  const handleDelete = () => {
+    setLoader(true);
+    store
+      .dispatch(procedureDeleteMiddleWare({ ids: selectedRows }))
+      .then(() => {
+        setLoader(false);
+        Alert("Runs deleted sucessfully.");
+        setDeleteModal(false);
+        dispatch(procedureMiddleWare());
+      })
+      .catch(() => {
+        setLoader(false);
+      });
+  };
 
   return (
     <Flex
@@ -283,13 +303,11 @@ const ProceduresScreen = () => {
         title="Confirmation"
         icon={<SvgDelete1 />}
         open={deleteModal}
-        yesClick={() => {
-          Alert("Runs deleted sucessfully.");
-          setDeleteModal(false);
-        }}
+        yesClick={handleDelete}
         noClick={() => {
           setDeleteModal(false);
         }}
+        isLoader={isLoader}
         description="Are you sure you want to delete the runs?"
       />
 

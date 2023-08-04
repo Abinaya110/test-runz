@@ -84,9 +84,11 @@ export const procedureUpdateMiddleWare = createAsyncThunk(
 
 export const procedureDeleteMiddleWare = createAsyncThunk(
   PROCEDURE_DELETE,
-  async ({ id }: { id: string }, { rejectWithValue }) => {
+  async ({ ids }: { ids: string[] }, { rejectWithValue }) => {
     try {
-      const { data } = await axios.delete(procedureUpdateAndDeleteApi(id));
+      const { data } = await axios.delete(procedureApi, {
+        data: { ids },
+      });
       return data;
     } catch (error: any) {
       const typedError = error as Error;
