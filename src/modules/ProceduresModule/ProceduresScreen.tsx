@@ -297,6 +297,7 @@ const ProceduresScreen = () => {
     onSubmit: handleSubmit,
     validate,
   });
+  const handleCloseAction = () => setSelectedRows([]);
 
   const handleDelete = () => {
     setLoader(true);
@@ -304,7 +305,8 @@ const ProceduresScreen = () => {
       .dispatch(procedureDeleteMiddleWare({ ids: selectedRows }))
       .then(() => {
         setLoader(false);
-        Alert("Runs deleted sucessfully.");
+        handleCloseAction();
+        Alert("Procedure deleted sucessfully.");
         setDeleteModal(false);
         dispatch(procedureMiddleWare({}));
       })
@@ -314,7 +316,6 @@ const ProceduresScreen = () => {
   };
 
   const checkDuplicate = selectedRows.length !== 0;
-  const handleCloseAction = () => setSelectedRows([]);
 
   const handleCreateAndDuplicate = () => {
     if (checkDuplicate) {

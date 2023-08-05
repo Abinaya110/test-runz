@@ -471,6 +471,7 @@ const UserTab = () => {
       .dispatch(authDisableMiddleWare({ ids: selectedRows }))
       .then((res) => {
         if (res.payload) {
+          setSelectedRows([]);
           Alert("User deleted successfully.");
           setDeleteModal(false);
           store.dispatch(getUserListMiddleWare({}));
