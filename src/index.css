@@ -268,16 +268,13 @@ input:-webkit-autofill:focus {
   border-radius: 8px !important;
 }
 
-/* input[type="color"] {
-  -webkit-appearance: none;
-  border: none;
-  width: 32px;
-  height: 32px;
-  border-radius: ;
+@media print {
+  body, #idOfYourDiv {
+    display: block !important;
+    position: relative !important;
+    width: auto !important;
+    height: auto !important;
+    overflow: visible !important;
+    margin-left: 0 !important;
+  }
 }
-input[type="color"]::-webkit-color-swatch-wrapper {
-  padding: 0;
-}
-input[type="color"]::-webkit-color-swatch {
-  border: none;
-} */

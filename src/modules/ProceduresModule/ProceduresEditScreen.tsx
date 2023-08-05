@@ -99,7 +99,7 @@ const ProceduresEditScreen = () => {
   const resultLab = myLabArray?.join(",");
 
   return (
-    <Flex height={window.innerHeight - HEADER_HEIGHT}>
+    <Flex id="idOfYourDiv" height={window.innerHeight - HEADER_HEIGHT}>
       {(procedureByIDisLoading || isLoader) && <Loader />}
       <CreateOrEditProcedure
         formik={formik}
