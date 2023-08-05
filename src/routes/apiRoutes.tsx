@@ -23,6 +23,7 @@ export const procedureByTitleApi = (title: string) => {
 export const procedureUpdateAndDeleteApi = (id: string) => {
   return proceduresFetchUrl(`procedure/${id}`);
 };
+export const duplicateProcedureApi = proceduresFetchUrl(`duplicateprocedure`);
 
 export const moreInfoListApi = moreInfoFetchUrl(`moreinfo/list`);
 export const moreInfoUserApi = moreInfoFetchUrl(`moreinfo/user`);

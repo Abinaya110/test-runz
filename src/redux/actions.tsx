@@ -10,6 +10,7 @@ export const PROCEDURE_ID_LIST = "procedure/PROCEDURE_ID_LIST";
 export const PROCEDURE_CREATE = "procedure/PROCEDURE_CREATE";
 export const PROCEDURE_UPDATE = "procedure/PROCEDURE_UPDATE";
 export const PROCEDURE_DELETE = "procedure/PROCEDURE_DELETE";
+export const PROCEDURE_DUPLICATE = "procedure/PROCEDURE_DUPLICATE";
 
 export const MORE_INFO_LIST = "mypage/MORE_INFO_LIST";
 export const MORE_INFO = "mypage/MORE_INFO";

@@ -1,7 +1,29 @@
 export interface Procedures {
-  user: User;
-  data?: DataEntity[];
+  _id: string;
+  department?: string[];
+  labtype?: string[];
+  name: string;
+  organization: string;
+  procedureIds?: ProcedureIdsEntity[];
 }
+export interface ProcedureIdsEntity {
+  id: string;
+  title: string;
+  createdBy: string;
+  createdOn: string;
+}
+
+export interface ProceduresReducerState {
+  isLoading: boolean;
+  error: string;
+  data: Procedures;
+}
+
+export interface ProceduresID {
+  user?: User;
+  procedure?: Procedure;
+}
+
 export interface User {
   _id: string;
   email: string;
@@ -16,21 +38,6 @@ export interface User {
   role: string;
   updatedAt: string;
   userCounter: string;
-}
-export interface DataEntity {
-  id: string;
-  title: string;
-}
-
-export interface ProceduresReducerState {
-  isLoading: boolean;
-  error: string;
-  data: Procedures;
-}
-
-export interface ProceduresID {
-  user?: User;
-  procedure?: Procedure;
 }
 
 export interface Procedure {
@@ -47,4 +54,9 @@ export interface ProcedureByIdReducerState {
   isLoading: boolean;
   error: string;
   data: ProceduresID;
+}
+
+export interface DuplicateReducerState {
+  isLoading: boolean;
+  error: string;
 }

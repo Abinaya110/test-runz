@@ -1,7 +1,9 @@
 import { useEffect, useMemo, useRef, useState } from "react";
+import moment from "moment";
+import { useSelector } from "react-redux";
+import Toast from "../../packages/Toast/Toast";
 import CheckBox from "../../packages/CheckBox/CheckBox";
 import Flex from "../../packages/Flex/Flex";
-import styles from "./userstab.module.css";
 import { isEmpty } from "../../utils/validators";
 import ScreenHeader from "./SettingScreenHeader";
 import Table from "../../packages/Table/Table";
@@ -11,9 +13,7 @@ import {
   StatusHeader,
   UserDetailsHeader,
 } from "./UserScreenTableHeader";
-import { useSelector } from "react-redux";
 import store, { RootState } from "../../redux/store";
-import moment from "moment";
 import Text from "../../packages/Text/Text";
 import CreateNewUserModal from "./CreateNewUserModal";
 import { FormikHelpers, useFormik } from "formik";
@@ -28,7 +28,7 @@ import {
   getUserListMiddleWare,
   getUserListUpdateMiddleWare,
 } from "./store/settingsMiddleware";
-import Toast from "../../packages/Toast/Toast";
+import styles from "./userstab.module.css";
 
 export type formType = {
   firstName: string;
@@ -99,6 +99,7 @@ const filterFormTypeInitialValues: filterFormType = {
   role: "",
   status: "",
 };
+
 const Status = ({ value, row, formikFilter }: any) => {
   const [isOpen, setOpen] = useState(false);
   const wrapperRef = useRef<any>(null);
@@ -288,7 +289,7 @@ const UserTab = () => {
       renderTitle: () => <AddOnHeader formik={formikFilter} />,
       render: (value: string) => (
         <Text type="bodyBold" align="center">
-          {moment(value).format("L")}
+          {moment(value).format("DD/MM/YYYY")}
         </Text>
       ),
     },

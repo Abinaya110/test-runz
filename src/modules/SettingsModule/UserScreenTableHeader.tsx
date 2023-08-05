@@ -1,15 +1,15 @@
 import { useMemo } from "react";
+import { FormikProps } from "formik";
 import LableWithIcon from "../../common/LableWithIcon";
 import SvgSort from "../../icons/SvgSort";
 import Flex from "../../packages/Flex/Flex";
 import InputText from "../../packages/InputText/InputText";
 import SelectTag from "../../packages/SelectTag/SelectTag";
-import { MoreInfoList } from "../MyPageModule/store/mypage.types";
-import styles from "./userscreentableheader.module.css";
-import { FormikProps } from "formik";
-import { filterFormType } from "./UserTab";
 import { isEmpty } from "../../utils/validators";
+import { MoreInfoList } from "../MyPageModule/store/mypage.types";
 import { designationOptions } from "../LoginModule/mock";
+import styles from "./userscreentableheader.module.css";
+import { filterFormType } from "./UserTab";
 import { STATUS_OPTIONS } from "./mock";
 
 export const UserDetailsHeader = ({
@@ -39,6 +39,8 @@ export const UserDetailsHeader = ({
       <Flex row center flex={1}>
         <div style={{ flex: 1 }}>
           <SelectTag
+            isClearable
+            isSearchable
             inputHeight={35}
             placeholder="Select organisation"
             value={formik.values.organisation}
@@ -58,6 +60,8 @@ export const UserDetailsHeader = ({
 
         <Flex flex={1} marginRight={8} marginLeft={8}>
           <SelectTag
+            isClearable
+            isSearchable
             isDisabled={isEmpty(formik.values.organisation)}
             inputHeight={35}
             placeholder="Select department"
@@ -76,10 +80,11 @@ export const UserDetailsHeader = ({
 
         <Flex flex={1}>
           <SelectTag
+            isClearable
+            isSearchable
             isDisabled={isEmpty(formik.values.organisation)}
             inputHeight={35}
             placeholder="Select lab"
-            // isMulti
             value={formik.values.lab}
             onChange={(event) => {
               formik.setFieldValue("lab", event);
@@ -100,7 +105,7 @@ export const AddOnHeader = ({
   formik: FormikProps<filterFormType>;
 }) => {
   return (
-    <Flex center middle className={styles.createdFlex} flex={1}>
+    <Flex className={styles.createdFlex} flex={1}>
       <LableWithIcon
         containerClassName={styles.sortTitleFlexSettings}
         label="Created on"
@@ -108,15 +113,16 @@ export const AddOnHeader = ({
         color="shade-3"
         actionRight={() => <SvgSort />}
       />
-
-      <InputText
-        keyboardType="date"
-        value={formik.values.addOn}
-        onChange={formik.handleChange("addOn")}
-        white
-        size="small"
-        placeholder="DD/MM/YYYY"
-      />
+      <Flex flex={1}>
+        <InputText
+          keyboardType="date"
+          value={formik.values.addOn}
+          onChange={formik.handleChange("addOn")}
+          white
+          size="small"
+          placeholder="DD/MM/YYYY"
+        />
+      </Flex>
     </Flex>
   );
 };
@@ -127,7 +133,7 @@ export const RoleHeader = ({
   formik: FormikProps<filterFormType>;
 }) => {
   return (
-    <Flex center middle flex={1} className={styles.inputMarginSettings}>
+    <Flex flex={1} className={styles.inputMarginSettings}>
       <LableWithIcon
         containerClassName={styles.sortTitleFlexSettings}
         label="Role"
@@ -135,8 +141,10 @@ export const RoleHeader = ({
         color="shade-3"
         actionRight={() => <SvgSort />}
       />
-      <div style={{ flex: 1 }}>
+      <Flex flex={1}>
         <SelectTag
+          isClearable
+          isSearchable
           value={formik.values.role}
           onChange={(event) => {
             formik.setFieldValue("role", event);
@@ -145,7 +153,7 @@ export const RoleHeader = ({
           inputHeight={35}
           placeholder="Select Role"
         />
-      </div>
+      </Flex>
     </Flex>
   );
 };
@@ -156,7 +164,7 @@ export const StatusHeader = ({
   formik: FormikProps<filterFormType>;
 }) => {
   return (
-    <Flex center middle flex={1} className={styles.inputMarginSettings}>
+    <Flex flex={1} className={styles.inputMarginSettings}>
       <LableWithIcon
         containerClassName={styles.sortTitleFlexSettings}
         label="Status"
@@ -164,8 +172,10 @@ export const StatusHeader = ({
         color="shade-3"
         actionRight={() => <SvgSort />}
       />
-      <div style={{ flex: 1 }}>
+      <Flex flex={1}>
         <SelectTag
+          isClearable
+          isSearchable
           value={formik.values.status}
           onChange={(event) => {
             formik.setFieldValue("status", event);
@@ -174,7 +184,7 @@ export const StatusHeader = ({
           inputHeight={35}
           placeholder="Select status"
         />
-      </div>
+      </Flex>
     </Flex>
   );
 };

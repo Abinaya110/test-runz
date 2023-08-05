@@ -9,6 +9,7 @@ import { FormikProps } from "formik";
 import { formType } from "./ProceduresScreen";
 import Loader from "../../packages/Loader/Loader";
 import moment from "moment";
+import { Procedures } from "./store/procedures.types";
 
 type Props = {
   cancelClick: () => void;
@@ -81,14 +82,22 @@ const CreateOrEditProcedure = ({
             <InputText
               disabled
               label="Department"
-              value={dataList?.user?.department?.toString()}
+              value={
+                isEdit
+                  ? dataList?.user?.department?.toString()
+                  : dataList?.department?.toString()
+              }
             />
           </Flex>
           <Flex flex={1}>
             <InputText
               disabled
               label="Laboratory"
-              value={dataList?.user?.labtype?.toString()}
+              value={
+                isEdit
+                  ? dataList?.user?.labtype?.toString()
+                  : dataList?.labtype?.toString()
+              }
             />
           </Flex>
         </Flex>

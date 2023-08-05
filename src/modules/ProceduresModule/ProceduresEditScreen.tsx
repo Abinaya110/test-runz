@@ -97,7 +97,6 @@ const ProceduresEditScreen = () => {
 
   const myLabArray = procedureByIDData?.user?.labtype;
   const resultLab = myLabArray?.join(",");
-  console.log("formik", formik.values.html);
 
   return (
     <Flex height={window.innerHeight - HEADER_HEIGHT}>

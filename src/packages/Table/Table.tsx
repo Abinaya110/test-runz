@@ -50,6 +50,7 @@ type Props = {
   rowShareAction?: () => void;
   rowSubmitAction?: () => void;
   pagination?: boolean;
+  isActionSearch?: boolean;
 } & typeof defaultProps;
 
 const Table = ({
@@ -77,6 +78,7 @@ const Table = ({
   pagination,
   isAction,
   hideRowSelection,
+  isActionSearch,
 }: Props) => {
   const totalRows = dataSource.length;
 
@@ -106,6 +108,7 @@ const Table = ({
           rowDeleteAction={rowDeleteAction}
           rowShareAction={rowShareAction}
           rowSubmitAction={rowSubmitAction}
+          isActionSearch={isActionSearch}
         />
       )}
       {customHeader && (

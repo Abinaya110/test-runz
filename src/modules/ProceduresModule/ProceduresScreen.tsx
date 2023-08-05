@@ -1,4 +1,8 @@
 import { useState, useEffect } from "react";
+import moment from "moment";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { FormikHelpers, useFormik } from "formik";
 import LableWithIcon from "../../common/LableWithIcon";
 import SvgPlus from "../../icons/SvgPlus";
 import Button from "../../packages/Button/Button";
@@ -18,21 +22,17 @@ import SvgDelete1 from "../../icons/SvgDelete1";
 import Alert from "../../packages/Alert/Alert";
 import CreateOrEditProcedure from "./CreateOrEditProcedure";
 import SvgCancel from "../../icons/SvgCancel";
-import { useNavigate, useSearchParams } from "react-router-dom";
 import { routes } from "../../routes/routesPath";
 import store, { AppDispatch, RootState } from "../../redux/store";
-import { useDispatch, useSelector } from "react-redux";
 import {
-  procedureByIdMiddleWare,
+  duplicateProcedureMiddleWare,
   procedureCreateMiddleWare,
   procedureDeleteMiddleWare,
   procedureMiddleWare,
 } from "./store/proceduresMiddleware";
 import Loader from "../../packages/Loader/Loader";
-import { FormikHelpers, useFormik } from "formik";
 import { HEADER_HEIGHT, ROLE_STUDENT } from "../../utils/constants";
 import NotAuthorizedModal from "../../common/NotAuthorizedModal";
-import moment from "moment";
 
 export type formType = {
   title: string;
@@ -52,6 +52,22 @@ const validate = (values: formType) => {
   return errors;
 };
 
+export type filterFormType = {
+  department: any;
+  lab: any;
+  createdOn: string;
+  id: any;
+  createdBy: any;
+};
+
+const filterFormTypeInitialValues: filterFormType = {
+  department: "",
+  lab: "",
+  createdOn: "",
+  createdBy: "",
+  id: "",
+};
+
 const ProceduresScreen = () => {
   const navigate = useNavigate();
   const dispatch: AppDispatch = useDispatch();
@@ -63,42 +79,57 @@ const ProceduresScreen = () => {
   const [isLoader, setLoader] = useState(false);
 
   useEffect(() => {
-    dispatch(procedureMiddleWare());
+    dispatch(procedureMiddleWare({}));
   }, []);
 
-  const { isLoading, authMeData, dataList, moreInfoList } = useSelector(
-    ({
-      procedureReducers,
-      authMeReducers,
-      moreInfoListReducers,
-    }: RootState) => {
-      return {
-        isLoading: procedureReducers.isLoading,
-        authMeData: authMeReducers.data,
-        dataList: procedureReducers.data,
-        moreInfoList: moreInfoListReducers.data,
-      };
-    }
-  );
+  const { isLoading, authMeData, dataList, moreInfoList, duplicateLoader } =
+    useSelector(
+      ({
+        procedureReducers,
+        authMeReducers,
+        moreInfoListReducers,
+        duplicateProcedureReducers,
+      }: RootState) => {
+        return {
+          isLoading: procedureReducers.isLoading,
+          authMeData: authMeReducers.data,
+          dataList: procedureReducers.data,
+          moreInfoList: moreInfoListReducers.data,
+          duplicateLoader: duplicateProcedureReducers.isLoading,
+        };
+      }
+    );
+
+  const handleNavigate = (row: any) =>
+    navigate(`${routes.PROCEDURE_EDIT}?id=${row.id}`);
+
+  const formikFilter = useFormik({
+    initialValues: filterFormTypeInitialValues,
+    onSubmit: () => {},
+  });
 
   const columns = [
     {
       title: "",
-      renderTitle: () => <ProcedureHeader />,
+      renderTitle: () => (
+        <ProcedureHeader
+          dataList={dataList}
+          moreInfoList={moreInfoList}
+          formik={formikFilter}
+        />
+      ),
       dataIndex: "title",
       key: "title",
       flex: 8,
-      rowOnClick: (row: any) => {
-        navigate(`${routes.PROCEDURE_EDIT}?id=${row.id}`);
-      },
+      rowOnClick: handleNavigate,
       render: (value: string, row: any) => {
         const getOrganization = moreInfoList?.filter(
-          (list) => list._id === dataList?.user?.organization
+          (list) => list._id === dataList?.organization
         );
-        const myDepartmentArray = dataList?.user?.department;
+        const myDepartmentArray = dataList?.department;
         const resultDepartment = myDepartmentArray?.join(",");
 
-        const myLabArray = dataList?.user?.labtype;
+        const myLabArray = dataList?.labtype;
         const resultLab = myLabArray?.join(",");
         return (
           <Flex>
@@ -117,7 +148,7 @@ const ProceduresScreen = () => {
     },
     {
       title: "",
-      renderTitle: () => <CreatedOnHeader />,
+      renderTitle: () => <CreatedOnHeader formik={formikFilter} />,
       dataIndex: "createdAt",
       key: "createdAt",
       flex: 2,
@@ -127,20 +158,18 @@ const ProceduresScreen = () => {
         </Text>
       ),
       align: "center",
-      rowOnClick: (row: any) => {
-        navigate(routes.PROCEDURE_EDIT);
-      },
+      rowOnClick: handleNavigate,
     },
     {
       title: "",
-      renderTitle: () => <CreatedByHeader />,
+      renderTitle: () => (
+        <CreatedByHeader formik={formikFilter} dataList={dataList} />
+      ),
       dataIndex: "createdBy",
       key: "createdBy",
       flex: 2,
       align: "center",
-      rowOnClick: (row: any) => {
-        navigate(routes.PROCEDURE_EDIT);
-      },
+      rowOnClick: handleNavigate,
     },
   ];
 
@@ -236,6 +265,7 @@ const ProceduresScreen = () => {
     setSelectedRows([]);
     setCurrentPage(page);
   };
+
   const handleSubmit = (
     values: formType,
     formikHelpers: FormikHelpers<formType>
@@ -249,11 +279,13 @@ const ProceduresScreen = () => {
       })
     )
       .then((res) => {
-        if (res.payload?._doc) {
+        if (res.payload?.createdProcedure) {
           formikHelpers.resetForm();
-          dispatch(procedureMiddleWare());
           setCreateProcedure(false);
           Alert("Procedure created successfully.");
+          navigate(
+            `${routes.PROCEDURE_EDIT}?id=${res.payload?.createdProcedure}`
+          );
         }
         setLoader(false);
       })
@@ -274,19 +306,60 @@ const ProceduresScreen = () => {
         setLoader(false);
         Alert("Runs deleted sucessfully.");
         setDeleteModal(false);
-        dispatch(procedureMiddleWare());
+        dispatch(procedureMiddleWare({}));
       })
       .catch(() => {
         setLoader(false);
       });
   };
 
+  const checkDuplicate = selectedRows.length !== 0;
+  const handleCloseAction = () => setSelectedRows([]);
+
+  const handleCreateAndDuplicate = () => {
+    if (checkDuplicate) {
+      if (selectedRows.length === 1) {
+        store
+          .dispatch(duplicateProcedureMiddleWare({ ids: selectedRows }))
+          .then(() => {
+            handleCloseAction();
+            Alert("Duplicated sucessfully.");
+            dispatch(procedureMiddleWare({}));
+          });
+      } else {
+        setPermission(true);
+      }
+    } else {
+      setCreateProcedure(true);
+    }
+  };
+
+  useEffect(() => {
+    const datePicker = formikFilter.values.createdOn
+      ? moment(formikFilter.values.createdOn).startOf("day").toISOString()
+      : "";
+    store.dispatch(
+      procedureMiddleWare({
+        department: formikFilter.values.department?.label
+          ? formikFilter.values.department.label
+          : "",
+        labtype: formikFilter.values.lab?.label
+          ? formikFilter.values.lab.label
+          : "",
+        createdOn: datePicker,
+        createdBy: formikFilter.values.createdBy?.label
+          ? formikFilter.values.createdBy.label
+          : "",
+        id: formikFilter.values.id?.label ? formikFilter.values.id.label : "",
+      })
+    );
+  }, [formikFilter.values]);
   return (
     <Flex
       className={styles.overAll}
       height={window.innerHeight - HEADER_HEIGHT}
     >
-      {isLoading && <Loader />}
+      {(isLoading || duplicateLoader) && <Loader />}
       {/* <NotAuthorizedModal open onClick={() => {}} /> */}
       <CreateOrEditProcedure
         formik={formik}
@@ -347,24 +420,18 @@ const ProceduresScreen = () => {
         actionTitleBtn={() => (
           <Button
             disabled={authMeData.role === ROLE_STUDENT}
-            onClick={() => {
-              setCreateProcedure(true);
-            }}
+            onClick={handleCreateAndDuplicate}
           >
             <LableWithIcon
-              label={
-                selectedRows.length !== 0 ? "Duplicate" : "Create procedure"
-              }
+              label={checkDuplicate ? "Duplicate" : "Create procedure"}
               actionLeft={() => <SvgPlus />}
             />
           </Button>
         )}
-        closeAction={() => {
-          setSelectedRows([]);
-        }}
+        closeAction={handleCloseAction}
         rowSelection={handleSelections}
         rowSelectionAll={handleAllSelections}
-        dataSource={dataList?.data ? dataList.data : []}
+        dataSource={dataList?.procedureIds ? dataList.procedureIds : []}
         columns={columns}
         rowUnSelectAll={handleAllUnSelections}
         rowDeleteAction={handleDeleteOpen}

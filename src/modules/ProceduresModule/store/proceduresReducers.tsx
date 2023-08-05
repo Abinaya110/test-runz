@@ -1,29 +1,24 @@
 import { createSlice } from "@reduxjs/toolkit";
 import {
+  DuplicateReducerState,
   ProcedureByIdReducerState,
   ProceduresReducerState,
 } from "./procedures.types";
 import {
   procedureMiddleWare,
   procedureByIdMiddleWare,
+  duplicateProcedureMiddleWare,
 } from "./proceduresMiddleware";
 
 const authMeInitialState: ProceduresReducerState = {
   isLoading: false,
   error: "",
   data: {
-    user: {
-      _id: "",
-      email: "",
-      userId: "",
-      __v: 0,
-      createdAt: "",
-      name: "",
-      organization: "",
-      role: "",
-      updatedAt: "",
-      userCounter: "",
-    },
+    _id: "",
+    department: [""],
+    labtype: [""],
+    name: "",
+    organization: "",
   },
 };
 
@@ -77,5 +72,32 @@ const procedureByIDReducer = createSlice({
   },
 });
 
+const duplicateProcedureInitialState: DuplicateReducerState = {
+  isLoading: false,
+  error: "",
+};
+
+const duplicateProcedureReducer = createSlice({
+  name: "duplicate_procedure_list",
+  initialState: duplicateProcedureInitialState,
+  reducers: {},
+  extraReducers: (builder) => {
+    builder.addCase(duplicateProcedureMiddleWare.pending, (state) => {
+      state.isLoading = true;
+      state.error = "";
+    });
+    builder.addCase(duplicateProcedureMiddleWare.fulfilled, (state, action) => {
+      state.isLoading = false;
+    });
+    builder.addCase(duplicateProcedureMiddleWare.rejected, (state, action) => {
+      state.isLoading = false;
+      if (typeof action.payload === "string") {
+        state.error = action.payload;
+      }
+    });
+  },
+});
+
 export const procedureReducers = procedureReducer.reducer;
 export const procedureByIDReducers = procedureByIDReducer.reducer;
+export const duplicateProcedureReducers = duplicateProcedureReducer.reducer;

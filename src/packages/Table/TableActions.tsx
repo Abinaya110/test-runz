@@ -26,6 +26,7 @@ type Props = {
   rowDeleteAction?: () => void;
   rowShareAction?: () => void;
   rowSubmitAction?: () => void;
+  isActionSearch?: boolean;
 };
 
 const TableActions = ({
@@ -40,6 +41,7 @@ const TableActions = ({
   rowDeleteAction,
   rowShareAction,
   rowSubmitAction,
+  isActionSearch,
 }: Props) => {
   return (
     <Flex>
@@ -124,11 +126,13 @@ const TableActions = ({
             )}
           </Flex>
           {hideActions && <div />}
-          <InputText
-            white
-            placeholder="Search"
-            actionRight={() => <SvgSearch />}
-          />
+          {isActionSearch && (
+            <InputText
+              white
+              placeholder="Search"
+              actionRight={() => <SvgSearch />}
+            />
+          )}
         </Flex>
       </Flex>
     </Flex>

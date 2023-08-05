@@ -2,12 +2,14 @@ import { createAsyncThunk } from "@reduxjs/toolkit";
 import {
   PROCEDURE_CREATE,
   PROCEDURE_DELETE,
+  PROCEDURE_DUPLICATE,
   PROCEDURE_ID_LIST,
   PROCEDURE_LIST,
   PROCEDURE_UPDATE,
 } from "../../../redux/actions";
 import axios from "axios";
 import {
+  duplicateProcedureApi,
   procedureApi,
   procedureByIdApi,
   procedureUpdateAndDeleteApi,
@@ -15,9 +17,32 @@ import {
 
 export const procedureMiddleWare = createAsyncThunk(
   PROCEDURE_LIST,
-  async (_a, { rejectWithValue }) => {
+  async (
+    {
+      department,
+      labtype,
+      id,
+      createdOn,
+      createdBy,
+    }: {
+      department?: string;
+      labtype?: string;
+      id?: string;
+      createdOn?: string;
+      createdBy?: string;
+    },
+    { rejectWithValue }
+  ) => {
     try {
-      const { data } = await axios.get(procedureApi);
+      const { data } = await axios.get(procedureApi, {
+        params: {
+          department,
+          labtype,
+          id,
+          createdBy,
+          createdOn,
+        },
+      });
       return data;
     } catch (error: any) {
       const typedError = error as Error;
@@ -88,6 +113,21 @@ export const procedureDeleteMiddleWare = createAsyncThunk(
     try {
       const { data } = await axios.delete(procedureApi, {
         data: { ids },
+      });
+      return data;
+    } catch (error: any) {
+      const typedError = error as Error;
+      return rejectWithValue(typedError);
+    }
+  }
+);
+
+export const duplicateProcedureMiddleWare = createAsyncThunk(
+  PROCEDURE_DUPLICATE,
+  async ({ ids }: { ids: string[] }, { rejectWithValue }) => {
+    try {
+      const { data } = await axios.post(duplicateProcedureApi, {
+        ids,
       });
       return data;
     } catch (error: any) {
