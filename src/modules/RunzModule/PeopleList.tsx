@@ -28,6 +28,7 @@ const PeopleList = ({ items, title, options, formik }: Props) => {
         open={isAdd}
         options={options}
         formik={formik}
+        onClick={() => setAdd(false)}
       />
       <Flex className={styles.shareContainer}>
         <Text color="shade-2" type="captionBold">

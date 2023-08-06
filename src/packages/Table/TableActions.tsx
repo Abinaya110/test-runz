@@ -107,7 +107,7 @@ const TableActions = ({
                 <LableWithIcon
                   type={"captionBold"}
                   color="shade-2"
-                  label="Submit"
+                  label="Assign"
                   actionLeft={() => <SvgSubmit />}
                 />
               </Button>

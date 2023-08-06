@@ -7,20 +7,34 @@ import Button from "../../packages/Button/Button";
 import SelectTag from "../../packages/SelectTag/SelectTag";
 import { FormikProps } from "formik";
 import { formType } from "./RunzScreen";
+import ErrorMessage from "../../packages/ErrorMessage/ErrorMessage";
 
 type Props = {
   options: any[];
-  formik: FormikProps<formType>;
+  formik: FormikProps<any>;
   open: boolean;
   cancel: () => void;
+  btnTitle?: string;
+  description?: string;
+  title?: string;
+  onClick: () => void;
 };
 
-const AddPeopleModal = ({ options, formik, open, cancel }: Props) => {
+const AddPeopleModal = ({
+  options,
+  formik,
+  open,
+  cancel,
+  btnTitle = "Save",
+  description = "You have selected following people",
+  title = "Add people",
+  onClick,
+}: Props) => {
   return (
     <Modal
       width={700}
-      onCancel={() => {}}
-      title={<Text type="title">Add people</Text>}
+      onCancel={cancel}
+      title={<Text type="title">{title}</Text>}
       closeIcon={<SvgClose />}
       centered
       open={open}
@@ -33,8 +47,8 @@ const AddPeopleModal = ({ options, formik, open, cancel }: Props) => {
           >
             Cancel
           </Button>
-          <Button onClick={cancel} className={styles.yesBtn}>
-            Save
+          <Button onClick={onClick} className={styles.yesBtn}>
+            {btnTitle}
           </Button>
         </Flex>
       }
@@ -42,7 +56,7 @@ const AddPeopleModal = ({ options, formik, open, cancel }: Props) => {
       <Flex>
         <SelectTag
           value={formik.values.assignTo}
-          label="You have selected following people."
+          label={description}
           options={options}
           isMulti
           isClearable
@@ -58,6 +72,11 @@ const AddPeopleModal = ({ options, formik, open, cancel }: Props) => {
               formik.setFieldValue("assignTo", "");
             }
           }}
+        />
+        <ErrorMessage
+          name="assignTo"
+          touched={formik.touched}
+          errors={formik.errors}
         />
       </Flex>
     </Modal>

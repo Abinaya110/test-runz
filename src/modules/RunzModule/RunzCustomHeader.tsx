@@ -1,13 +1,17 @@
+import { FormikProps } from "formik";
 import LableWithIcon from "../../common/LableWithIcon";
-import SvgCalendar from "../../icons/SvgCalendar";
-import SvgSearch from "../../icons/SvgSearch";
 import SvgSort from "../../icons/SvgSort";
 import Flex from "../../packages/Flex/Flex";
 import InputText from "../../packages/InputText/InputText";
 import SelectTag from "../../packages/SelectTag/SelectTag";
 import styles from "./runzcustomheader.module.css";
+import { formFilterType } from "./RunzScreen";
 
-export const RunzDetailsHeader = () => {
+export const RunzDetailsHeader = ({
+  formikFilter,
+}: {
+  formikFilter: FormikProps<formFilterType>;
+}) => {
   return (
     <Flex flex={1}>
       <LableWithIcon
@@ -24,6 +28,15 @@ export const RunzDetailsHeader = () => {
             options={[{ label: "ss", value: "11" }]}
             inputHeight={35}
             placeholder="ID"
+            value={formikFilter.values.id}
+            isClearable
+            onChange={(event) => {
+              if (event) {
+                formikFilter.setFieldValue("id", event);
+              } else {
+                formikFilter.setFieldValue("id", "");
+              }
+            }}
           />
         </div>
 
@@ -32,6 +45,15 @@ export const RunzDetailsHeader = () => {
             options={[{ label: "ss", value: "11" }]}
             inputHeight={35}
             placeholder="Department"
+            value={formikFilter.values.department}
+            isClearable
+            onChange={(event) => {
+              if (event) {
+                formikFilter.setFieldValue("department", event);
+              } else {
+                formikFilter.setFieldValue("department", "");
+              }
+            }}
           />
         </div>
         <div style={{ flex: 1 }}>
@@ -39,14 +61,15 @@ export const RunzDetailsHeader = () => {
             options={[{ label: "ss", value: "11" }]}
             inputHeight={35}
             placeholder="Lab"
-          />
-        </div>
-        <div className={styles.inputMargin}>
-          <InputText
-            white
-            size="small"
-            placeholder="Procedure"
-            actionRight={() => <SvgSearch height={20} width={20} />}
+            value={formikFilter.values.lab}
+            isClearable
+            onChange={(event) => {
+              if (event) {
+                formikFilter.setFieldValue("lab", event);
+              } else {
+                formikFilter.setFieldValue("lab", "");
+              }
+            }}
           />
         </div>
       </Flex>
@@ -54,7 +77,11 @@ export const RunzDetailsHeader = () => {
   );
 };
 
-export const RunzCreatedOnHeader = () => {
+export const RunzCreatedOnHeader = ({
+  formikFilter,
+}: {
+  formikFilter: FormikProps<formFilterType>;
+}) => {
   return (
     <Flex flex={1}>
       <LableWithIcon
@@ -64,17 +91,23 @@ export const RunzCreatedOnHeader = () => {
         color="shade-3"
         actionRight={() => <SvgSort />}
       />
-
-      <InputText
-        white
-        size="small"
-        placeholder="DD/MM/YYYY"
-        actionRight={() => <SvgCalendar />}
-      />
+      <Flex flex={1}>
+        <InputText
+          value={formikFilter.values.createdOn}
+          onChange={formikFilter.handleChange("createdOn")}
+          white
+          size="small"
+          keyboardType="date"
+        />
+      </Flex>
     </Flex>
   );
 };
-export const RunzDueDateHeader = () => {
+export const RunzDueDateHeader = ({
+  formikFilter,
+}: {
+  formikFilter: FormikProps<formFilterType>;
+}) => {
   return (
     <Flex flex={1}>
       <LableWithIcon
@@ -84,18 +117,24 @@ export const RunzDueDateHeader = () => {
         color="shade-3"
         actionRight={() => <SvgSort />}
       />
-
-      <InputText
-        white
-        size="small"
-        placeholder="DD/MM/YYYY"
-        actionRight={() => <SvgCalendar />}
-      />
+      <Flex flex={1}>
+        <InputText
+          white
+          size="small"
+          keyboardType="date"
+          value={formikFilter.values.dueDate}
+          onChange={formikFilter.handleChange("dueDate")}
+        />
+      </Flex>
     </Flex>
   );
 };
 
-export const RunzStatusHeader = () => {
+export const RunzStatusHeader = ({
+  formikFilter,
+}: {
+  formikFilter: FormikProps<formFilterType>;
+}) => {
   return (
     <Flex flex={1}>
       <LableWithIcon
@@ -105,18 +144,30 @@ export const RunzStatusHeader = () => {
         color="shade-3"
         actionRight={() => <SvgSort />}
       />
-
-      <InputText
-        white
-        size="small"
-        placeholder="Select status"
-        actionRight={() => <SvgSearch height={20} width={20} />}
-      />
+      <div style={{ flex: 1 }}>
+        <SelectTag
+          options={[{ label: "ss", value: "11" }]}
+          inputHeight={35}
+          value={formikFilter.values.status}
+          isClearable
+          onChange={(event) => {
+            if (event) {
+              formikFilter.setFieldValue("status", event);
+            } else {
+              formikFilter.setFieldValue("status", "");
+            }
+          }}
+        />
+      </div>
     </Flex>
   );
 };
 
-export const RunzAssignedHeader = () => {
+export const RunzAssignedHeader = ({
+  formikFilter,
+}: {
+  formikFilter: FormikProps<formFilterType>;
+}) => {
   return (
     <Flex flex={1}>
       <LableWithIcon
@@ -127,12 +178,21 @@ export const RunzAssignedHeader = () => {
         actionRight={() => <SvgSort />}
       />
 
-      <InputText
-        white
-        size="small"
-        placeholder="Select teacher"
-        actionRight={() => <SvgSearch height={20} width={20} />}
-      />
+      <div style={{ flex: 1 }}>
+        <SelectTag
+          options={[{ label: "ss", value: "11" }]}
+          inputHeight={35}
+          value={formikFilter.values.assignedBy}
+          isClearable
+          onChange={(event) => {
+            if (event) {
+              formikFilter.setFieldValue("assignedBy", event);
+            } else {
+              formikFilter.setFieldValue("assignedBy", "");
+            }
+          }}
+        />
+      </div>
     </Flex>
   );
 };

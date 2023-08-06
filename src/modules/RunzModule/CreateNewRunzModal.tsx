@@ -34,15 +34,15 @@ const CreateNewRunzModal = ({
   formik,
   isLoader,
 }: Props) => {
-  const { procedureList, procedureLoader, getUserListdata, getUserListLoader } =
-    useSelector(({ procedureReducers, getUserListReducers }: RootState) => {
+  const { procedureList, procedureLoader, getUserListdata } = useSelector(
+    ({ procedureReducers, getUserListReducers }: RootState) => {
       return {
         procedureList: procedureReducers.data,
         procedureLoader: procedureReducers.isLoading,
         getUserListdata: getUserListReducers.data,
-        getUserListLoader: getUserListReducers.isLoading,
       };
-    });
+    }
+  );
 
   const procedureOptions: any =
     procedureList?.procedureIds.length > 0 ? procedureList?.procedureIds : [];
@@ -71,7 +71,7 @@ const CreateNewRunzModal = ({
       }
     >
       <Flex className={styles.overAll}>
-        {(procedureLoader || getUserListLoader || isLoader) && <Loader />}
+        {(procedureLoader || isLoader) && <Loader />}
         <Flex className={styles.inputFlexMargin}>
           <SelectTag
             value={formik.values.procedureName}

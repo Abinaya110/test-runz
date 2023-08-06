@@ -15,9 +15,7 @@ import LableWithIcon from "../../common/LableWithIcon";
 import SvgPlus from "../../icons/SvgPlus";
 import YesOrNo from "../../common/YesOrNo";
 import SvgDelete1 from "../../icons/SvgDelete1";
-import SvgSubmitReport from "../../icons/SvgSubmitReport";
 import Alert from "../../packages/Alert/Alert";
-import ShareRunzModal from "./ShareRunzModal";
 import CreateNewRunzModal from "./CreateNewRunzModal";
 import styles from "./runzscreen.module.css";
 import Text from "../../packages/Text/Text";
@@ -35,6 +33,7 @@ import { FormikHelpers, useFormik } from "formik";
 import { procedureMiddleWare } from "../ProceduresModule/store/proceduresMiddleware";
 import { getUserListMiddleWare } from "../SettingsModule/store/settingsMiddleware";
 import moment from "moment";
+import AddPeopleModal from "./AddPeopleModal";
 
 export type formType = {
   procedureName: any;
@@ -50,6 +49,25 @@ const initialValues: formType = {
   assignTo: "",
 };
 
+export type formFilterType = {
+  id: any;
+  department: any;
+  lab: any;
+  createdOn: string;
+  dueDate: string;
+  status: any;
+  assignedBy: any;
+};
+
+const initialValuesFilter: formFilterType = {
+  id: "",
+  department: "",
+  lab: "",
+  createdOn: "",
+  dueDate: "",
+  status: "",
+  assignedBy: "",
+};
 const validate = (values: formType) => {
   const errors: Partial<formType> = {};
   if (isEmpty(values.procedureName)) {
@@ -72,7 +90,7 @@ const RunzScreen = () => {
   const [selectedRows, setSelectedRows] = useState<any[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [deleteModal, setDeleteModal] = useState(false);
-  const [submitModal, setSubmitModal] = useState(false);
+  const [assign, setAssign] = useState(false);
   const [shareModal, setShareModal] = useState(false);
   const [createNewRunz, setCreateNewRunz] = useState(false);
   const [isLoader, setLoader] = useState(false);
@@ -83,21 +101,27 @@ const RunzScreen = () => {
     store.dispatch(getUserListMiddleWare({}));
   }, []);
 
-  const { isLoading, runzListdata } = useSelector(
-    ({ getRunzListReducers }: RootState) => {
+  const { isLoading, runzListdata, getUserListdata, getUserListLoader } =
+    useSelector(({ getRunzListReducers, getUserListReducers }: RootState) => {
       return {
         isLoading: getRunzListReducers.isLoading,
         runzListdata: getRunzListReducers.data,
+        getUserListdata: getUserListReducers.data,
+        getUserListLoader: getUserListReducers.isLoading,
       };
-    }
-  );
+    });
+
+  const formikFilter = useFormik({
+    initialValues: initialValuesFilter,
+    onSubmit: () => {},
+  });
 
   const columns = [
     {
       title: "",
       dataIndex: "details",
       key: "details",
-      renderTitle: () => <RunzDetailsHeader />,
+      renderTitle: () => <RunzDetailsHeader formikFilter={formikFilter} />,
       flex: 6,
       rowOnClick: (a: any) => {
         navigate(routes.RUNZ_EIDT);
@@ -118,7 +142,7 @@ const RunzScreen = () => {
       dataIndex: "Createdon",
       key: "Createdon",
       flex: 1.5,
-      renderTitle: () => <RunzCreatedOnHeader />,
+      renderTitle: () => <RunzCreatedOnHeader formikFilter={formikFilter} />,
       align: "center",
       rowOnClick: (a: any) => {
         navigate(routes.RUNZ_EIDT);
@@ -129,7 +153,7 @@ const RunzScreen = () => {
       dataIndex: "Duedate",
       key: "Duedate",
       flex: 1.5,
-      renderTitle: () => <RunzDueDateHeader />,
+      renderTitle: () => <RunzDueDateHeader formikFilter={formikFilter} />,
       align: "center",
       rowOnClick: (a: any) => {
         navigate(routes.RUNZ_EIDT);
@@ -140,7 +164,7 @@ const RunzScreen = () => {
       dataIndex: "Status",
       key: "Status",
       flex: 1.5,
-      renderTitle: () => <RunzStatusHeader />,
+      renderTitle: () => <RunzStatusHeader formikFilter={formikFilter} />,
       align: "center",
       rowOnClick: (a: any) => {
         navigate(routes.RUNZ_EIDT);
@@ -151,7 +175,7 @@ const RunzScreen = () => {
       dataIndex: "Assignedby",
       key: "Assignedby",
       flex: 1.5,
-      renderTitle: () => <RunzAssignedHeader />,
+      renderTitle: () => <RunzAssignedHeader formikFilter={formikFilter} />,
       align: "center",
       rowOnClick: (a: any) => {
         navigate(routes.RUNZ_EIDT);
@@ -257,7 +281,7 @@ const RunzScreen = () => {
   };
 
   const handleDeleteOpen = () => setDeleteModal(true);
-  const handleSubmitOpen = () => setSubmitModal(true);
+  const handleAssignOpen = () => setAssign(true);
   const handleShareOpen = () => setShareModal(true);
 
   const handleCreate = (
@@ -299,12 +323,74 @@ const RunzScreen = () => {
     validate,
   });
 
+  const assignFormik = useFormik({
+    initialValues: {
+      assignTo: "",
+    },
+    onSubmit: (values, formikHelpers) => {
+      setAssign(false);
+      Alert("Runs assigned successfully.");
+      formikHelpers.resetForm();
+    },
+    validate: (values) => {
+      const errors: Partial<formType> = {};
+      if (isEmpty(values.assignTo)) {
+        errors.assignTo = "AssignTo is required";
+      }
+      return errors;
+    },
+  });
+
+  const shareFormik = useFormik({
+    initialValues: {
+      assignTo: "",
+    },
+    onSubmit: (values, formikHelpers) => {
+      setShareModal(false);
+      formikHelpers.resetForm();
+      Alert("Runs shared successfully.");
+    },
+    validate: (values) => {
+      const errors: Partial<formType> = {};
+      if (isEmpty(values.assignTo)) {
+        errors.assignTo = "Share is required";
+      }
+      return errors;
+    },
+  });
+
   return (
     <Flex
       className={styles.overAll}
       height={window.innerHeight - HEADER_HEIGHT}
     >
-      {isLoading && <Loader />}
+      {(isLoading || getUserListLoader) && <Loader />}
+      <AddPeopleModal
+        open={assign}
+        options={getUserListdata}
+        cancel={() => {
+          assignFormik.resetForm();
+          setAssign(false);
+        }}
+        formik={assignFormik}
+        btnTitle="Assign"
+        description="You have selected following runz to assign."
+        title="Assign runz"
+        onClick={assignFormik.handleSubmit}
+      />
+      <AddPeopleModal
+        open={shareModal}
+        options={getUserListdata}
+        cancel={() => {
+          shareFormik.resetForm();
+          setShareModal(false);
+        }}
+        formik={shareFormik}
+        btnTitle="Assign"
+        description="You have selected following runz to assign."
+        title="Assign runz"
+        onClick={shareFormik.handleSubmit}
+      />
       <CreateNewRunzModal
         formik={formik}
         title="Create new Runz"
@@ -315,7 +401,7 @@ const RunzScreen = () => {
         submit={formik.handleSubmit}
         isLoader={isLoader}
       />
-      <ShareRunzModal
+      {/* <ShareRunzModal
         open={shareModal}
         shareOnClick={() => {
           Alert("Runs shared successfully.");
@@ -324,7 +410,8 @@ const RunzScreen = () => {
         cancelClick={() => {
           setShareModal(false);
         }}
-      />
+      /> */}
+
       <YesOrNo
         title="Confirmation"
         icon={<SvgDelete1 />}
@@ -337,19 +424,6 @@ const RunzScreen = () => {
           setDeleteModal(false);
         }}
         description="Are you sure you want to delete the runs?"
-      />
-      <YesOrNo
-        title="Submit"
-        icon={<SvgSubmitReport />}
-        open={submitModal}
-        yesClick={() => {
-          Alert("Runs submitted successfully.");
-          setSubmitModal(false);
-        }}
-        noClick={() => {
-          setSubmitModal(false);
-        }}
-        description="Are you sure you want to submit the runs?"
       />
       <Table
         rowPointer
@@ -368,7 +442,7 @@ const RunzScreen = () => {
         columns={columns}
         rowUnSelectAll={handleAllUnSelections}
         rowDeleteAction={handleDeleteOpen}
-        rowSubmitAction={handleSubmitOpen}
+        rowSubmitAction={handleAssignOpen}
         rowShareAction={handleShareOpen}
         pagination
         closeAction={() => {
