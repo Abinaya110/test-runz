@@ -27,3 +27,8 @@ export const moreInfoFetchUrl = (url: string) => {
   const result = `https://testrunzmoreinfoserve.onrender.com/${url}`;
   return result;
 };
+
+export const runzFetchUrl = (url: string) => {
+  const result = `https://testrunzrunzserve.onrender.com/${url}`;
+  return result;
+};

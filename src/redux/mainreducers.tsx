@@ -13,6 +13,7 @@ import {
   procedureByIDReducers,
   procedureReducers,
 } from "../modules/ProceduresModule/store/proceduresReducers";
+import { getRunzListReducers } from "../modules/RunzModule/store/runzReducer";
 import {
   getSettingsReducers,
   getUserListReducers,
@@ -34,4 +35,5 @@ export const reducers = {
   getUserListReducers,
   procedureByIDReducers,
   duplicateProcedureReducers,
+  getRunzListReducers,
 };

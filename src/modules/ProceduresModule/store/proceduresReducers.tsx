@@ -10,7 +10,7 @@ import {
   duplicateProcedureMiddleWare,
 } from "./proceduresMiddleware";
 
-const authMeInitialState: ProceduresReducerState = {
+const procedureInitialState: ProceduresReducerState = {
   isLoading: false,
   error: "",
   data: {
@@ -25,7 +25,7 @@ const authMeInitialState: ProceduresReducerState = {
 
 const procedureReducer = createSlice({
   name: "procedure_list",
-  initialState: authMeInitialState,
+  initialState: procedureInitialState,
   reducers: {},
   extraReducers: (builder) => {
     builder.addCase(procedureMiddleWare.pending, (state) => {

@@ -3,15 +3,25 @@ import {
   fetchUrl,
   moreInfoFetchUrl,
   proceduresFetchUrl,
+  runzFetchUrl,
 } from "../utils/apiConfig";
 
 export const uploadApi = fetchUrl("upload");
+export const settingApi = (id: string) => {
+  const result = fetchUrl(`setting/${id}`);
+  return result;
+};
+export const settingUpdateApi = (id: string) => {
+  const result = fetchUrl(`setting/${id}`);
+  return result;
+};
 
 export const signUpApi = authFetchUrl("register");
 export const authMeApi = authFetchUrl("me");
 export const googleLoginApi = authFetchUrl("googlelogin");
 export const microsoftLoginApi = authFetchUrl("microsoftlogin");
 export const linkedinLoginApi = authFetchUrl("linkedinlogin");
+export const authCreateApi = authFetchUrl("create");
 
 export const procedureApi = proceduresFetchUrl("procedure");
 export const procedureByIdApi = (id: string) => {
@@ -34,14 +44,4 @@ export const getUserListUpdateApi = (id: string) => {
 };
 export const moreinfoDisableuserApi = moreInfoFetchUrl("moreinfo/disableuser");
 
-export const settingApi = (id: string) => {
-  const result = fetchUrl(`setting/${id}`);
-  return result;
-};
-
-export const settingUpdateApi = (id: string) => {
-  const result = fetchUrl(`setting/${id}`);
-  return result;
-};
-
-export const authCreateApi = authFetchUrl("create");
+export const getRunzListApi = runzFetchUrl("experiment");

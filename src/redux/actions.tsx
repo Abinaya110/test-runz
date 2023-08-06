@@ -23,3 +23,5 @@ export const GET_USER_LIST = "setting/GET_USER_LIST";
 export const GET_USER_LIST_UPDATE = "setting/GET_USER_LIST_UPDATE";
 export const AUTH_CREATE = "setting/AUTH_CREATE";
 export const AUTH_DISABLE = "setting/AUTH_DISABLE";
+
+export const RUNZ_GET_LIST = "runz/RUNZ_GET_LIST";

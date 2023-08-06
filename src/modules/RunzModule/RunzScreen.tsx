@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Flex from "../../packages/Flex/Flex";
 import CheckBox from "../../packages/CheckBox/CheckBox";
 import { isEmpty } from "../../utils/validators";
@@ -25,6 +25,10 @@ import Text from "../../packages/Text/Text";
 import { useNavigate } from "react-router-dom";
 import { routes } from "../../routes/routesPath";
 import { HEADER_HEIGHT } from "../../utils/constants";
+import store, { RootState } from "../../redux/store";
+import { getRunzListMiddleWare } from "./store/runzMiddleware";
+import { useSelector } from "react-redux";
+import Loader from "../../packages/Loader/Loader";
 
 const RunzScreen = () => {
   const navigate = useNavigate();
@@ -34,6 +38,16 @@ const RunzScreen = () => {
   const [submitModal, setSubmitModal] = useState(false);
   const [shareModal, setShareModal] = useState(false);
   const [createNewRunz, setCreateNewRunz] = useState(false);
+
+  useEffect(() => {
+    store.dispatch(getRunzListMiddleWare());
+  }, []);
+
+  const { isLoading } = useSelector(({ getRunzListReducers }: RootState) => {
+    return {
+      isLoading: getRunzListReducers.isLoading,
+    };
+  });
 
   const columns = [
     {
@@ -208,6 +222,7 @@ const RunzScreen = () => {
       className={styles.overAll}
       height={window.innerHeight - HEADER_HEIGHT}
     >
+      {isLoading && <Loader />}
       <CreateNewRunzModal
         title="Create new Runz"
         open={createNewRunz}
