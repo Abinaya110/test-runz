@@ -52,6 +52,7 @@ type Props = {
   inputColor?: inputColors;
   inputHeight?: number;
   isMulti?: boolean;
+  inputMaxHeight?: boolean;
 };
 
 const SelectTag = (
@@ -81,6 +82,7 @@ const SelectTag = (
     inputColor = "white",
     inputHeight = 43,
     isMulti,
+    inputMaxHeight,
   }: Props,
   ref: Ref<any> | undefined
 ) => {
@@ -119,8 +121,7 @@ const SelectTag = (
           }),
           control: (provided: any, state: { isFocused: any }) => ({
             ...provided,
-            minHeight: inputHeight,
-            height: inputHeight,
+            [inputMaxHeight ? "maxHeight" : "minHeight"]: inputHeight,
             boxShadow: state.isFocused ? null : null,
             boxSizing: "border-box",
             borderColor: textShade3,
@@ -128,7 +129,7 @@ const SelectTag = (
           }),
           valueContainer: (provided: any) => ({
             ...provided,
-            height: inputHeight,
+            [inputMaxHeight ? "maxHeight" : "minHeight"]: inputHeight,
             padding: "0 8px",
             fontSize: 14,
             color: textShade1,
@@ -143,7 +144,7 @@ const SelectTag = (
           }),
           indicatorsContainer: (provided: any) => ({
             ...provided,
-            height: inputHeight,
+            [inputMaxHeight ? "maxHeight" : "minHeight"]: inputHeight,
             cursor: "pointer",
             boxSizing: "border-box",
           }),

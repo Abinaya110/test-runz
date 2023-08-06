@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import Flex from "../../packages/Flex/Flex";
 import CheckBox from "../../packages/CheckBox/CheckBox";
 import { isEmpty } from "../../utils/validators";
-import { ACTIVE_BACKING_BOARD } from "./mock";
 import Table from "../../packages/Table/Table";
 import {
   RunzAssignedHeader,
@@ -26,9 +25,47 @@ import { useNavigate } from "react-router-dom";
 import { routes } from "../../routes/routesPath";
 import { HEADER_HEIGHT } from "../../utils/constants";
 import store, { RootState } from "../../redux/store";
-import { getRunzListMiddleWare } from "./store/runzMiddleware";
+import {
+  getRunzCreateMiddleWare,
+  getRunzListMiddleWare,
+} from "./store/runzMiddleware";
 import { useSelector } from "react-redux";
 import Loader from "../../packages/Loader/Loader";
+import { FormikHelpers, useFormik } from "formik";
+import { procedureMiddleWare } from "../ProceduresModule/store/proceduresMiddleware";
+import { getUserListMiddleWare } from "../SettingsModule/store/settingsMiddleware";
+import moment from "moment";
+
+export type formType = {
+  procedureName: any;
+  testObjective: string;
+  setDueDate: string;
+  assignTo: any;
+};
+
+const initialValues: formType = {
+  procedureName: "",
+  testObjective: "",
+  setDueDate: "",
+  assignTo: "",
+};
+
+const validate = (values: formType) => {
+  const errors: Partial<formType> = {};
+  if (isEmpty(values.procedureName)) {
+    errors.procedureName = "Procedure Name field is required";
+  }
+  if (isEmpty(values.testObjective)) {
+    errors.testObjective = "Test Objective field is required";
+  }
+  if (isEmpty(values.setDueDate)) {
+    errors.setDueDate = "Set Due Date is required";
+  }
+  if (isEmpty(values.assignTo)) {
+    errors.assignTo = "AssignTo is required";
+  }
+  return errors;
+};
 
 const RunzScreen = () => {
   const navigate = useNavigate();
@@ -38,16 +75,22 @@ const RunzScreen = () => {
   const [submitModal, setSubmitModal] = useState(false);
   const [shareModal, setShareModal] = useState(false);
   const [createNewRunz, setCreateNewRunz] = useState(false);
+  const [isLoader, setLoader] = useState(false);
 
   useEffect(() => {
     store.dispatch(getRunzListMiddleWare());
+    store.dispatch(procedureMiddleWare({}));
+    store.dispatch(getUserListMiddleWare({}));
   }, []);
 
-  const { isLoading } = useSelector(({ getRunzListReducers }: RootState) => {
-    return {
-      isLoading: getRunzListReducers.isLoading,
-    };
-  });
+  const { isLoading, runzListdata } = useSelector(
+    ({ getRunzListReducers }: RootState) => {
+      return {
+        isLoading: getRunzListReducers.isLoading,
+        runzListdata: getRunzListReducers.data,
+      };
+    }
+  );
 
   const columns = [
     {
@@ -217,6 +260,45 @@ const RunzScreen = () => {
   const handleSubmitOpen = () => setSubmitModal(true);
   const handleShareOpen = () => setShareModal(true);
 
+  const handleCreate = (
+    values: formType,
+    formikHelpers: FormikHelpers<formType>
+  ) => {
+    setLoader(true);
+    const assignList: any =
+      Array.isArray(values.assignTo) &&
+      values.assignTo?.map((list: any) => {
+        return { userId: list.userId, date: list.createdAt };
+      });
+
+    store
+      .dispatch(
+        getRunzCreateMiddleWare({
+          procedureId: values.procedureName?.id,
+          procedurename: values.procedureName?.title,
+          testobjective: values.testObjective,
+          dueDate: moment(values.setDueDate).local().toISOString(),
+          assignTo: assignList,
+        })
+      )
+      .then((res) => {
+        setLoader(false);
+        Alert("Runz created successfully.");
+        setCreateNewRunz(false);
+        formikHelpers.resetForm();
+        store.dispatch(getRunzListMiddleWare());
+      })
+      .catch(() => {
+        setLoader(false);
+      });
+  };
+
+  const formik = useFormik({
+    initialValues,
+    onSubmit: handleCreate,
+    validate,
+  });
+
   return (
     <Flex
       className={styles.overAll}
@@ -224,15 +306,14 @@ const RunzScreen = () => {
     >
       {isLoading && <Loader />}
       <CreateNewRunzModal
+        formik={formik}
         title="Create new Runz"
         open={createNewRunz}
         cancelClick={() => {
           setCreateNewRunz(false);
         }}
-        submit={() => {
-          Alert("Runz created successfully.");
-          setCreateNewRunz(false);
-        }}
+        submit={formik.handleSubmit}
+        isLoader={isLoader}
       />
       <ShareRunzModal
         open={shareModal}
@@ -283,7 +364,7 @@ const RunzScreen = () => {
         )}
         rowSelection={handleSelections}
         rowSelectionAll={handleAllSelections}
-        dataSource={ACTIVE_BACKING_BOARD}
+        dataSource={runzListdata}
         columns={columns}
         rowUnSelectAll={handleAllUnSelections}
         rowDeleteAction={handleDeleteOpen}

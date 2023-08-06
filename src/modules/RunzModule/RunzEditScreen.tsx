@@ -159,7 +159,7 @@ const RunzEditScreen = () => {
   };
   return (
     <Flex className={styles.overAll}>
-      <CreateNewRunzModal
+      {/* <CreateNewRunzModal
         title="Edit Runz"
         open={editNewRunz}
         cancelClick={() => {
@@ -169,7 +169,7 @@ const RunzEditScreen = () => {
           Alert("Runz saved successfully.");
           setEditNewRunz(false);
         }}
-      />
+      /> */}
       <Flex className={styles.header}>
         <Flex row center between>
           <Flex>

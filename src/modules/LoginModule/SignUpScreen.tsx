@@ -120,7 +120,7 @@ const SignUpScreen = () => {
           Toast(res.payload.message, "LONG", "error");
         }
       })
-      .catch((err) => {
+      .catch(() => {
         setLoader(false);
       });
   };
