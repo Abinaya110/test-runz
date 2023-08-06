@@ -26,3 +26,4 @@ export const AUTH_DISABLE = "setting/AUTH_DISABLE";
 
 export const RUNZ_GET_LIST = "runz/RUNZ_GET_LIST";
 export const RUNZ_CREATE = "runz/RUNZ_CREATE";
+export const RUNZ_GET_DETAILS = "runz/RUNZ_GET_DETAILS";

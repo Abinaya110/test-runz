@@ -106,7 +106,7 @@ const RunzScreen = () => {
         return (
           <Flex>
             <Text color="shade-3" type="captionBold">
-              {row.detailsDes}
+              {row.detailsDes}ssss
             </Text>
             <Text type="bodyBold">{value}</Text>
           </Flex>
@@ -281,7 +281,7 @@ const RunzScreen = () => {
           assignTo: assignList,
         })
       )
-      .then((res) => {
+      .then(() => {
         setLoader(false);
         Alert("Runz created successfully.");
         setCreateNewRunz(false);

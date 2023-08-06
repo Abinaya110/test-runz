@@ -28,6 +28,12 @@ import CreateNewRunzModal from "./CreateNewRunzModal";
 import Alert from "../../packages/Alert/Alert";
 import LineCharts from "../../common/LineChart/LineCharts";
 import ResizePanel from "../../packages/ResizePanel/ResizePanel";
+import store, { RootState } from "../../redux/store";
+import { getRunzListDetailsMiddleWare } from "./store/runzMiddleware";
+import { useSelector } from "react-redux";
+import Loader from "../../packages/Loader/Loader";
+import moment from "moment";
+import { procedureByIdMiddleWare } from "../ProceduresModule/store/proceduresMiddleware";
 
 const LabelWithColumn = ({
   title,
@@ -50,12 +56,50 @@ const LabelWithColumn = ({
 
 const RunzEditScreen = () => {
   const [state, setState] = useState({ box1: 0, box2: 0 });
-
   const [isStatus, setStatus] = useState<any>("error");
   const [isMore, setMore] = useState<boolean>(false);
   const [isFull, setFull] = useState<boolean>(false);
   const [isTab, setTab] = useState("Results");
   const [editNewRunz, setEditNewRunz] = useState(false);
+
+  useEffect(() => {
+    store.dispatch(
+      getRunzListDetailsMiddleWare({ id: "64cf5c2884d42f6e02421501" })
+    );
+    store.dispatch(procedureByIdMiddleWare({ id: "64cf5c2884d42f6e02421501" }));
+  }, []);
+
+  const {
+    isLoading,
+    runzData,
+    procedureByIDLoader,
+    procedureData,
+    moreInfoList,
+  } = useSelector(
+    ({
+      getRunzListDetailsReducers,
+      procedureByIDReducers,
+      moreInfoListReducers,
+    }: RootState) => {
+      return {
+        isLoading: getRunzListDetailsReducers.isLoading,
+        runzData: getRunzListDetailsReducers.data,
+        procedureByIDLoader: procedureByIDReducers.isLoading,
+        procedureData: procedureByIDReducers.data,
+        moreInfoList: moreInfoListReducers.data,
+      };
+    }
+  );
+  // ["not started", "opened", "completed"]
+  useEffect(() => {
+    if (runzData?.experiment?.status === "not started") {
+      setStatus("error");
+    } else if (runzData?.experiment?.status === "success") {
+      setStatus("success");
+    } else if (runzData?.experiment?.status === "opened") {
+      setStatus("primary");
+    }
+  }, [runzData?.experiment?.status]);
 
   const onMouseDown = useCallback(
     ([key1, key2]: any, dragKey: any) =>
@@ -157,8 +201,20 @@ const RunzEditScreen = () => {
   const handleTab = (value: string) => {
     setTab(value);
   };
+
+  const getOrganization = moreInfoList?.filter(
+    (list) => list._id === runzData?.experiment?._id
+  );
+
+  const myDepartmentArray = procedureData?.user?.department;
+  const resultDepartment = myDepartmentArray?.join(",");
+
+  const myLabArray = procedureData?.user?.labtype;
+  const resultLab = myLabArray?.join(",");
+
   return (
     <Flex className={styles.overAll}>
+      {(isLoading || procedureByIDLoader) && <Loader />}
       {/* <CreateNewRunzModal
         title="Edit Runz"
         open={editNewRunz}
@@ -174,7 +230,11 @@ const RunzEditScreen = () => {
         <Flex row center between>
           <Flex>
             <Text color="shade-3" type="captionBold">
-              ID023659ADN / Dept-Computer science / Lab-Data structure
+              {runzData?.experiment?.procedureId} / {resultDepartment} /{" "}
+              {resultLab} /{" "}
+              {getOrganization &&
+                getOrganization.length === 1 &&
+                getOrganization[0]?.organization}
             </Text>
             <Text className={styles.subTitle} type="subTitle">
               Bubble sort 2
@@ -224,12 +284,27 @@ const RunzEditScreen = () => {
           <Flex center row between className={styles.moreFlex}>
             <LabelWithColumn
               title="Test objective"
-              value="Time period of pendulum"
+              value={runzData?.experiment?.testobjective}
             />
-            <LabelWithColumn title="Created by" value="Username" />
-            <LabelWithColumn title="Assigned by" value="Username" />
-            <LabelWithColumn title="Created on" value="28/05/2023 (Wed)" />
-            <LabelWithColumn title="Due date" value="31/05/2023 (Sat)" />
+            {/* <LabelWithColumn title="Created by" value={runzData?.experiment?.} /> */}
+            <LabelWithColumn
+              title="Assigned by"
+              value={moment(runzData?.experiment?.createdAt).format(
+                "DD/MM/YYYY"
+              )}
+            />
+            <LabelWithColumn
+              title="Created on"
+              value={moment(runzData?.experiment?.createdAt).format(
+                "DD/MM/YYYY (ddd)"
+              )}
+            />
+            <LabelWithColumn
+              title="Due date"
+              value={moment(runzData?.experiment?.dueDate).format(
+                "DD/MM/YYYY (ddd)"
+              )}
+            />
 
             <Flex>
               <Dropdown menu={menuProps} overlayStyle={{ marginBottom: 8 }}>

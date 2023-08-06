@@ -1,7 +1,11 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
-import { getRunzListApi } from "../../../routes/apiRoutes";
-import { RUNZ_CREATE, RUNZ_GET_LIST } from "../../../redux/actions";
+import { getRunzListApi, getRunzListDetails } from "../../../routes/apiRoutes";
+import {
+  RUNZ_CREATE,
+  RUNZ_GET_DETAILS,
+  RUNZ_GET_LIST,
+} from "../../../redux/actions";
 
 export const getRunzListMiddleWare = createAsyncThunk(
   RUNZ_GET_LIST,
@@ -47,6 +51,19 @@ export const getRunzCreateMiddleWare = createAsyncThunk(
         dueDate,
         assignTo,
       });
+      return data;
+    } catch (error: any) {
+      const typedError = error as Error;
+      return rejectWithValue(typedError);
+    }
+  }
+);
+
+export const getRunzListDetailsMiddleWare = createAsyncThunk(
+  RUNZ_GET_DETAILS,
+  async ({ id }: { id: string }, { rejectWithValue }) => {
+    try {
+      const { data } = await axios.get(getRunzListDetails(id));
       return data;
     } catch (error: any) {
       const typedError = error as Error;

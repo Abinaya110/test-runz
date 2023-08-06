@@ -45,3 +45,7 @@ export const getUserListUpdateApi = (id: string) => {
 export const moreinfoDisableuserApi = moreInfoFetchUrl("moreinfo/disableuser");
 
 export const getRunzListApi = runzFetchUrl("experiment");
+
+export const getRunzListDetails = (id: string) => {
+  return runzFetchUrl(`experiment/${id}`);
+};
