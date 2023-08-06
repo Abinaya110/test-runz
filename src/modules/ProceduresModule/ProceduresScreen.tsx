@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import moment from "moment";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
@@ -77,6 +77,7 @@ const ProceduresScreen = () => {
   const [createProcedure, setCreateProcedure] = useState(false);
   const [isPermission, setPermission] = useState(false);
   const [isLoader, setLoader] = useState(false);
+  const [isSearch, setSearch] = useState("");
 
   useEffect(() => {
     dispatch(procedureMiddleWare({}));
@@ -355,6 +356,24 @@ const ProceduresScreen = () => {
       })
     );
   }, [formikFilter.values]);
+
+  const filterData = useMemo(() => {
+    const result = dataList?.procedureIds?.filter(
+      (list) =>
+        list?.title
+          ?.toLocaleLowerCase()
+          .includes(isSearch?.toLocaleLowerCase()) ||
+        list?.id?.toLocaleLowerCase().includes(isSearch?.toLocaleLowerCase()) ||
+        list?.createdBy
+          ?.toLocaleLowerCase()
+          .includes(isSearch?.toLocaleLowerCase())
+    );
+    return dataList?.procedureIds?.length > 0
+      ? result
+      : dataList?.procedureIds
+      ? dataList?.procedureIds
+      : [];
+  }, [dataList?.procedureIds, isSearch]);
   return (
     <Flex
       className={styles.overAll}
@@ -432,10 +451,14 @@ const ProceduresScreen = () => {
         closeAction={handleCloseAction}
         rowSelection={handleSelections}
         rowSelectionAll={handleAllSelections}
-        dataSource={dataList?.procedureIds ? dataList.procedureIds : []}
+        dataSource={filterData}
         columns={columns}
         rowUnSelectAll={handleAllUnSelections}
         rowDeleteAction={handleDeleteOpen}
+        searchOnChange={(event) => {
+          setSearch(event.target.value);
+        }}
+        searchValue={isSearch}
       />
     </Flex>
   );

@@ -4,7 +4,7 @@ export interface Procedures {
   labtype?: string[];
   name: string;
   organization: string;
-  procedureIds?: ProcedureIdsEntity[];
+  procedureIds: ProcedureIdsEntity[];
 }
 export interface ProcedureIdsEntity {
   id: string;

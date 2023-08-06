@@ -11,7 +11,6 @@ import { designationOptions } from "../LoginModule/mock";
 import styles from "./userscreentableheader.module.css";
 import { filterFormType } from "./UserTab";
 import { STATUS_OPTIONS } from "./mock";
-import { log } from "console";
 
 export const UserDetailsHeader = ({
   moreInfoList,

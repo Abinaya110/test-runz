@@ -19,6 +19,7 @@ const authMeInitialState: ProceduresReducerState = {
     labtype: [""],
     name: "",
     organization: "",
+    procedureIds: [],
   },
 };
 

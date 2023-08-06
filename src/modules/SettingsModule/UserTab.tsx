@@ -234,6 +234,8 @@ const UserTab = () => {
   const [deleteModal, setDeleteModal] = useState(false);
   const [createNew, setCreateNew] = useState(false);
   const [isLoader, setLoader] = useState(false);
+  const [isSearch, setSearch] = useState("");
+
   const { data, moreInfoList } = useSelector(
     ({ getUserListReducers, moreInfoListReducers }: RootState) => {
       return {
@@ -509,6 +511,22 @@ const UserTab = () => {
     );
   }, [formikFilter.values]);
 
+  const filterData = useMemo(() => {
+    const result = data?.filter(
+      (list) =>
+        list?.name
+          ?.toLocaleLowerCase()
+          .includes(isSearch?.toLocaleLowerCase()) ||
+        list?.role
+          ?.toLocaleLowerCase()
+          .includes(isSearch?.toLocaleLowerCase()) ||
+        list?.userCounter
+          ?.toLocaleLowerCase()
+          .includes(isSearch?.toLocaleLowerCase())
+    );
+    return result.length > 0 ? result : data;
+  }, [data, isSearch]);
+
   return (
     <Flex>
       <YesOrNo
@@ -547,12 +565,16 @@ const UserTab = () => {
           hideActions={selectedRows.length === 0}
           rowSelection={handleSelections}
           rowSelectionAll={handleAllSelections}
-          dataSource={data}
+          dataSource={filterData}
           columns={columns}
           rowUnSelectAll={handleAllUnSelections}
           rowDeleteAction={handleDeleteOpen}
           closeAction={() => setSelectedRows([])}
           pagination
+          searchOnChange={(event) => {
+            setSearch(event.target.value);
+          }}
+          searchValue={isSearch}
         />
       </Flex>
     </Flex>
