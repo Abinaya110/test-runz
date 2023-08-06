@@ -11,6 +11,7 @@ import { designationOptions } from "../LoginModule/mock";
 import styles from "./userscreentableheader.module.css";
 import { filterFormType } from "./UserTab";
 import { STATUS_OPTIONS } from "./mock";
+import { log } from "console";
 
 export const UserDetailsHeader = ({
   moreInfoList,
@@ -47,10 +48,14 @@ export const UserDetailsHeader = ({
             onChange={(event) => {
               formik.setFieldValue("department", "");
               formik.setFieldValue("lab", "");
-              formik.setFieldValue("organisation", {
-                organization: event.organization,
-                _id: event._id,
-              });
+              if (event) {
+                formik.setFieldValue("organisation", {
+                  organization: event.organization,
+                  _id: event._id,
+                });
+              } else {
+                formik.setFieldValue("organisation", "");
+              }
             }}
             options={moreInfoList}
             getOptionLabel={(option) => option.organization}
@@ -68,7 +73,11 @@ export const UserDetailsHeader = ({
             required
             value={formik.values.department}
             onChange={(event) => {
-              formik.setFieldValue("department", event);
+              if (event) {
+                formik.setFieldValue("department", event);
+              } else {
+                formik.setFieldValue("department", "");
+              }
             }}
             options={
               getDepartmentOption?.department
@@ -87,7 +96,11 @@ export const UserDetailsHeader = ({
             placeholder="Select lab"
             value={formik.values.lab}
             onChange={(event) => {
-              formik.setFieldValue("lab", event);
+              if (event) {
+                formik.setFieldValue("lab", event);
+              } else {
+                formik.setFieldValue("lab", "");
+              }
             }}
             options={
               getDepartmentOption?.labtype ? getDepartmentOption?.labtype : []
@@ -147,7 +160,11 @@ export const RoleHeader = ({
           isSearchable
           value={formik.values.role}
           onChange={(event) => {
-            formik.setFieldValue("role", event);
+            if (event) {
+              formik.setFieldValue("role", event);
+            } else {
+              formik.setFieldValue("role", "");
+            }
           }}
           options={designationOptions}
           inputHeight={35}
@@ -178,7 +195,11 @@ export const StatusHeader = ({
           isSearchable
           value={formik.values.status}
           onChange={(event) => {
-            formik.setFieldValue("status", event);
+            if (event) {
+              formik.setFieldValue("status", event);
+            } else {
+              formik.setFieldValue("status", "");
+            }
           }}
           options={STATUS_OPTIONS}
           inputHeight={35}

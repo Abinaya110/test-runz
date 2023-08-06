@@ -79,10 +79,6 @@ const ProfileTab = () => {
     }
   };
 
-  useEffect(() => {
-    dispatch(moreInfoListMiddleWare());
-  }, []);
-
   const { moreInfoData, moreInfoList, uploadLoader, updateLoader } =
     useSelector(
       ({

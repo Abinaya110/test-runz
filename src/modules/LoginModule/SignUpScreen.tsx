@@ -169,41 +169,51 @@ const SignUpScreen = () => {
 
   const handlerGoogleSignIn = (e: any) => {
     e.preventDefault();
-    auth.signInWithPopup(provider).then((result: any) => {
-      setLoader(true);
-      dispatch(
-        googleLoginMiddleWare({
-          email: result.user?._delegate?.email,
-          name: result.user?._delegate?.displayName,
-          uid: result.user?._delegate?.uid,
-          timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
-        })
-      )
-        .then((res: any) => {
-          if (res?.payload?.success) {
-            Toast(res.payload.success);
-            setAuthorization(result.user?._delegate?.accessToken);
-            localStorage.setItem(
-              AUTH_TOKEN,
-              result.user?._delegate?.accessToken
-            );
-            dispatch(authMeMiddleWare())
-              .then(() => {
-                dispatch(moreInfoUserMiddleWare())
-                  .then(() => {
-                    setLoader(false);
-                    navigate(routes.MY_PAGE);
-                    formik.resetForm();
-                  })
-                  .catch(() => setLoader(false));
-              })
-              .catch(() => setLoader(false));
-          } else {
-            Toast(res.payload.error, "LONG", "error");
-          }
-        })
-        .catch(() => setLoader(false));
-    });
+    auth
+      .signInWithPopup(provider)
+      .then((result: any) => {
+        setLoader(true);
+        dispatch(
+          googleLoginMiddleWare({
+            email: result.user?._delegate?.email,
+            name: result.user?._delegate?.displayName,
+            uid: result.user?._delegate?.uid,
+            timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+          })
+        )
+          .then((res: any) => {
+            if (res?.payload?.success) {
+              Toast("Google Account logged successfully.");
+              setAuthorization(result.user?._delegate?.accessToken);
+              localStorage.setItem(
+                AUTH_TOKEN,
+                result.user?._delegate?.accessToken
+              );
+              dispatch(authMeMiddleWare())
+                .then(() => {
+                  dispatch(moreInfoUserMiddleWare())
+                    .then(() => {
+                      setLoader(false);
+                      navigate(routes.MY_PAGE);
+                      formik.resetForm();
+                    })
+                    .catch(() => setLoader(false));
+                })
+                .catch(() => setLoader(false));
+            } else {
+              Toast(res.payload.error, "LONG", "error");
+            }
+          })
+          .catch(() => setLoader(false));
+      })
+      .then((error: any) => {
+        if (error?.code === "auth/popup-closed-by-user") {
+          console.log("Authentication popup closed by user.");
+          // Display a message to the user or handle the cancellation gracefully.
+        } else {
+          console?.error("Authentication failed:", error);
+        }
+      });
   };
 
   const handlerMicroSoftSignIn = (e: any) => {

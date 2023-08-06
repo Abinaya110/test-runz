@@ -49,7 +49,11 @@ export const ProcedureHeader = ({
             placeholder="ID"
             value={formik.values.id}
             onChange={(event) => {
-              formik.setFieldValue("id", event);
+              if (event) {
+                formik.setFieldValue("id", event);
+              } else {
+                formik.setFieldValue("id", "");
+              }
             }}
           />
         </div>
@@ -63,7 +67,11 @@ export const ProcedureHeader = ({
             required
             value={formik.values.department}
             onChange={(event) => {
-              formik.setFieldValue("department", event);
+              if (event) {
+                formik.setFieldValue("department", event);
+              } else {
+                formik.setFieldValue("department", "");
+              }
             }}
             options={
               getDepartmentOption?.department
@@ -80,7 +88,11 @@ export const ProcedureHeader = ({
             placeholder="Lab"
             value={formik.values.lab}
             onChange={(event) => {
-              formik.setFieldValue("lab", event);
+              if (event) {
+                formik.setFieldValue("lab", event);
+              } else {
+                formik.setFieldValue("lab", "");
+              }
             }}
             options={
               getDepartmentOption?.labtype ? getDepartmentOption?.labtype : []
@@ -159,7 +171,11 @@ export const CreatedByHeader = ({
           placeholder="Created By"
           value={formik.values.createdBy}
           onChange={(event) => {
-            formik.setFieldValue("createdBy", event);
+            if (event) {
+              formik.setFieldValue("createdBy", event);
+            } else {
+              formik.setFieldValue("createdBy", "");
+            }
           }}
           options={uniqueData?.length > 0 ? uniqueData : []}
         />

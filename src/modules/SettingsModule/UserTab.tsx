@@ -552,6 +552,7 @@ const UserTab = () => {
           rowUnSelectAll={handleAllUnSelections}
           rowDeleteAction={handleDeleteOpen}
           closeAction={() => setSelectedRows([])}
+          pagination
         />
       </Flex>
     </Flex>
