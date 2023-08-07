@@ -64,15 +64,12 @@ type Props = {
   index: number;
   formikHelpers: FieldArrayRenderProps;
   lineData: {
-    labels: string[];
-    xAxisLabel: string;
-    datasets: {
-      label: string;
-      data: number[];
-      borderColor: string;
-      backgroundColor: string;
-    }[];
-  };
+    label: string;
+    data: number[];
+    borderColor: string;
+    backgroundColor: string;
+    yAxisID: string;
+  }[];
   formik: FormikProps<formType>;
   arrayLineDataInitial: any;
 };
@@ -81,7 +78,7 @@ const LineChartsList = ({ options, list, index, lineData, formik }: Props) => {
   const handleAddChart = () => {
     formik.setFieldValue("data", [
       ...formik.values.data,
-      { ...lineData, datasets: [lineData.datasets[0]] },
+      { ...lineData, datasets: [lineData[0]] },
     ]);
   };
 
@@ -146,15 +143,12 @@ const LineChartsList = ({ options, list, index, lineData, formik }: Props) => {
             formik.setFieldValue("data", [
               {
                 labels: list.labels,
-                datasets: [
-                  ...list.datasets,
-                  lineData.datasets[list.datasets.length],
-                ],
+                datasets: [...list.datasets, lineData[list.datasets.length]],
               },
             ])
           }
           height="small"
-          disabled={lineData.datasets.length === list.datasets.length}
+          disabled={lineData.length === list.datasets.length}
           className={styles.addAxis}
           types="tertiary"
         >
