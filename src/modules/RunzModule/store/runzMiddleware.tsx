@@ -29,6 +29,9 @@ export const getRunzCreateMiddleWare = createAsyncThunk(
       testobjective,
       dueDate,
       assignTo,
+      department,
+      labType,
+      createdBy,
     }: {
       procedureId: string;
       procedurename: string;
@@ -40,6 +43,9 @@ export const getRunzCreateMiddleWare = createAsyncThunk(
           date: String;
         }
       ];
+      department: any;
+      labType: any;
+      createdBy: any;
     },
     { rejectWithValue }
   ) => {
@@ -50,6 +56,9 @@ export const getRunzCreateMiddleWare = createAsyncThunk(
         testobjective,
         dueDate,
         assignTo,
+        department,
+        labType,
+        createdBy,
       });
       return data;
     } catch (error: any) {
