@@ -4,7 +4,7 @@ import { useSelector } from "react-redux";
 import Toast from "../../packages/Toast/Toast";
 import CheckBox from "../../packages/CheckBox/CheckBox";
 import Flex from "../../packages/Flex/Flex";
-import { isEmpty } from "../../utils/validators";
+import { isEmpty, isValidEmail } from "../../utils/validators";
 import ScreenHeader from "./SettingScreenHeader";
 import Table from "../../packages/Table/Table";
 import {
@@ -62,6 +62,8 @@ const validate = (values: formType) => {
   }
   if (isEmpty(values.email)) {
     errors.email = "Email field is required";
+  } else if (!isValidEmail(values.email)) {
+    errors.email = "Invalid email entered";
   }
 
   if (isEmpty(values.organization)) {
