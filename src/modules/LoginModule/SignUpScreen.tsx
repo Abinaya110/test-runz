@@ -203,7 +203,7 @@ const SignUpScreen = () => {
                       .catch(() => setLoader(false));
                   })
                   .catch(() => setLoader(false));
-              }, 1000);
+              }, 10000);
             } else {
               Toast(res.payload.error, "LONG", "error");
               setLoader(false);
@@ -253,7 +253,7 @@ const SignUpScreen = () => {
                       .catch(() => setLoader(false));
                   })
                   .catch(() => setLoader(false));
-              }, 1000);
+              }, 10000);
             } else {
               Toast(res.payload.error, "LONG", "error");
               setLoader(false);
