@@ -75,11 +75,13 @@ const RunzEditScreen = () => {
     procedureByIDLoader,
     procedureData,
     moreInfoList,
+    getRunzUpdatesLoader,
   } = useSelector(
     ({
       getRunzListDetailsReducers,
       procedureByIDReducers,
       moreInfoListReducers,
+      getRunzUpdatesReducers,
     }: RootState) => {
       return {
         isLoading: getRunzListDetailsReducers.isLoading,
@@ -87,6 +89,7 @@ const RunzEditScreen = () => {
         procedureByIDLoader: procedureByIDReducers.isLoading,
         procedureData: procedureByIDReducers.data,
         moreInfoList: moreInfoListReducers.data,
+        getRunzUpdatesLoader: getRunzUpdatesReducers.isLoading,
       };
     }
   );
@@ -214,7 +217,7 @@ const RunzEditScreen = () => {
 
   return (
     <Flex className={styles.overAll}>
-      {(isLoading || procedureByIDLoader) && <Loader />}
+      {(isLoading || procedureByIDLoader || getRunzUpdatesLoader) && <Loader />}
       {/* <CreateNewRunzModal
         title="Edit Runz"
         open={editNewRunz}

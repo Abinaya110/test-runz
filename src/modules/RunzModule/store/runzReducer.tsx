@@ -2,6 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 import {
   getRunzListDetailsMiddleWare,
   getRunzListMiddleWare,
+  getRunzUpdatesMiddleWare,
 } from "./runzMiddleware";
 import { RunzDetailsReducerState, RunzListReducerState } from "./runz.types";
 
@@ -72,5 +73,33 @@ const getRunzListDetailsReducer = createSlice({
   },
 });
 
+const getRunzUpdatesInitialState: any = {
+  isLoading: false,
+  error: "",
+};
+
+const getRunzUpdatesReducer = createSlice({
+  name: "getRunzUpdates_list",
+  initialState: getRunzUpdatesInitialState,
+  reducers: {},
+  extraReducers: (builder) => {
+    builder.addCase(getRunzUpdatesMiddleWare.pending, (state) => {
+      state.isLoading = true;
+      state.error = "";
+    });
+    builder.addCase(getRunzUpdatesMiddleWare.fulfilled, (state, action) => {
+      state.isLoading = false;
+      state.data = action.payload;
+    });
+    builder.addCase(getRunzUpdatesMiddleWare.rejected, (state, action) => {
+      state.isLoading = false;
+      if (typeof action.payload === "string") {
+        state.error = action.payload;
+      }
+    });
+  },
+});
+
 export const getRunzListReducers = getRunzListReducer.reducer;
 export const getRunzListDetailsReducers = getRunzListDetailsReducer.reducer;
+export const getRunzUpdatesReducers = getRunzUpdatesReducer.reducer;

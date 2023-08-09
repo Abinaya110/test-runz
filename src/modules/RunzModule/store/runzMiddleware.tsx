@@ -5,6 +5,7 @@ import {
   RUNZ_CREATE,
   RUNZ_GET_DETAILS,
   RUNZ_GET_LIST,
+  RUNZ_UPDATE,
 } from "../../../redux/actions";
 
 export const getRunzListMiddleWare = createAsyncThunk(
@@ -79,6 +80,22 @@ export const getRunzListDetailsMiddleWare = createAsyncThunk(
   async ({ id }: { id: string }, { rejectWithValue }) => {
     try {
       const { data } = await axios.get(getRunzListDetails(id));
+      return data;
+    } catch (error: any) {
+      const typedError = error as Error;
+      return rejectWithValue(typedError);
+    }
+  }
+);
+
+export const getRunzUpdatesMiddleWare = createAsyncThunk(
+  RUNZ_UPDATE,
+  async (
+    { id, status }: { id: string; status?: string },
+    { rejectWithValue }
+  ) => {
+    try {
+      const { data } = await axios.patch(getRunzListDetails(id), { status });
       return data;
     } catch (error: any) {
       const typedError = error as Error;

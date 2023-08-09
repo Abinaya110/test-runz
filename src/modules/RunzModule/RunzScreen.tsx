@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Flex from "../../packages/Flex/Flex";
 import CheckBox from "../../packages/CheckBox/CheckBox";
 import { isEmpty } from "../../utils/validators";
@@ -26,6 +26,7 @@ import store, { RootState } from "../../redux/store";
 import {
   getRunzCreateMiddleWare,
   getRunzListMiddleWare,
+  getRunzUpdatesMiddleWare,
 } from "./store/runzMiddleware";
 import { useSelector } from "react-redux";
 import Loader from "../../packages/Loader/Loader";
@@ -34,6 +35,8 @@ import { procedureMiddleWare } from "../ProceduresModule/store/proceduresMiddlew
 import { getUserListMiddleWare } from "../SettingsModule/store/settingsMiddleware";
 import moment from "moment";
 import AddPeopleModal from "./AddPeopleModal";
+import SvgArrowDown from "../../icons/SvgArrowDown";
+import { error, primaryShade1, success, white } from "../../theme/colors";
 
 export type formType = {
   procedureName: any;
@@ -83,6 +86,129 @@ const validate = (values: formType) => {
     errors.assignTo = "AssignTo is required";
   }
   return errors;
+};
+
+const Status = ({ value, row, formikFilter }: any) => {
+  const [isOpen, setOpen] = useState(false);
+  const wrapperRef = useRef<any>(null);
+
+  const useOutsideAlerter = (ref: any) => {
+    useEffect(() => {
+      const handleClickOutside = (event: any) => {
+        if (ref.current && !ref.current.contains(event.target)) {
+          setOpen(false);
+        }
+      };
+      document.addEventListener("mousedown", handleClickOutside);
+      return () => {
+        document.removeEventListener("mousedown", handleClickOutside);
+      };
+    }, [ref]);
+  };
+  useOutsideAlerter(wrapperRef);
+
+  const handleUpdate = (value: string) => {
+    if (row.activeStatus === value) {
+      setOpen(false);
+    } else {
+      store
+        .dispatch(getRunzUpdatesMiddleWare({ id: row._id, status: value }))
+        .then(() => {
+          setOpen(false);
+          store.dispatch(getRunzListMiddleWare());
+        });
+    }
+  };
+
+  let status = "Not started";
+  let backgroundColor = success;
+  if (value === "not started") {
+    status = "Not started";
+    backgroundColor = error;
+  } else if (value === "completed") {
+    status = "Completed";
+    backgroundColor = success;
+  } else if (value === "opened") {
+    status = "Working";
+    backgroundColor = primaryShade1;
+  }
+
+  return (
+    <div
+      style={{
+        position: "relative",
+      }}
+    >
+      <Flex row center middle>
+        <Text
+          color="white"
+          type="smallBold"
+          align="center"
+          size={12}
+          style={{
+            backgroundColor,
+            borderRadius: 20,
+            padding: "4px 10px",
+            width: 100,
+            marginRight: 8,
+          }}
+        >
+          {status}
+        </Text>
+        <div
+          style={{ cursor: "pointer" }}
+          ref={wrapperRef}
+          onClick={() => setOpen(true)}
+        >
+          <SvgArrowDown />
+        </div>
+      </Flex>
+      {isOpen && (
+        <div
+          ref={wrapperRef}
+          style={{
+            position: "absolute",
+            display: "flex",
+            flexDirection: "column",
+            background: white,
+            zIndex: 99,
+            border: "1px solid",
+            borderRadius: 4,
+            cursor: "pointer",
+            right: 20,
+          }}
+        >
+          <Text
+            onClick={() => {
+              handleUpdate("not started");
+              setOpen(false);
+            }}
+            style={{ padding: 8, borderBottom: "1px solid" }}
+          >
+            Not started
+          </Text>
+          <Text
+            onClick={() => {
+              handleUpdate("completed");
+              setOpen(false);
+            }}
+            style={{ padding: 8, borderBottom: "1px solid" }}
+          >
+            Completed
+          </Text>
+          <Text
+            onClick={() => {
+              handleUpdate("opened");
+              setOpen(false);
+            }}
+            style={{ padding: 8 }}
+          >
+            Working
+          </Text>
+        </div>
+      )}
+    </div>
+  );
 };
 
 const RunzScreen = () => {
@@ -188,9 +314,9 @@ const RunzScreen = () => {
       flex: 1.6,
       renderTitle: () => <RunzStatusHeader formikFilter={formikFilter} />,
       align: "center",
-      rowOnClick: (a: any) => {
-        navigate(routes.RUNZ_EIDT);
-      },
+      render: (value: string, row: any) => (
+        <Status value={value} row={row} formikFilter={formikFilter} />
+      ),
     },
     {
       title: "",

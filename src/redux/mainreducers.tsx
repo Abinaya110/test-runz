@@ -16,6 +16,7 @@ import {
 import {
   getRunzListDetailsReducers,
   getRunzListReducers,
+  getRunzUpdatesReducers,
 } from "../modules/RunzModule/store/runzReducer";
 import {
   getSettingsReducers,
@@ -40,4 +41,5 @@ export const reducers = {
   duplicateProcedureReducers,
   getRunzListReducers,
   getRunzListDetailsReducers,
+  getRunzUpdatesReducers,
 };
