@@ -114,7 +114,10 @@ const Layout = ({ children }: Props) => {
 
   useEffect(() => {
     dispatch(moreInfoListMiddleWare());
+    dispatch(authMeMiddleWare());
+    dispatch(moreInfoUserMiddleWare());
   }, []);
+
   const { moreInfoData, moreInfoList, uploadLoader, updateLoader, data } =
     useSelector(
       ({

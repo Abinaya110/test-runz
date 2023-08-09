@@ -90,7 +90,7 @@ const LoginScreen = () => {
               .catch(() => {
                 setLoader(false);
               });
-          }, 10000);
+          }, 1000);
         }
       })
       .catch((error) => {

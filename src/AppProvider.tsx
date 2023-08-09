@@ -14,26 +14,15 @@ import RunzScreen from "./modules/RunzModule/RunzScreen";
 import SettingsScreen from "./modules/SettingsModule/SettingsScreen";
 import { routes } from "./routes/routesPath";
 import PageNotFound from "./utils/PageNotFound";
-import ProtectedRoutes, { useAuth } from "./utils/ProtectedRoutes";
+import ProtectedRoutes from "./utils/ProtectedRoutes";
 import Layout from "./common/Layout/Layout";
 import { useInterceptors } from "./utils/interceptors";
-import { AppDispatch, RootState } from "./redux/store";
+import { RootState } from "./redux/store";
 import Loader from "./packages/Loader/Loader";
-import { Fragment, useEffect } from "react";
-import { authMeMiddleWare } from "./modules/LoginModule/store/loginMiddleware";
-import { moreInfoUserMiddleWare } from "./modules/MyPageModule/store/mypageMiddleware";
+import { Fragment } from "react";
 
 const AppProvider = () => {
   useInterceptors();
-  const dispatch: AppDispatch = useDispatch();
-  const isAuth = useAuth();
-
-  useEffect(() => {
-    if (isAuth) {
-      dispatch(authMeMiddleWare());
-      dispatch(moreInfoUserMiddleWare());
-    }
-  }, [isAuth]);
 
   const { authLoader, moreInfoUserLoader } = useSelector(
     ({ authMeReducers, moreInfoUserReducers }: RootState) => {
