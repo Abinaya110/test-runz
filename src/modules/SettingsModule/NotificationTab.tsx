@@ -66,7 +66,7 @@ const NotificationTab = () => {
   const handleSave = () => {
     dispatch(
       updateSettingMiddleWare({
-        id: moreInfoData.organization?._id,
+        id: moreInfoData?.organization?._id,
         notification: {
           procdure: {
             notification: cardDetails[0].isNotifyActive,
@@ -83,7 +83,7 @@ const NotificationTab = () => {
         },
       })
     ).then(() => {
-      dispatch(getSettingMiddleWare({ id: moreInfoData.organization?._id }));
+      dispatch(getSettingMiddleWare({ id: moreInfoData?.organization?._id }));
     });
   };
   return (

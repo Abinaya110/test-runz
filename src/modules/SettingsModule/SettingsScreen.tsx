@@ -49,10 +49,10 @@ const SettingsScreen = () => {
     );
 
   useEffect(() => {
-    if (!isEmpty(moreInfoData.organization?._id)) {
-      dispatch(getSettingMiddleWare({ id: moreInfoData.organization?._id }));
+    if (!isEmpty(moreInfoData?.organization?._id)) {
+      dispatch(getSettingMiddleWare({ id: moreInfoData?.organization?._id }));
     }
-  }, [moreInfoData.organization]);
+  }, [moreInfoData?.organization]);
 
   const handleChangeSettings = (value: string) => {
     setSearchParams({ type: value });

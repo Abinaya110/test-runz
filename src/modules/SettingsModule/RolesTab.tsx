@@ -215,7 +215,7 @@ const RolesTab = () => {
   const handleSave = () => {
     dispatch(
       updateSettingMiddleWare({
-        id: moreInfoData.organization?._id,
+        id: moreInfoData?.organization?._id,
         roleSetting: {
           procedure: {
             admin: {
@@ -263,7 +263,7 @@ const RolesTab = () => {
         },
       })
     ).then(() => {
-      dispatch(getSettingMiddleWare({ id: moreInfoData.organization?._id }));
+      dispatch(getSettingMiddleWare({ id: moreInfoData?.organization?._id }));
     });
   };
 

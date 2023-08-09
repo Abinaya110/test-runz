@@ -247,7 +247,7 @@ const ProfileDrawer = ({
           <Flex flex={1} className={styles.inputFlexMarginRight}>
             <SelectTag
               value={designationOptions.filter(
-                (option) => option.value === moreInfoData.role
+                (option) => option.value === moreInfoData?.role
               )}
               required
               isDisabled
@@ -258,7 +258,7 @@ const ProfileDrawer = ({
           <Flex flex={1} className={styles.inputFlexMarginLeft}>
             <InputText
               disabled
-              value={moreInfoData.userCounter}
+              value={moreInfoData?.userCounter}
               label="Requestor ID/Tester ID"
               required
               actionLeft={() => <SvgUserInput />}

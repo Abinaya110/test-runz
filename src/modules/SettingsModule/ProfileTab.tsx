@@ -188,12 +188,12 @@ const ProfileTab = () => {
       formik.setFieldValue("firstName", firstName);
       formik.setFieldValue("lastName", lastName);
     } else if (!isEmpty(moreInfoData?.firstname)) {
-      formik.setFieldValue("firstName", moreInfoData.firstname);
-      formik.setFieldValue("lastName", moreInfoData.lastname);
+      formik.setFieldValue("firstName", moreInfoData?.firstname);
+      formik.setFieldValue("lastName", moreInfoData?.lastname);
     }
-    if (!isEmpty(moreInfoData.organization)) {
+    if (!isEmpty(moreInfoData?.organization)) {
       const getOrganization = moreInfoList.filter(
-        (list) => list._id === moreInfoData.organization
+        (list) => list._id === moreInfoData?.organization
       );
 
       if (getOrganization.length > 0) {
@@ -203,18 +203,18 @@ const ProfileTab = () => {
         });
       }
 
-      const getDepartment = moreInfoData.department.map((list: any) => {
+      const getDepartment = moreInfoData?.department.map((list: any) => {
         return { label: list, value: list };
       });
 
       formik.setFieldValue("department", getDepartment);
-      const getLab = moreInfoData.labtype.map((list: any) => {
+      const getLab = moreInfoData?.labtype.map((list: any) => {
         return { label: list, value: list };
       });
       formik.setFieldValue("lab", getLab);
     }
-    formik.setFieldValue("email", moreInfoData.email);
-    formik.setFieldValue("profile", moreInfoData.imageUrl);
+    formik.setFieldValue("email", moreInfoData?.email);
+    formik.setFieldValue("profile", moreInfoData?.imageUrl);
   }, [moreInfoData]);
 
   return (
@@ -387,7 +387,7 @@ const ProfileTab = () => {
               <Flex flex={1} className={styles.inputFlexMarginRight}>
                 <SelectTag
                   value={designationOptions.filter(
-                    (option) => option.value === moreInfoData.role
+                    (option) => option.value === moreInfoData?.role
                   )}
                   required
                   isDisabled
@@ -398,7 +398,7 @@ const ProfileTab = () => {
               <Flex flex={1} className={styles.inputFlexMarginLeft}>
                 <InputText
                   disabled
-                  value={moreInfoData.userCounter}
+                  value={moreInfoData?.userCounter}
                   label="Requestor ID/Tester ID"
                   required
                   actionLeft={() => <SvgUserInput />}
