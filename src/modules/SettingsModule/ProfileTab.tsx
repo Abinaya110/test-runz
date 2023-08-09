@@ -181,8 +181,8 @@ const ProfileTab = () => {
   }, [formik.values.organization]);
 
   useEffect(() => {
-    if (isEmpty(moreInfoData?.firstname) && !isEmpty(moreInfoData.name)) {
-      const nameArray = moreInfoData.name.split(" ");
+    if (isEmpty(moreInfoData?.firstname) && !isEmpty(moreInfoData?.name)) {
+      const nameArray = moreInfoData?.name?.split(" ");
       const firstName = nameArray[0];
       const lastName = nameArray[nameArray.length - 1];
       formik.setFieldValue("firstName", firstName);

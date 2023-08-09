@@ -276,7 +276,7 @@ const ProceduresScreen = () => {
       procedureCreateMiddleWare({
         title: values.title,
         html: "",
-        createdBy: authMeData.name,
+        createdBy: authMeData?.name,
       })
     )
       .then((res) => {
