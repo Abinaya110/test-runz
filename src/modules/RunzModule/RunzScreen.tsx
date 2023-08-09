@@ -131,10 +131,10 @@ const RunzScreen = () => {
   const columns = [
     {
       title: "",
-      dataIndex: "details",
-      key: "details",
+      dataIndex: "testobjective",
+      key: "testobjective",
       renderTitle: () => <RunzDetailsHeader formikFilter={formikFilter} />,
-      flex: 6,
+      flex: 5,
       rowOnClick: (a: any) => {
         navigate(routes.RUNZ_EIDT);
       },
@@ -142,7 +142,7 @@ const RunzScreen = () => {
         return (
           <Flex>
             <Text color="shade-3" type="captionBold">
-              {row.detailsDes}ssss
+              {row._id} / {row.department} / {row.labType}
             </Text>
             <Text type="bodyBold">{value}</Text>
           </Flex>
@@ -151,31 +151,41 @@ const RunzScreen = () => {
     },
     {
       title: "",
-      dataIndex: "Createdon",
-      key: "Createdon",
-      flex: 1.5,
+      dataIndex: "createdAt",
+      key: "createdAt",
+      flex: 1.6,
       renderTitle: () => <RunzCreatedOnHeader formikFilter={formikFilter} />,
       align: "center",
       rowOnClick: (a: any) => {
         navigate(routes.RUNZ_EIDT);
       },
+      render: (value: string) => (
+        <Text align="center" transform="capitalize" type="bodyBold">
+          {moment(value).format("DD/MM/YYYY")}
+        </Text>
+      ),
     },
     {
       title: "",
-      dataIndex: "Duedate",
-      key: "Duedate",
-      flex: 1.5,
+      dataIndex: "dueDate",
+      key: "dueDate",
+      flex: 1.6,
       renderTitle: () => <RunzDueDateHeader formikFilter={formikFilter} />,
       align: "center",
       rowOnClick: (a: any) => {
         navigate(routes.RUNZ_EIDT);
       },
+      render: (value: string) => (
+        <Text align="center" transform="capitalize" type="bodyBold">
+          {moment(value).format("DD/MM/YYYY")}
+        </Text>
+      ),
     },
     {
       title: "",
-      dataIndex: "Status",
-      key: "Status",
-      flex: 1.5,
+      dataIndex: "status",
+      key: "status",
+      flex: 1.6,
       renderTitle: () => <RunzStatusHeader formikFilter={formikFilter} />,
       align: "center",
       rowOnClick: (a: any) => {
@@ -184,9 +194,9 @@ const RunzScreen = () => {
     },
     {
       title: "",
-      dataIndex: "Assignedby",
-      key: "Assignedby",
-      flex: 1.5,
+      dataIndex: "createdBy",
+      key: "createdBy",
+      flex: 1.6,
       renderTitle: () => <RunzAssignedHeader formikFilter={formikFilter} />,
       align: "center",
       rowOnClick: (a: any) => {
@@ -318,6 +328,8 @@ const RunzScreen = () => {
           department: procedureList?.department?.toString(),
           labType: procedureList?.labtype?.toString(),
           createdBy: procedureList?.name?.toString(),
+          organization: procedureList?.organization,
+          datas: "",
         })
       )
       .then(() => {
@@ -453,7 +465,7 @@ const RunzScreen = () => {
         )}
         rowSelection={handleSelections}
         rowSelectionAll={handleAllSelections}
-        dataSource={runzListdata}
+        dataSource={runzListdata ? runzListdata : []}
         columns={columns}
         rowUnSelectAll={handleAllUnSelections}
         rowDeleteAction={handleDeleteOpen}

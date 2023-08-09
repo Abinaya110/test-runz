@@ -30,3 +30,32 @@ export interface RunzDetailsReducerState {
   error: string;
   data: GetRunzListDetails;
 }
+
+export interface RunzList {
+  _id: string;
+  procedureId: string;
+  procedurename: string;
+  testobjective: string;
+  dueDate: string;
+  status: string;
+  datas: string;
+  organization: string;
+  department: string;
+  labType: string;
+  createdBy: string;
+  assignTo?: AssignToEntity[] | null;
+  createdAt: string;
+  updatedAt: string;
+  __v: number;
+}
+export interface AssignToEntity {
+  userId: string;
+  date: string;
+  _id: string;
+}
+
+export interface RunzListReducerState {
+  isLoading: boolean;
+  error: string;
+  data?: RunzList[];
+}

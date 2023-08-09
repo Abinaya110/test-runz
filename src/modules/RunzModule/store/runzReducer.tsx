@@ -3,9 +3,9 @@ import {
   getRunzListDetailsMiddleWare,
   getRunzListMiddleWare,
 } from "./runzMiddleware";
-import { RunzDetailsReducerState } from "./runz.types";
+import { RunzDetailsReducerState, RunzListReducerState } from "./runz.types";
 
-const getRunzListInitialState: any = {
+const getRunzListInitialState: RunzListReducerState = {
   isLoading: false,
   error: "",
 };

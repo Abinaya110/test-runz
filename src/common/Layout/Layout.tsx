@@ -42,6 +42,7 @@ import {
 } from "../../modules/MyPageModule/store/mypageMiddleware";
 import { useFormik } from "formik";
 import Loader from "../../packages/Loader/Loader";
+import { useAuth } from "../../utils/ProtectedRoutes";
 
 const cx = classNames.bind(styles);
 
@@ -106,7 +107,7 @@ const Layout = ({ children }: Props) => {
   const [isDrawer, setDrawer] = useState(false);
   const [isNoti, setNoti] = useState(false);
   const [isEdit, setEdit] = useState(true);
-
+  const auth = useAuth();
   const hideLayout =
     window.location.pathname === routes.LOGIN ||
     window.location.pathname === routes.FORGOT_PASSWORD ||
@@ -114,9 +115,11 @@ const Layout = ({ children }: Props) => {
 
   useEffect(() => {
     dispatch(moreInfoListMiddleWare());
-    dispatch(authMeMiddleWare());
-    dispatch(moreInfoUserMiddleWare());
-  }, []);
+    if (auth) {
+      dispatch(authMeMiddleWare());
+      dispatch(moreInfoUserMiddleWare());
+    }
+  }, [auth]);
 
   const { moreInfoData, moreInfoList, uploadLoader, updateLoader, data } =
     useSelector(
