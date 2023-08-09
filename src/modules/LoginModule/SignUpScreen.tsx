@@ -29,6 +29,7 @@ import { auth, microProvider, provider } from "../../utils/firebase";
 import { setAuthorization } from "../../utils/apiConfig";
 import { AUTH_TOKEN } from "../../utils/localStoreConst";
 import { getAuth, signInWithPopup } from "firebase/auth";
+import axios from "axios";
 import { moreInfoUserMiddleWare } from "../MyPageModule/store/mypageMiddleware";
 
 type formType = {
@@ -183,25 +184,29 @@ const SignUpScreen = () => {
         )
           .then((res: any) => {
             if (res?.payload?.success) {
-              Toast("Google Account logged successfully.");
+              axios.defaults.headers.common["Authorization"] =
+                "Bearer " + result.user?._delegate?.accessToken;
               setAuthorization(result.user?._delegate?.accessToken);
+              Toast("Google Account logged successfully.");
               localStorage.setItem(
                 AUTH_TOKEN,
                 result.user?._delegate?.accessToken
               );
-              dispatch(authMeMiddleWare())
-                .then(() => {
-                  dispatch(moreInfoUserMiddleWare())
-                    .then(() => {
-                      setLoader(false);
-                      navigate(routes.MY_PAGE);
-                      formik.resetForm();
-                    })
-                    .catch(() => setLoader(false));
-                })
-                .catch(() => setLoader(false));
+              setTimeout(() => {
+                dispatch(authMeMiddleWare())
+                  .then(() => {
+                    dispatch(moreInfoUserMiddleWare())
+                      .then(() => {
+                        setLoader(false);
+                        navigate(routes.MY_PAGE);
+                      })
+                      .catch(() => setLoader(false));
+                  })
+                  .catch(() => setLoader(false));
+              }, 1000);
             } else {
               Toast(res.payload.error, "LONG", "error");
+              setLoader(false);
             }
           })
           .catch(() => setLoader(false));
@@ -232,22 +237,26 @@ const SignUpScreen = () => {
         )
           .then((res: any) => {
             if (res?.payload?.success) {
-              Toast(res.payload.success);
+              axios.defaults.headers.common["Authorization"] =
+                "Bearer " + result.user.accessToken;
               setAuthorization(result.user.accessToken);
+              Toast(res.payload.success);
               localStorage.setItem(AUTH_TOKEN, result.user.accessToken);
-              dispatch(authMeMiddleWare())
-                .then(() => {
-                  dispatch(moreInfoUserMiddleWare())
-                    .then(() => {
-                      setLoader(false);
-                      navigate(routes.MY_PAGE);
-                      formik.resetForm();
-                    })
-                    .catch(() => setLoader(false));
-                })
-                .catch(() => setLoader(false));
+              setTimeout(() => {
+                dispatch(authMeMiddleWare())
+                  .then(() => {
+                    dispatch(moreInfoUserMiddleWare())
+                      .then(() => {
+                        setLoader(false);
+                        navigate(routes.MY_PAGE);
+                      })
+                      .catch(() => setLoader(false));
+                  })
+                  .catch(() => setLoader(false));
+              }, 1000);
             } else {
               Toast(res.payload.error, "LONG", "error");
+              setLoader(false);
             }
           })
           .catch(() => setLoader(false));

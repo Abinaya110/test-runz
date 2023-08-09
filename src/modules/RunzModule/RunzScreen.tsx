@@ -101,15 +101,27 @@ const RunzScreen = () => {
     store.dispatch(getUserListMiddleWare({}));
   }, []);
 
-  const { isLoading, runzListdata, getUserListdata, getUserListLoader } =
-    useSelector(({ getRunzListReducers, getUserListReducers }: RootState) => {
+  const {
+    isLoading,
+    runzListdata,
+    getUserListdata,
+    getUserListLoader,
+    procedureList,
+  } = useSelector(
+    ({
+      getRunzListReducers,
+      getUserListReducers,
+      procedureReducers,
+    }: RootState) => {
       return {
         isLoading: getRunzListReducers.isLoading,
         runzListdata: getRunzListReducers.data,
         getUserListdata: getUserListReducers.data,
         getUserListLoader: getUserListReducers.isLoading,
+        procedureList: procedureReducers.data,
       };
-    });
+    }
+  );
 
   const formikFilter = useFormik({
     initialValues: initialValuesFilter,
@@ -303,6 +315,9 @@ const RunzScreen = () => {
           testobjective: values.testObjective,
           dueDate: moment(values.setDueDate).local().toISOString(),
           assignTo: assignList,
+          department: procedureList?.department?.toString(),
+          labType: procedureList?.labtype?.toString(),
+          createdBy: procedureList?.name?.toString(),
         })
       )
       .then(() => {
