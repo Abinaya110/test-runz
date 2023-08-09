@@ -16,11 +16,11 @@ import { auth } from "../../utils/firebase";
 import { useEffect, useState } from "react";
 import Loader from "../../packages/Loader/Loader";
 import { setAuthorization } from "../../utils/apiConfig";
-import { useDispatch } from "react-redux";
-import { AppDispatch } from "../../redux/store";
-import { authMeMiddleWare } from "./store/loginMiddleware";
 import Alert from "../../packages/Alert/Alert";
+import store from "../../redux/store";
+import { authMeMiddleWare } from "./store/loginMiddleware";
 import { moreInfoUserMiddleWare } from "../MyPageModule/store/mypageMiddleware";
+import axios from "axios";
 
 type formType = {
   email: string;
@@ -50,11 +50,11 @@ const validate = (values: formType) => {
 const LoginScreen = () => {
   const navigate = useNavigate();
   const [isLoader, setLoader] = useState(false);
-  const dispatch: AppDispatch = useDispatch();
 
   const { visibleIcon, isVisible } = useVisibilityIcon();
   const handleSignUp = () => navigate(routes.SIGNUP);
   const handleForgot = () => navigate(routes.FORGOT_PASSWORD);
+
   const handleSubmit = (
     values: formType,
     formikHelpers: FormikHelpers<any>
@@ -64,27 +64,33 @@ const LoginScreen = () => {
       .signInWithEmailAndPassword(values.email, values.password)
       .then((res: any) => {
         if (res.user?._delegate?.accessToken) {
+          axios.defaults.headers.common["Authorization"] =
+            "Bearer " + res.user?._delegate?.accessToken;
+          setAuthorization(res.user?._delegate?.accessToken);
+          localStorage.setItem(AUTH_TOKEN, res.user?._delegate?.accessToken);
           if (!isEmpty(formik.values.remember)) {
             localStorage.setItem(REMEMBER_ME, JSON.stringify(formik.values));
           } else {
             localStorage.removeItem(REMEMBER_ME);
           }
-          setAuthorization(res.user?._delegate?.accessToken);
-          localStorage.setItem(AUTH_TOKEN, res.user?._delegate?.accessToken);
-          dispatch(authMeMiddleWare())
-            .then(() => {
-              dispatch(moreInfoUserMiddleWare())
-                .then(() => {
-                  setLoader(false);
-                  navigate(routes.MY_PAGE);
-                })
-                .catch(() => {
-                  setLoader(false);
-                });
-            })
-            .catch(() => {
-              setLoader(false);
-            });
+          setTimeout(() => {
+            store
+              .dispatch(authMeMiddleWare())
+              .then(() => {
+                store
+                  .dispatch(moreInfoUserMiddleWare())
+                  .then(() => {
+                    setLoader(false);
+                    navigate(routes.MY_PAGE);
+                  })
+                  .catch(() => {
+                    setLoader(false);
+                  });
+              })
+              .catch(() => {
+                setLoader(false);
+              });
+          }, 1000);
         }
       })
       .catch((error) => {
@@ -103,6 +109,7 @@ const LoginScreen = () => {
         setLoader(false);
       });
   };
+
   const formik = useFormik({
     initialValues,
     onSubmit: handleSubmit,
