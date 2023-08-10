@@ -90,9 +90,38 @@ export const getRunzListDetailsMiddleWare = createAsyncThunk(
 
 export const getRunzUpdatesMiddleWare = createAsyncThunk(
   RUNZ_UPDATE,
-  async ({ id, status }: { id: any; status?: string }, { rejectWithValue }) => {
+  async (
+    {
+      id,
+      status,
+      procedureId,
+      procedurename,
+      testobjective,
+      dueDate,
+      assignTo,
+      datas,
+    }: {
+      id: any;
+      status?: string;
+      procedureId?: string;
+      procedurename?: string;
+      testobjective?: string;
+      dueDate?: string;
+      assignTo?: string;
+      datas?: string;
+    },
+    { rejectWithValue }
+  ) => {
     try {
-      const { data } = await axios.patch(getRunzListDetails(id), { status });
+      const { data } = await axios.patch(getRunzListDetails(id), {
+        status,
+        procedureId,
+        procedurename,
+        testobjective,
+        dueDate,
+        assignTo,
+        datas: "",
+      });
       return data;
     } catch (error: any) {
       const typedError = error as Error;

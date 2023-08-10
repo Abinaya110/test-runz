@@ -30,6 +30,7 @@ import LineCharts from "../../common/LineChart/LineCharts";
 import ResizePanel from "../../packages/ResizePanel/ResizePanel";
 import store, { RootState } from "../../redux/store";
 import {
+  getRunzCreateMiddleWare,
   getRunzListDetailsMiddleWare,
   getRunzUpdatesMiddleWare,
 } from "./store/runzMiddleware";
@@ -38,6 +39,8 @@ import Loader from "../../packages/Loader/Loader";
 import moment from "moment";
 import { procedureByIdMiddleWare } from "../ProceduresModule/store/proceduresMiddleware";
 import { useSearchParams } from "react-router-dom";
+import { useFormik } from "formik";
+import { isEmpty } from "../../utils/validators";
 
 const items: MenuProps["items"] = [
   {
@@ -84,6 +87,37 @@ const items: MenuProps["items"] = [
   },
 ];
 
+export type formType = {
+  procedureName: any;
+  testObjective: string;
+  setDueDate: string;
+  assignTo: any;
+};
+
+const initialValues: formType = {
+  procedureName: "",
+  testObjective: "",
+  setDueDate: "",
+  assignTo: "",
+};
+
+const validate = (values: formType) => {
+  const errors: Partial<formType> = {};
+  if (isEmpty(values.procedureName)) {
+    errors.procedureName = "Procedure Name field is required";
+  }
+  if (isEmpty(values.testObjective)) {
+    errors.testObjective = "Test Objective field is required";
+  }
+  if (isEmpty(values.setDueDate)) {
+    errors.setDueDate = "Set Due Date is required";
+  }
+  if (isEmpty(values.assignTo)) {
+    errors.assignTo = "AssignTo is required";
+  }
+  return errors;
+};
+
 const LabelWithColumn = ({
   title,
   value,
@@ -111,6 +145,7 @@ const RunzEditScreen = () => {
   const [isTab, setTab] = useState("Results");
   const [editNewRunz, setEditNewRunz] = useState(false);
   let [searchParams] = useSearchParams();
+  const [isLoader, setLoader] = useState(false);
 
   useEffect(() => {
     store.dispatch(
@@ -266,10 +301,47 @@ const RunzEditScreen = () => {
   const myLabArray = procedureData?.user?.labtype;
   const resultLab = myLabArray?.join(",");
 
+  const handleEdit = (values: formType) => {
+    setLoader(true);
+    const assignList: any =
+      Array.isArray(values.assignTo) &&
+      values.assignTo?.map((list: any) => {
+        return { userId: list.userId, date: list.createdAt };
+      });
+
+    store
+      .dispatch(
+        getRunzUpdatesMiddleWare({
+          id: searchParams.get("id"),
+          procedureId: values.procedureName?.id,
+          procedurename: values.procedureName?.title,
+          testobjective: values.testObjective,
+          dueDate: moment(values.setDueDate).local().toISOString(),
+          assignTo: assignList,
+          // department: procedureList?.department?.toString(),
+          // labType: procedureList?.labtype?.toString(),
+          // createdBy: procedureList?.name?.toString(),
+          // organization: procedureList?.organization,
+        })
+      )
+      .then(() => {
+        Alert("Runz saved successfully.");
+        store.dispatch(
+          getRunzListDetailsMiddleWare({ id: searchParams.get("id") })
+        );
+      });
+  };
+
+  const formik = useFormik({
+    initialValues,
+    onSubmit: handleEdit,
+    validate,
+  });
+
   return (
     <Flex className={styles.overAll}>
       {(isLoading || procedureByIDLoader || getRunzUpdatesLoader) && <Loader />}
-      {/* <CreateNewRunzModal
+      <CreateNewRunzModal
         title="Edit Runz"
         open={editNewRunz}
         cancelClick={() => {
@@ -279,7 +351,10 @@ const RunzEditScreen = () => {
           Alert("Runz saved successfully.");
           setEditNewRunz(false);
         }}
-      /> */}
+        isLoader={false}
+        formik={formik}
+      />
+
       <Flex className={styles.header}>
         <Flex row center between>
           <Flex>
