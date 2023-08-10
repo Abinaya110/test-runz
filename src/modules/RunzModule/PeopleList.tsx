@@ -39,7 +39,7 @@ const PeopleList = ({ items, title, options, formik }: Props) => {
             <Flex row center marginRight={16}>
               {items.slice(0, 4).map((item: any, index: any) => {
                 return (
-                  <Flex key={index.toString()}>
+                  <Flex row center key={index.toString()}>
                     {item?.imageUrl ? (
                       <img
                         title={item?.name}
@@ -48,7 +48,7 @@ const PeopleList = ({ items, title, options, formik }: Props) => {
                       />
                     ) : (
                       <div title={item?.name}>
-                        <SvgUserProfile height={40} width={40} />
+                        <SvgUserProfile height={48} width={48} />
                       </div>
                     )}
                   </Flex>

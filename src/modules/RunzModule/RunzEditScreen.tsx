@@ -37,10 +37,14 @@ import {
 import { useSelector } from "react-redux";
 import Loader from "../../packages/Loader/Loader";
 import moment from "moment";
-import { procedureByIdMiddleWare } from "../ProceduresModule/store/proceduresMiddleware";
+import {
+  procedureByIdMiddleWare,
+  procedureMiddleWare,
+} from "../ProceduresModule/store/proceduresMiddleware";
 import { useSearchParams } from "react-router-dom";
 import { useFormik } from "formik";
 import { isEmpty } from "../../utils/validators";
+import { getUserListMiddleWare } from "../SettingsModule/store/settingsMiddleware";
 
 const items: MenuProps["items"] = [
   {
@@ -154,6 +158,8 @@ const RunzEditScreen = () => {
     store.dispatch(
       procedureByIdMiddleWare({ id: searchParams.get("procedureId") })
     );
+    store.dispatch(getUserListMiddleWare({}));
+    store.dispatch(procedureMiddleWare({}));
   }, []);
 
   const {
@@ -163,12 +169,14 @@ const RunzEditScreen = () => {
     procedureData,
     moreInfoList,
     getRunzUpdatesLoader,
+    getUserListdata,
   } = useSelector(
     ({
       getRunzListDetailsReducers,
       procedureByIDReducers,
       moreInfoListReducers,
       getRunzUpdatesReducers,
+      getUserListReducers,
     }: RootState) => {
       return {
         isLoading: getRunzListDetailsReducers.isLoading,
@@ -177,6 +185,7 @@ const RunzEditScreen = () => {
         procedureData: procedureByIDReducers.data,
         moreInfoList: moreInfoListReducers.data,
         getRunzUpdatesLoader: getRunzUpdatesReducers.isLoading,
+        getUserListdata: getUserListReducers.data,
       };
     }
   );
@@ -318,10 +327,6 @@ const RunzEditScreen = () => {
           testobjective: values.testObjective,
           dueDate: moment(values.setDueDate).local().toISOString(),
           assignTo: assignList,
-          // department: procedureList?.department?.toString(),
-          // labType: procedureList?.labtype?.toString(),
-          // createdBy: procedureList?.name?.toString(),
-          // organization: procedureList?.organization,
         })
       )
       .then(() => {
@@ -329,6 +334,7 @@ const RunzEditScreen = () => {
         store.dispatch(
           getRunzListDetailsMiddleWare({ id: searchParams.get("id") })
         );
+        setEditNewRunz(false);
       });
   };
 
@@ -337,6 +343,23 @@ const RunzEditScreen = () => {
     onSubmit: handleEdit,
     validate,
   });
+
+  const handleOpenEdit = () => {
+    formik.setFieldValue("procedureName", {
+      title: runzData?.experiment?.procedurename,
+      id: runzData?.experiment?.procedureId,
+    });
+    setEditNewRunz(true);
+    formik.setFieldValue("testObjective", runzData?.experiment?.testobjective);
+    formik.setFieldValue(
+      "setDueDate",
+      moment(runzData?.experiment.dueDate).format("YYYY-MM-DD")
+    );
+    const commonObjects = getUserListdata.filter((obj2) =>
+      runzData?.experiment.assignTo?.some((obj1) => obj1.userId === obj2.userId)
+    );
+    formik.setFieldValue("assignTo", commonObjects);
+  };
 
   return (
     <Flex className={styles.overAll}>
@@ -347,12 +370,10 @@ const RunzEditScreen = () => {
         cancelClick={() => {
           setEditNewRunz(false);
         }}
-        submit={() => {
-          Alert("Runz saved successfully.");
-          setEditNewRunz(false);
-        }}
+        submit={formik.handleSubmit}
         isLoader={false}
         formik={formik}
+        btnTitle="Save"
       />
 
       <Flex className={styles.header}>
@@ -384,12 +405,7 @@ const RunzEditScreen = () => {
                 type="button-2"
               />
             </Button>
-            <Button
-              types="link"
-              onClick={() => {
-                setEditNewRunz(true);
-              }}
-            >
+            <Button types="link" onClick={handleOpenEdit}>
               <LableWithIcon
                 actionLeft={() => <SvgEdit fill={textShade1} />}
                 label="Edit"

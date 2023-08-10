@@ -28,6 +28,7 @@ type Props = {
   white?: boolean;
   status?: statusType;
   size?: "small" | "medium";
+  defaultValue?: string;
 };
 
 const InputText = ({
@@ -52,6 +53,7 @@ const InputText = ({
   white,
   status,
   size,
+  defaultValue,
 }: Props) => {
   const [isFocus, setFocus] = useState(false);
 
@@ -83,6 +85,7 @@ const InputText = ({
           <div className={styles.actionLeftStyle}>{actionLeft()}</div>
         )}
         <input
+          defaultValue={defaultValue}
           autoFocus={autoFocus}
           maxLength={maxLength}
           minLength={minLength}

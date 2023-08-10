@@ -7,7 +7,6 @@ import SvgClose from "../../icons/SvgClose";
 import SelectTag from "../../packages/SelectTag/SelectTag";
 import InputText from "../../packages/InputText/InputText";
 import PeopleList from "./PeopleList";
-import SvgUserProfile from "../../icons/SvgUserProfile";
 import { FormikProps } from "formik";
 import { formType } from "./RunzScreen";
 import { useSelector } from "react-redux";
@@ -24,6 +23,7 @@ type Props = {
   title: string;
   formik: FormikProps<formType>;
   isLoader: boolean;
+  btnTitle?: string;
 };
 
 const CreateNewRunzModal = ({
@@ -33,6 +33,7 @@ const CreateNewRunzModal = ({
   title,
   formik,
   isLoader,
+  btnTitle = "Create",
 }: Props) => {
   const { procedureList, procedureLoader, getUserListdata } = useSelector(
     ({ procedureReducers, getUserListReducers }: RootState) => {
@@ -62,10 +63,10 @@ const CreateNewRunzModal = ({
             className={styles.cancelBtn}
             types="tertiary-1"
           >
-            Create
+            Cancel
           </Button>
           <Button onClick={submit} className={styles.yesBtn}>
-            Create
+            {btnTitle}
           </Button>
         </Flex>
       }
