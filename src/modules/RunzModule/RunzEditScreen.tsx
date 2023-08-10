@@ -18,7 +18,7 @@ import {
 } from "../../theme/colors";
 import styles from "./raunzeditscreen.module.css";
 import Badge from "../../packages/Badge/Badge";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import SvgNewWindow from "../../icons/SvgNewWindow";
 import SvgUnWindow from "../../icons/SvgUnWindow";
 import ButtonGroup from "../../packages/ButtonGroup/ButtonGroup";
@@ -30,7 +30,6 @@ import LineCharts from "../../common/LineChart/LineCharts";
 import ResizePanel from "../../packages/ResizePanel/ResizePanel";
 import store, { RootState } from "../../redux/store";
 import {
-  getRunzCreateMiddleWare,
   getRunzListDetailsMiddleWare,
   getRunzUpdatesMiddleWare,
 } from "./store/runzMiddleware";
@@ -148,13 +147,12 @@ const RunzEditScreen = () => {
   const [isFull, setFull] = useState<boolean>(false);
   const [isTab, setTab] = useState("Results");
   const [editNewRunz, setEditNewRunz] = useState(false);
-  let [searchParams] = useSearchParams();
-  const [isLoader, setLoader] = useState(false);
+  let [searchParams, setSearchParams] = useSearchParams();
+
+  const getRunzId: any = searchParams.get("id");
 
   useEffect(() => {
-    store.dispatch(
-      getRunzListDetailsMiddleWare({ id: searchParams.get("id") })
-    );
+    store.dispatch(getRunzListDetailsMiddleWare({ id: getRunzId }));
     store.dispatch(
       procedureByIdMiddleWare({ id: searchParams.get("procedureId") })
     );
@@ -245,43 +243,37 @@ const RunzEditScreen = () => {
         store
           .dispatch(
             getRunzUpdatesMiddleWare({
-              id: searchParams.get("id"),
+              id: getRunzId,
               status: "not started",
             })
           )
           .then(() => {
             setStatus(event.key);
-            store.dispatch(
-              getRunzListDetailsMiddleWare({ id: searchParams.get("id") })
-            );
+            store.dispatch(getRunzListDetailsMiddleWare({ id: getRunzId }));
           });
       } else if (event.key === "success") {
         store
           .dispatch(
             getRunzUpdatesMiddleWare({
-              id: searchParams.get("id"),
+              id: getRunzId,
               status: "success",
             })
           )
           .then(() => {
             setStatus(event.key);
-            store.dispatch(
-              getRunzListDetailsMiddleWare({ id: searchParams.get("id") })
-            );
+            store.dispatch(getRunzListDetailsMiddleWare({ id: getRunzId }));
           });
       } else if (event.key === "primary") {
         store
           .dispatch(
             getRunzUpdatesMiddleWare({
-              id: searchParams.get("id"),
+              id: getRunzId,
               status: "opened",
             })
           )
           .then(() => {
             setStatus(event.key);
-            store.dispatch(
-              getRunzListDetailsMiddleWare({ id: searchParams.get("id") })
-            );
+            store.dispatch(getRunzListDetailsMiddleWare({ id: getRunzId }));
           });
       }
     },
@@ -311,7 +303,6 @@ const RunzEditScreen = () => {
   const resultLab = myLabArray?.join(",");
 
   const handleEdit = (values: formType) => {
-    setLoader(true);
     const assignList: any =
       Array.isArray(values.assignTo) &&
       values.assignTo?.map((list: any) => {
@@ -321,7 +312,7 @@ const RunzEditScreen = () => {
     store
       .dispatch(
         getRunzUpdatesMiddleWare({
-          id: searchParams.get("id"),
+          id: getRunzId,
           procedureId: values.procedureName?.id,
           procedurename: values.procedureName?.title,
           testobjective: values.testObjective,
@@ -330,9 +321,14 @@ const RunzEditScreen = () => {
         })
       )
       .then(() => {
+        setSearchParams({
+          id: getRunzId,
+          procedureId: values.procedureName?.id,
+        });
         Alert("Runz saved successfully.");
+        store.dispatch(getRunzListDetailsMiddleWare({ id: getRunzId }));
         store.dispatch(
-          getRunzListDetailsMiddleWare({ id: searchParams.get("id") })
+          procedureByIdMiddleWare({ id: values.procedureName?.id })
         );
         setEditNewRunz(false);
       });
@@ -491,18 +487,14 @@ const RunzEditScreen = () => {
             >
               {isFull ? <SvgUnWindow /> : <SvgNewWindow />}
             </Button>
-            <Text tag={"pre"} className={styles.preTag}>
-              {`Aim
-To measure the time period of a simple pendulum.
 
-Apparatus required
-A wire of unknown resistance (~10Ω), battery eliminator or an accumulator (0 to 3V) or two dry cells (1.5 V each), voltmeter (0-5 V), milliammeter (0– 500 mA), rheostat, plug key, connecting wires and a piece of sand paper.
-
-Principle
-is directly proportional to the potential difference across its ends, provided the physical state of the conductor remains unchanged. If I be the current flowing through the conductor and V the potential difference across its ends, then according to Ohm's law V I ∝ and hence V = RI where R is the constant of proportionality and is termed as the electrical resistance of the conductor. If V is expressed in volts and I in amperes, then R is expressed in ohms. The resistance R, depends upon the material and dimensions of the conductor. For a wire of uniform cross-section, the resistance depends on the length l and the area of cross-section A. It also depends on the temperature of the conductor. At a given temperature the resistance R = l A ρ where ρ is the specific resistance or resistivity and is characteristic of the material of wire.
-
-`}
-            </Text>
+            {procedureData.procedure?.html && (
+              <div
+                dangerouslySetInnerHTML={{
+                  __html: procedureData.procedure.html,
+                }}
+              />
+            )}
           </Flex>
         </ResizePanel>
         <div
