@@ -88,7 +88,7 @@ const validate = (values: formType) => {
   return errors;
 };
 
-const Status = ({ value, row, formikFilter }: any) => {
+const Status = ({ value, row }: any) => {
   const [isOpen, setOpen] = useState(false);
   const wrapperRef = useRef<any>(null);
 
@@ -261,8 +261,10 @@ const RunzScreen = () => {
       key: "testobjective",
       renderTitle: () => <RunzDetailsHeader formikFilter={formikFilter} />,
       flex: 5,
-      rowOnClick: (a: any) => {
-        navigate(routes.RUNZ_EIDT);
+      rowOnClick: (row: any) => {
+        navigate(
+          `${routes.RUNZ_EIDT}?id=${row._id}&procedureId=${row.procedureId}`
+        );
       },
       render: (value: string, row: any) => {
         return (
@@ -282,8 +284,10 @@ const RunzScreen = () => {
       flex: 1.6,
       renderTitle: () => <RunzCreatedOnHeader formikFilter={formikFilter} />,
       align: "center",
-      rowOnClick: (a: any) => {
-        navigate(routes.RUNZ_EIDT);
+      rowOnClick: (row: any) => {
+        navigate(
+          `${routes.RUNZ_EIDT}?id=${row._id}&procedureId=${row.procedureId}`
+        );
       },
       render: (value: string) => (
         <Text align="center" transform="capitalize" type="bodyBold">
@@ -298,8 +302,10 @@ const RunzScreen = () => {
       flex: 1.6,
       renderTitle: () => <RunzDueDateHeader formikFilter={formikFilter} />,
       align: "center",
-      rowOnClick: (a: any) => {
-        navigate(routes.RUNZ_EIDT);
+      rowOnClick: (row: any) => {
+        navigate(
+          `${routes.RUNZ_EIDT}?id=${row._id}&procedureId=${row.procedureId}`
+        );
       },
       render: (value: string) => (
         <Text align="center" transform="capitalize" type="bodyBold">
@@ -325,8 +331,10 @@ const RunzScreen = () => {
       flex: 1.6,
       renderTitle: () => <RunzAssignedHeader formikFilter={formikFilter} />,
       align: "center",
-      rowOnClick: (a: any) => {
-        navigate(routes.RUNZ_EIDT);
+      rowOnClick: (row: any) => {
+        navigate(
+          `${routes.RUNZ_EIDT}?id=${row._id}&procedureId=${row.procedureId}`
+        );
       },
     },
   ];

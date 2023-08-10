@@ -77,7 +77,7 @@ export const getRunzCreateMiddleWare = createAsyncThunk(
 
 export const getRunzListDetailsMiddleWare = createAsyncThunk(
   RUNZ_GET_DETAILS,
-  async ({ id }: { id: string }, { rejectWithValue }) => {
+  async ({ id }: { id: any }, { rejectWithValue }) => {
     try {
       const { data } = await axios.get(getRunzListDetails(id));
       return data;
@@ -90,10 +90,7 @@ export const getRunzListDetailsMiddleWare = createAsyncThunk(
 
 export const getRunzUpdatesMiddleWare = createAsyncThunk(
   RUNZ_UPDATE,
-  async (
-    { id, status }: { id: string; status?: string },
-    { rejectWithValue }
-  ) => {
+  async ({ id, status }: { id: any; status?: string }, { rejectWithValue }) => {
     try {
       const { data } = await axios.patch(getRunzListDetails(id), { status });
       return data;

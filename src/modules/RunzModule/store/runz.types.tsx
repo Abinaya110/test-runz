@@ -6,6 +6,7 @@ export interface RunzReducerState {
 
 export interface GetRunzListDetails {
   experiment: Experiment;
+  meta?: Meta;
 }
 export interface Experiment {
   _id: string;
@@ -14,15 +15,35 @@ export interface Experiment {
   testobjective: string;
   dueDate: string;
   status: string;
+  datas: string;
+  organization: string;
+  department: string;
+  labType: string;
+  createdBy: string;
   assignTo?: AssignToEntity[];
   createdAt: string;
   updatedAt: string;
-  __v: number;
+  __v?: number;
 }
 export interface AssignToEntity {
   userId: string;
   date: string;
   _id: string;
+}
+export interface Meta {
+  _id: string;
+  email: string;
+  userId: string;
+  __v: number;
+  createdAt: string;
+  department?: string[];
+  experimentIds?: string[];
+  labtype?: string[];
+  name: string;
+  organization: string;
+  role: string;
+  updatedAt: string;
+  userCounter: string;
 }
 
 export interface RunzDetailsReducerState {
@@ -43,7 +64,7 @@ export interface RunzList {
   department: string;
   labType: string;
   createdBy: string;
-  assignTo?: AssignToEntity[] | null;
+  assignTo?: AssignToEntity[];
   createdAt: string;
   updatedAt: string;
   __v: number;

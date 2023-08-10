@@ -29,11 +29,60 @@ import Alert from "../../packages/Alert/Alert";
 import LineCharts from "../../common/LineChart/LineCharts";
 import ResizePanel from "../../packages/ResizePanel/ResizePanel";
 import store, { RootState } from "../../redux/store";
-import { getRunzListDetailsMiddleWare } from "./store/runzMiddleware";
+import {
+  getRunzListDetailsMiddleWare,
+  getRunzUpdatesMiddleWare,
+} from "./store/runzMiddleware";
 import { useSelector } from "react-redux";
 import Loader from "../../packages/Loader/Loader";
 import moment from "moment";
 import { procedureByIdMiddleWare } from "../ProceduresModule/store/proceduresMiddleware";
+import { useSearchParams } from "react-router-dom";
+
+const items: MenuProps["items"] = [
+  {
+    label: "Not started",
+    key: "error",
+    style: {
+      backgroundColor: error,
+      borderTopLeftRadius: 8,
+      borderTopRightRadius: 8,
+      borderBottomLeftRadius: 0,
+      borderBottomRightRadius: 0,
+      color: white,
+      fontFamily: "Poppins-Regular",
+      fontSize: 14,
+      padding: "8px 16px",
+    },
+  },
+  {
+    label: "Completed",
+    key: "success",
+    style: {
+      backgroundColor: success,
+      borderRadius: 0,
+      color: white,
+      fontFamily: "Poppins-Regular",
+      fontSize: 14,
+      padding: "8px 16px",
+    },
+  },
+  {
+    label: "Working",
+    key: "primary",
+    style: {
+      backgroundColor: yellow,
+      borderTopLeftRadius: 0,
+      borderTopRightRadius: 0,
+      borderBottomLeftRadius: 8,
+      borderBottomRightRadius: 8,
+      color: white,
+      fontFamily: "Poppins-Regular",
+      fontSize: 14,
+      padding: "8px 16px",
+    },
+  },
+];
 
 const LabelWithColumn = ({
   title,
@@ -61,12 +110,15 @@ const RunzEditScreen = () => {
   const [isFull, setFull] = useState<boolean>(false);
   const [isTab, setTab] = useState("Results");
   const [editNewRunz, setEditNewRunz] = useState(false);
+  let [searchParams] = useSearchParams();
 
   useEffect(() => {
     store.dispatch(
-      getRunzListDetailsMiddleWare({ id: "64cf5c2884d42f6e02421501" })
+      getRunzListDetailsMiddleWare({ id: searchParams.get("id") })
     );
-    store.dispatch(procedureByIdMiddleWare({ id: "64cf5c2884d42f6e02421501" }));
+    store.dispatch(
+      procedureByIdMiddleWare({ id: searchParams.get("procedureId") })
+    );
   }, []);
 
   const {
@@ -140,55 +192,54 @@ const RunzEditScreen = () => {
     [setState]
   );
 
-  const items: MenuProps["items"] = [
-    {
-      label: "Not started",
-      key: "error",
-      style: {
-        backgroundColor: error,
-        borderTopLeftRadius: 8,
-        borderTopRightRadius: 8,
-        borderBottomLeftRadius: 0,
-        borderBottomRightRadius: 0,
-        color: white,
-        fontFamily: "Poppins-Regular",
-        fontSize: 14,
-        padding: "8px 16px",
-      },
-    },
-    {
-      label: "Completed",
-      key: "success",
-      style: {
-        backgroundColor: success,
-        borderRadius: 0,
-        color: white,
-        fontFamily: "Poppins-Regular",
-        fontSize: 14,
-        padding: "8px 16px",
-      },
-    },
-    {
-      label: "Working",
-      key: "primary",
-      style: {
-        backgroundColor: yellow,
-        borderTopLeftRadius: 0,
-        borderTopRightRadius: 0,
-        borderBottomLeftRadius: 8,
-        borderBottomRightRadius: 8,
-        color: white,
-        fontFamily: "Poppins-Regular",
-        fontSize: 14,
-        padding: "8px 16px",
-      },
-    },
-  ];
-
   const menuProps = {
     items,
     onClick: (event: any) => {
       setStatus(event.key);
+
+      if (event.key === "error") {
+        store
+          .dispatch(
+            getRunzUpdatesMiddleWare({
+              id: searchParams.get("id"),
+              status: "not started",
+            })
+          )
+          .then(() => {
+            setStatus(event.key);
+            store.dispatch(
+              getRunzListDetailsMiddleWare({ id: searchParams.get("id") })
+            );
+          });
+      } else if (event.key === "success") {
+        store
+          .dispatch(
+            getRunzUpdatesMiddleWare({
+              id: searchParams.get("id"),
+              status: "success",
+            })
+          )
+          .then(() => {
+            setStatus(event.key);
+            store.dispatch(
+              getRunzListDetailsMiddleWare({ id: searchParams.get("id") })
+            );
+          });
+      } else if (event.key === "primary") {
+        store
+          .dispatch(
+            getRunzUpdatesMiddleWare({
+              id: searchParams.get("id"),
+              status: "opened",
+            })
+          )
+          .then(() => {
+            setStatus(event.key);
+            store.dispatch(
+              getRunzListDetailsMiddleWare({ id: searchParams.get("id") })
+            );
+          });
+      }
     },
   };
 
@@ -206,7 +257,7 @@ const RunzEditScreen = () => {
   };
 
   const getOrganization = moreInfoList?.filter(
-    (list) => list._id === runzData?.experiment?._id
+    (list) => list._id === runzData?.experiment?.organization
   );
 
   const myDepartmentArray = procedureData?.user?.department;
@@ -240,7 +291,7 @@ const RunzEditScreen = () => {
                 getOrganization[0]?.organization}
             </Text>
             <Text className={styles.subTitle} type="subTitle">
-              Bubble sort 2
+              {runzData?.experiment?.procedurename}
             </Text>
           </Flex>
           <Flex row center>
@@ -292,9 +343,7 @@ const RunzEditScreen = () => {
             {/* <LabelWithColumn title="Created by" value={runzData?.experiment?.} /> */}
             <LabelWithColumn
               title="Assigned by"
-              value={moment(runzData?.experiment?.createdAt).format(
-                "DD/MM/YYYY"
-              )}
+              value={runzData?.experiment?.createdBy}
             />
             <LabelWithColumn
               title="Created on"
@@ -361,23 +410,7 @@ A wire of unknown resistance (~10Ω), battery eliminator or an accumulator (0 t
 Principle
 is directly proportional to the potential difference across its ends, provided the physical state of the conductor remains unchanged. If I be the current flowing through the conductor and V the potential difference across its ends, then according to Ohm's law V I ∝ and hence V = RI where R is the constant of proportionality and is termed as the electrical resistance of the conductor. If V is expressed in volts and I in amperes, then R is expressed in ohms. The resistance R, depends upon the material and dimensions of the conductor. For a wire of uniform cross-section, the resistance depends on the length l and the area of cross-section A. It also depends on the temperature of the conductor. At a given temperature the resistance R = l A ρ where ρ is the specific resistance or resistivity and is characteristic of the material of wire.
 
-Procedure
-1. Clean the ends of the connecting wires with the help of sand paper in order to remove any insulating coating on them.
-2. Connect various components - resistance, rheostat, battery, key, voltmeter and ammeter as shown in Fig. E 1.2.
-3. Note whether pointers in milliammeter and voltmeter coincide with the zero mark on the measuring scale. If it is not so, adjust the pointer to coincide with the zero mark by adjusting the screw provided near the base of the needle using a screw driver. 
-4. Note the range and least count of the given voltmeter and milliammeter. 
-5. Insert the key K and slide the rheostat contact to one of its extreme ends, so that current passing through the resistance wire is minimum. 
-6. Note the milliammeter and voltmeter readings.
-7. Remove the key K and allow the wire to cool, if heated. Again insert the key. Shift the rheostat contact slightly to increase the applied voltage. Note the milliammeter and voltmeter reading.
-8. Repeat step 7 for four different settings of the rheostat. Record your observations in a tabular form.
-
-Observations
-1. Range of ammeter = 0 ... mA to ...mA 
-2. Least count of ammeter = ... mA 
-3. Range of voltmeter = 0 ... V to ...V 
-4. Least count of voltmeter = ...V 
-5. Least count of metre scale = ... m 
-6. Length of the given wire, l = ...m`}
+`}
             </Text>
           </Flex>
         </ResizePanel>
