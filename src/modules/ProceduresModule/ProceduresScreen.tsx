@@ -150,8 +150,8 @@ const ProceduresScreen = () => {
     {
       title: "",
       renderTitle: () => <CreatedOnHeader formik={formikFilter} />,
-      dataIndex: "createdAt",
-      key: "createdAt",
+      dataIndex: "createdOn",
+      key: "createdOn",
       flex: 2,
       render: (value: string) => (
         <Text align="center" transform="capitalize" type="bodyBold">
