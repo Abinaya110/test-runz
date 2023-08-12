@@ -100,6 +100,8 @@ export const getRunzUpdatesMiddleWare = createAsyncThunk(
       dueDate,
       assignTo,
       datas,
+      expresult,
+      remark,
     }: {
       id: any;
       status?: string;
@@ -109,6 +111,8 @@ export const getRunzUpdatesMiddleWare = createAsyncThunk(
       dueDate?: string;
       assignTo?: string;
       datas?: string;
+      remark?: string;
+      expresult?: string;
     },
     { rejectWithValue }
   ) => {
@@ -120,7 +124,9 @@ export const getRunzUpdatesMiddleWare = createAsyncThunk(
         testobjective,
         dueDate,
         assignTo,
-        datas: "",
+        datas,
+        remark,
+        expresult,
       });
       return data;
     } catch (error: any) {

@@ -1,20 +1,26 @@
 import { Editor } from "@tinymce/tinymce-react";
 
-const RunzRichText = ({ height }) => {
+const RunzRichText = ({ onEditorChange, value, height }) => {
   return (
     <Editor
+      onEditorChange={onEditorChange}
+      value={value}
       apiKey="au50u78j9vjabzcr4icg4v3oknubu08ifv9rfstawlzmdobp"
       init={{
+        height,
         selector: "textarea",
-        menubar: "format",
-        height: height,
+        plugins: "charmap link image code lists directionality",
         directionality: "ltr",
-        content_style: `body { font-family:'Poppins-Medium'; font-size:14px;color:#1a1a1a }`,
+        menubar: "format ",
+        toolbar:
+          "undo redo | blocks| " +
+          "charmap superscript subscript" +
+          "superscript subscript bold italic forecolor | alignleft aligncenter " +
+          "alignright alignjustify | bullist numlist outdent indent | ",
+
+        content_style:
+          "body { font-family:Helvetica,Arial,sans-serif; font-size:14px }",
       }}
-      toolbar={
-        "undo redo | blocks | charmap superscript subscript | superscript subscript bold italic forecolor | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent"
-      }
-      plugins={["charmap", "link", "image", "code", "lists", "directionality"]}
     />
   );
 };

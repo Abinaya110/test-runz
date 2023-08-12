@@ -46,6 +46,8 @@ import { isEmpty } from "../../utils/validators";
 import { getUserListMiddleWare } from "../SettingsModule/store/settingsMiddleware";
 import parse from "html-react-parser";
 import * as html2json from "html2json";
+import Toast from "../../packages/Toast/Toast";
+import { isEmptyObject } from "../../utils/helpers";
 
 const items: MenuProps["items"] = [
   {
@@ -150,8 +152,10 @@ const RunzEditScreen = () => {
   const [isTab, setTab] = useState("Results");
   const [editNewRunz, setEditNewRunz] = useState(false);
   let [searchParams, setSearchParams] = useSearchParams();
-  const [htmlInput, setHtmlInput] = useState({});
+  const [htmlInput, setHtmlInput] = useState<any>({});
   const getRunzId: any = searchParams.get("id");
+  const [expResult, setResult] = useState("");
+  const [expRemarks, setRemarks] = useState("");
 
   useEffect(() => {
     store.dispatch(getRunzListDetailsMiddleWare({ id: getRunzId }));
@@ -374,17 +378,72 @@ const RunzEditScreen = () => {
       const { id, value } = ele;
       let temp = { [id]: value };
       objects = { ...objects, temp };
-      setHtmlInput((prev) => ({ ...prev, [id]: value }));
+      setHtmlInput((prev: any) => ({ ...prev, [id]: value }));
       // @ts-ignore
       ele.onChange = (e) => {
         const { id, value } = e.target;
-        setHtmlInput((prev) => ({ ...prev, [id]: value }));
+        setHtmlInput((prev: any) => ({ ...prev, [id]: value }));
       };
     });
     // setSavebtn(false);
   };
 
-  console.log("data1", htmlInput);
+  const handleSave = () => {
+    handleHtmlInput();
+    let vals = Object.values(htmlInput);
+    const empty = vals.filter((item) => item === "");
+    if (empty.length > 0) {
+      Toast("Must fill all Required Readings", "LONG", "error");
+    } else if (empty.length === 0) {
+      handleHtmlInput();
+
+      store
+        .dispatch(
+          getRunzUpdatesMiddleWare({
+            id: getRunzId,
+            datas: JSON.stringify(htmlInput),
+            remark: expRemarks,
+            expresult: expResult,
+          })
+        )
+        .then(() => {
+          Alert("Your work has been saved");
+          store.dispatch(getRunzListDetailsMiddleWare({ id: getRunzId }));
+          setEditNewRunz(false);
+        })
+        .catch(() => {
+          Toast("Something went wrong! Try again", "LONG", "error");
+        });
+    }
+  };
+
+  useEffect(() => {
+    if (runzData.experiment?.expresult) {
+      setResult(runzData.experiment?.expresult);
+    }
+    if (runzData.experiment?.remark) {
+      setRemarks(runzData.experiment?.remark);
+    }
+  }, [runzData.experiment?.remark, runzData.experiment?.expresult]);
+
+  useEffect(() => {
+    if (runzData.experiment?.datas) {
+      const filtered =
+        runzData.experiment?.datas &&
+        Object.entries(JSON.parse(runzData.experiment?.datas)).filter(
+          ([key]) => key !== ""
+        );
+      const obj = filtered && Object.fromEntries(filtered);
+      if (!isEmptyObject(obj) && !procedureByIDLoader) {
+        for (const [key, values] of Object.entries(obj)) {
+          if (values) {
+            // @ts-ignore
+            document.getElementById(key).value = values;
+          }
+        }
+      }
+    }
+  }, [runzData.experiment?.datas, procedureByIDLoader]);
 
   return (
     <Flex className={styles.overAll}>
@@ -551,7 +610,11 @@ const RunzEditScreen = () => {
             <Flex height={window.innerHeight - 303}>
               {isTab === "Results" && (
                 <Flex className={styles.actionFlex}>
-                  <RunzRichText height={"100%"} />
+                  <RunzRichText
+                    onEditorChange={(event: any) => setResult(event)}
+                    value={expResult}
+                    height={"100%"}
+                  />
                 </Flex>
               )}
               {isTab === "Charts" && (
@@ -561,7 +624,11 @@ const RunzEditScreen = () => {
               )}
               {isTab === "Remarks" && (
                 <Flex className={styles.actionFlex}>
-                  <RunzRichText height={"100%"} />
+                  <RunzRichText
+                    onEditorChange={(event: any) => setRemarks(event)}
+                    value={expRemarks}
+                    height={"100%"}
+                  />
                 </Flex>
               )}
             </Flex>
@@ -569,7 +636,9 @@ const RunzEditScreen = () => {
               <Button types="tertiary-1">Back</Button>
               <Flex row center>
                 <SvgPrint />
-                <Button style={{ marginLeft: 8 }}>Save</Button>
+                <Button onClick={handleSave} style={{ marginLeft: 8 }}>
+                  Save
+                </Button>
               </Flex>
             </Flex>
           </Flex>

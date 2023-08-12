@@ -24,6 +24,8 @@ export interface Experiment {
   createdAt: string;
   updatedAt: string;
   __v?: number;
+  remark?: string;
+  expresult?: string;
 }
 export interface AssignToEntity {
   userId: string;
