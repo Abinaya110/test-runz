@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import Flex from "../../packages/Flex/Flex";
 import CheckBox from "../../packages/CheckBox/CheckBox";
 import { isEmpty } from "../../utils/validators";
@@ -19,7 +20,6 @@ import Alert from "../../packages/Alert/Alert";
 import CreateNewRunzModal from "./CreateNewRunzModal";
 import styles from "./runzscreen.module.css";
 import Text from "../../packages/Text/Text";
-import { useNavigate } from "react-router-dom";
 import { routes } from "../../routes/routesPath";
 import { HEADER_HEIGHT } from "../../utils/constants";
 import store, { RootState } from "../../redux/store";
@@ -357,19 +357,19 @@ const RunzScreen = () => {
   };
 
   const handleChecked = (row: {
-    id: any;
+    _id: any;
     filter: (arg0: (r: any) => boolean) => any[];
     length: number;
   }) => {
     if (!Array.isArray(row)) {
-      if (selectedRows.includes(row.id)) {
-        const updatedRow = selectedRows.filter((s) => s !== row.id);
+      if (selectedRows.includes(row._id)) {
+        const updatedRow = selectedRows.filter((s) => s !== row._id);
         setSelectedRows(updatedRow);
       } else {
-        setSelectedRows([...selectedRows, row.id]);
+        setSelectedRows([...selectedRows, row._id]);
       }
     } else if (Array.isArray(row)) {
-      const orderNumbers = row.filter((r) => !isEmpty(r.id)).map((r) => r.id);
+      const orderNumbers = row.filter((r) => !isEmpty(r._id)).map((r) => r._id);
       if (isAllRowChecked(selectedRows, row, row.length)) {
         setSelectedRows([]);
       } else {
@@ -384,14 +384,14 @@ const RunzScreen = () => {
     length: number;
   }) => {
     if (Array.isArray(row)) {
-      const orderNumbers = row.filter((r) => !isEmpty(r.id)).map((r) => r.id);
+      const orderNumbers = row.filter((r) => !isEmpty(r._id)).map((r) => r._id);
       setSelectedRows([...orderNumbers]);
     }
   };
 
   const handleSelections = (row: any) => {
     const isChecked = !Array.isArray(row)
-      ? selectedRows.includes(row.id)
+      ? selectedRows.includes(row._id)
       : isAllRowChecked(selectedRows, row, row.length);
     return (
       <Flex>
