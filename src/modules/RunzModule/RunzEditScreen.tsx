@@ -28,12 +28,12 @@ import CreateNewRunzModal from "./CreateNewRunzModal";
 import Alert from "../../packages/Alert/Alert";
 import LineCharts from "../../common/LineChart/LineCharts";
 import ResizePanel from "../../packages/ResizePanel/ResizePanel";
-import store, { RootState } from "../../redux/store";
+import store, { AppDispatch, RootState } from "../../redux/store";
 import {
   getRunzListDetailsMiddleWare,
   getRunzUpdatesMiddleWare,
 } from "./store/runzMiddleware";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import Loader from "../../packages/Loader/Loader";
 import moment from "moment";
 import {
@@ -145,6 +145,7 @@ const LabelWithColumn = ({
 };
 
 const RunzEditScreen = () => {
+  const dispatch: AppDispatch = useDispatch();
   const [state, setState] = useState({ box1: 0, box2: 0 });
   const [isStatus, setStatus] = useState<any>("error");
   const [isMore, setMore] = useState<boolean>(false);
@@ -154,16 +155,14 @@ const RunzEditScreen = () => {
   let [searchParams, setSearchParams] = useSearchParams();
   const [htmlInput, setHtmlInput] = useState<any>({});
   const getRunzId: any = searchParams.get("id");
-  const [expResult, setResult] = useState("");
-  const [expRemarks, setRemarks] = useState("");
+  const [expResult, setResult] = useState<any>("");
+  const [expRemarks, setRemarks] = useState<any>("");
 
   useEffect(() => {
-    store.dispatch(getRunzListDetailsMiddleWare({ id: getRunzId }));
-    store.dispatch(
-      procedureByIdMiddleWare({ id: searchParams.get("procedureId") })
-    );
-    store.dispatch(getUserListMiddleWare({}));
-    store.dispatch(procedureMiddleWare({}));
+    dispatch(getRunzListDetailsMiddleWare({ id: getRunzId }));
+    dispatch(procedureByIdMiddleWare({ id: searchParams.get("procedureId") }));
+    dispatch(getUserListMiddleWare({}));
+    dispatch(procedureMiddleWare({}));
   }, []);
 
   const {
@@ -193,6 +192,7 @@ const RunzEditScreen = () => {
       };
     }
   );
+
   // ["not started", "opened", "completed"]
   useEffect(() => {
     if (runzData?.experiment?.status === "not started") {
@@ -255,7 +255,7 @@ const RunzEditScreen = () => {
           )
           .then(() => {
             setStatus(event.key);
-            store.dispatch(getRunzListDetailsMiddleWare({ id: getRunzId }));
+            dispatch(getRunzListDetailsMiddleWare({ id: getRunzId }));
           });
       } else if (event.key === "success") {
         store
@@ -267,7 +267,7 @@ const RunzEditScreen = () => {
           )
           .then(() => {
             setStatus(event.key);
-            store.dispatch(getRunzListDetailsMiddleWare({ id: getRunzId }));
+            dispatch(getRunzListDetailsMiddleWare({ id: getRunzId }));
           });
       } else if (event.key === "primary") {
         store
@@ -279,7 +279,7 @@ const RunzEditScreen = () => {
           )
           .then(() => {
             setStatus(event.key);
-            store.dispatch(getRunzListDetailsMiddleWare({ id: getRunzId }));
+            dispatch(getRunzListDetailsMiddleWare({ id: getRunzId }));
           });
       }
     },
@@ -332,10 +332,8 @@ const RunzEditScreen = () => {
           procedureId: values.procedureName?.id,
         });
         Alert("Runz saved successfully.");
-        store.dispatch(getRunzListDetailsMiddleWare({ id: getRunzId }));
-        store.dispatch(
-          procedureByIdMiddleWare({ id: values.procedureName?.id })
-        );
+        dispatch(getRunzListDetailsMiddleWare({ id: getRunzId }));
+        dispatch(procedureByIdMiddleWare({ id: values.procedureName?.id }));
         setEditNewRunz(false);
       });
   };
@@ -385,7 +383,6 @@ const RunzEditScreen = () => {
         setHtmlInput((prev: any) => ({ ...prev, [id]: value }));
       };
     });
-    // setSavebtn(false);
   };
 
   const handleSave = () => {
@@ -408,7 +405,7 @@ const RunzEditScreen = () => {
         )
         .then(() => {
           Alert("Your work has been saved");
-          store.dispatch(getRunzListDetailsMiddleWare({ id: getRunzId }));
+          dispatch(getRunzListDetailsMiddleWare({ id: getRunzId }));
           setEditNewRunz(false);
         })
         .catch(() => {
@@ -418,16 +415,16 @@ const RunzEditScreen = () => {
   };
 
   useEffect(() => {
-    if (runzData.experiment?.expresult) {
-      setResult(runzData.experiment?.expresult);
+    if (!isEmpty(runzData.experiment?.expresult)) {
+      setResult(runzData.experiment.expresult);
     }
-    if (runzData.experiment?.remark) {
-      setRemarks(runzData.experiment?.remark);
+    if (!isEmpty(runzData.experiment?.remark)) {
+      setRemarks(runzData.experiment.remark);
     }
   }, [runzData.experiment?.remark, runzData.experiment?.expresult]);
 
   useEffect(() => {
-    if (runzData.experiment?.datas) {
+    if (!isEmpty(runzData.experiment?.datas)) {
       const filtered =
         runzData.experiment?.datas &&
         Object.entries(JSON.parse(runzData.experiment?.datas)).filter(
