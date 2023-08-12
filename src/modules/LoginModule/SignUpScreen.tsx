@@ -192,18 +192,16 @@ const SignUpScreen = () => {
                 AUTH_TOKEN,
                 result.user?._delegate?.accessToken
               );
-              setTimeout(() => {
-                dispatch(authMeMiddleWare())
-                  .then(() => {
-                    dispatch(moreInfoUserMiddleWare())
-                      .then(() => {
-                        setLoader(false);
-                        navigate(routes.MY_PAGE);
-                      })
-                      .catch(() => setLoader(false));
-                  })
-                  .catch(() => setLoader(false));
-              }, 1000);
+              dispatch(authMeMiddleWare())
+                .then(() => {
+                  dispatch(moreInfoUserMiddleWare())
+                    .then(() => {
+                      setLoader(false);
+                      navigate(routes.MY_PAGE);
+                    })
+                    .catch(() => setLoader(false));
+                })
+                .catch(() => setLoader(false));
             } else {
               Toast(res.payload.error, "LONG", "error");
               setLoader(false);
@@ -242,18 +240,16 @@ const SignUpScreen = () => {
               setAuthorization(result.user.accessToken);
               Toast(res.payload.success);
               localStorage.setItem(AUTH_TOKEN, result.user.accessToken);
-              setTimeout(() => {
-                dispatch(authMeMiddleWare())
-                  .then(() => {
-                    dispatch(moreInfoUserMiddleWare())
-                      .then(() => {
-                        setLoader(false);
-                        navigate(routes.MY_PAGE);
-                      })
-                      .catch(() => setLoader(false));
-                  })
-                  .catch(() => setLoader(false));
-              }, 1000);
+              dispatch(authMeMiddleWare())
+                .then(() => {
+                  dispatch(moreInfoUserMiddleWare())
+                    .then(() => {
+                      setLoader(false);
+                      navigate(routes.MY_PAGE);
+                    })
+                    .catch(() => setLoader(false));
+                })
+                .catch(() => setLoader(false));
             } else {
               Toast(res.payload.error, "LONG", "error");
               setLoader(false);

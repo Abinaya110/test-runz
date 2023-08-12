@@ -73,24 +73,23 @@ const LoginScreen = () => {
           } else {
             localStorage.removeItem(REMEMBER_ME);
           }
-          setTimeout(() => {
-            store
-              .dispatch(authMeMiddleWare())
-              .then(() => {
-                store
-                  .dispatch(moreInfoUserMiddleWare())
-                  .then(() => {
-                    setLoader(false);
-                    navigate(routes.MY_PAGE);
-                  })
-                  .catch(() => {
-                    setLoader(false);
-                  });
-              })
-              .catch(() => {
-                setLoader(false);
-              });
-          }, 1000);
+
+          store
+            .dispatch(authMeMiddleWare())
+            .then(() => {
+              store
+                .dispatch(moreInfoUserMiddleWare())
+                .then(() => {
+                  setLoader(false);
+                  navigate(routes.MY_PAGE);
+                })
+                .catch(() => {
+                  setLoader(false);
+                });
+            })
+            .catch(() => {
+              setLoader(false);
+            });
         }
       })
       .catch((error) => {
