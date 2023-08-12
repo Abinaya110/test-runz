@@ -44,14 +44,6 @@ const initialValues: formType = {
   html: " ",
 };
 
-const validate = (values: formType) => {
-  const errors: Partial<formType> = {};
-  if (isEmpty(values.title)) {
-    errors.title = "This field is required";
-  }
-  return errors;
-};
-
 export type filterFormType = {
   department: any;
   lab: any;
@@ -293,11 +285,26 @@ const ProceduresScreen = () => {
       .catch(() => setLoader(false));
   };
 
+  const validate = (values: formType) => {
+    const filterDuplicate = dataList?.procedureIds?.filter(
+      (list) =>
+        list.title?.toLocaleUpperCase() === values.title?.toLocaleUpperCase()
+    );
+    const errors: Partial<formType> = {};
+    if (isEmpty(values.title)) {
+      errors.title = "This field is required";
+    } else if (filterDuplicate.length !== 0 || filterDuplicate === undefined) {
+      errors.title = "Procedure name is duplicate";
+    }
+    return errors;
+  };
+
   const formik = useFormik({
     initialValues,
     onSubmit: handleSubmit,
     validate,
   });
+
   const handleCloseAction = () => setSelectedRows([]);
 
   const handleDelete = () => {
@@ -321,13 +328,18 @@ const ProceduresScreen = () => {
   const handleCreateAndDuplicate = () => {
     if (checkDuplicate) {
       if (selectedRows.length === 1) {
-        store
-          .dispatch(duplicateProcedureMiddleWare({ ids: selectedRows }))
-          .then(() => {
-            handleCloseAction();
-            Alert("Duplicated sucessfully.");
-            dispatch(procedureMiddleWare({}));
-          });
+        const filterRow = dataList.procedureIds.filter(
+          (list) => list.id === selectedRows.toString()
+        );
+        setCreateProcedure(true);
+        formik.setFieldValue("title", filterRow[0].title);
+        // store
+        //   .dispatch(duplicateProcedureMiddleWare({ ids: selectedRows }))
+        //   .then(() => {
+        //     handleCloseAction();
+        //     Alert("Duplicated sucessfully.");
+        //     dispatch(procedureMiddleWare({}));
+        //   });
       } else {
         setPermission(true);
       }
@@ -388,6 +400,7 @@ const ProceduresScreen = () => {
         submit={formik.handleSubmit}
         cancelClick={() => {
           setCreateProcedure(false);
+          formik.resetForm();
         }}
         dataList={dataList}
         isLoader={isLoader}
