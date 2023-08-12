@@ -133,7 +133,7 @@ export const authCreateMiddleWare = createAsyncThunk(
       email,
       organization,
       department,
-      lab,
+      labtype,
       role,
       activeStatus,
     }: {
@@ -142,7 +142,7 @@ export const authCreateMiddleWare = createAsyncThunk(
       email: string;
       organization: string;
       department: string[];
-      lab: string[];
+      labtype: string[];
       role: string;
       activeStatus: boolean;
     },
@@ -153,7 +153,7 @@ export const authCreateMiddleWare = createAsyncThunk(
         lastname,
         firstname,
         email,
-        lab,
+        labtype,
         organization,
         department,
         role,

@@ -435,7 +435,7 @@ const UserTab = () => {
           email: values.email,
           organization: values.organization._id,
           department: getDepartment,
-          lab: getLab,
+          labtype: getLab,
           role: values.role.value,
           activeStatus: values.status.value === "Active" ? true : false,
         })

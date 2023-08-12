@@ -44,6 +44,8 @@ import { useSearchParams } from "react-router-dom";
 import { useFormik } from "formik";
 import { isEmpty } from "../../utils/validators";
 import { getUserListMiddleWare } from "../SettingsModule/store/settingsMiddleware";
+import parse from "html-react-parser";
+import * as html2json from "html2json";
 
 const items: MenuProps["items"] = [
   {
@@ -148,7 +150,7 @@ const RunzEditScreen = () => {
   const [isTab, setTab] = useState("Results");
   const [editNewRunz, setEditNewRunz] = useState(false);
   let [searchParams, setSearchParams] = useSearchParams();
-
+  const [htmlInput, setHtmlInput] = useState({});
   const getRunzId: any = searchParams.get("id");
 
   useEffect(() => {
@@ -357,6 +359,33 @@ const RunzEditScreen = () => {
     formik.setFieldValue("assignTo", commonObjects);
   };
 
+  const htmlData: any = procedureData.procedure?.html
+    ? procedureData.procedure?.html
+    : "";
+
+  const htmlToJSON: any = html2json.html2json(htmlData);
+  const uses = htmlToJSON?.child.map((ele: any) => ele);
+
+  const handleHtmlInput = () => {
+    let objects = {};
+    // @ts-ignore
+    let inputEl = document.getElementById("content").querySelectorAll("input");
+    inputEl.forEach((ele) => {
+      const { id, value } = ele;
+      let temp = { [id]: value };
+      objects = { ...objects, temp };
+      setHtmlInput((prev) => ({ ...prev, [id]: value }));
+      // @ts-ignore
+      ele.onChange = (e) => {
+        const { id, value } = e.target;
+        setHtmlInput((prev) => ({ ...prev, [id]: value }));
+      };
+    });
+    // setSavebtn(false);
+  };
+
+  console.log("data1", htmlInput);
+
   return (
     <Flex className={styles.overAll}>
       {(isLoading || procedureByIDLoader || getRunzUpdatesLoader) && <Loader />}
@@ -427,7 +456,6 @@ const RunzEditScreen = () => {
               title="Test objective"
               value={runzData?.experiment?.testobjective}
             />
-            {/* <LabelWithColumn title="Created by" value={runzData?.experiment?.} /> */}
             <LabelWithColumn
               title="Assigned by"
               value={runzData?.experiment?.createdBy}
@@ -489,11 +517,13 @@ const RunzEditScreen = () => {
             </Button>
 
             {procedureData.procedure?.html && (
-              <div
-                dangerouslySetInnerHTML={{
-                  __html: procedureData.procedure.html,
-                }}
-              />
+              <div id="content">
+                <form onChange={handleHtmlInput}>
+                  {uses.map((el: any) =>
+                    parse(htmlToJSON && html2json.json2html(el))
+                  )}
+                </form>
+              </div>
             )}
           </Flex>
         </ResizePanel>
