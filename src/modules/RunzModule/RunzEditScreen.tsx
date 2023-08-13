@@ -433,7 +433,7 @@ const RunzEditScreen = () => {
       const obj = filtered && Object.fromEntries(filtered);
       if (!isEmptyObject(obj) && !procedureByIDLoader) {
         for (const [key, values] of Object.entries(obj)) {
-          if (values) {
+          if (values && document.getElementById(key)) {
             // @ts-ignore
             document.getElementById(key).value = values;
           }
