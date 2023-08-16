@@ -99,8 +99,8 @@ const Pagination = ({
 
     addPageToRange(totalPages); // Always show the last page
   }
-  const rangeStart = (currentPage - 1) * pageSize + 1;
-  const rangeEnd = Math.min(currentPage * pageSize, totalPages);
+  const rangeStart = currentPage;
+  const rangeEnd = currentPage * pageSize;
 
   if (totalPages === 0) {
     return <></>;
@@ -109,8 +109,7 @@ const Pagination = ({
     <Flex row center between>
       <Flex>
         <Text type="captionBold" color="shade-3">
-          Showing {rangeStart < 10 ? `0${rangeStart}` : rangeStart} -{" "}
-          {rangeEnd < 10 ? `0${rangeEnd}` : rangeEnd} out of {totalPages}
+          Showing {rangeStart} - {rangeEnd} out of {totalPages}
         </Text>
       </Flex>
       <Flex row center>
@@ -118,14 +117,17 @@ const Pagination = ({
           types="link"
           onClick={handlePrevClick}
           disabled={currentPage === 1}
-          style={{cursor:currentPage === 1?'not-allowed':'pointer' }}
+          style={{ cursor: currentPage === 1 ? "not-allowed" : "pointer" }}
         >
           <SvgBack fill={textShade3} fillOne={gray2} />
         </Button>
 
         {range}
         <Button
-          style={{ marginLeft: 4,cursor:currentPage === totalPages?'not-allowed':'pointer' }}
+          style={{
+            marginLeft: 4,
+            cursor: currentPage === totalPages ? "not-allowed" : "pointer",
+          }}
           types="link"
           onClick={handleNextClick}
           disabled={currentPage === totalPages}
