@@ -6,19 +6,62 @@ import InputText from "../../packages/InputText/InputText";
 import SelectTag from "../../packages/SelectTag/SelectTag";
 import styles from "./runzcustomheader.module.css";
 import { formFilterType } from "./RunzScreen";
+import { useState } from "react";
+import Button from "../../packages/Button/Button";
+import moment from "moment";
 
 export const RunzDetailsHeader = ({
   formikFilter,
+  setData,
+  isData,
+  data,
 }: {
   formikFilter: FormikProps<formFilterType>;
+  setData: (a: any) => void;
+  isData: any;
+  data: any;
 }) => {
+  const [isFilter, setFilter] = useState("");
+
+  const sortByNameAscending = () => {
+    setFilter("Ascending");
+    const sortedData = [...isData].sort((a, b) =>
+      a.testobjective.localeCompare(b.testobjective)
+    );
+    setData(sortedData);
+  };
+
+  const sortByNameDescending = () => {
+    setFilter("Descending");
+    const sortedData = [...isData].sort((a, b) =>
+      b.testobjective.localeCompare(a.testobjective)
+    );
+    setData(sortedData);
+  };
   return (
     <Flex flex={1}>
       <LableWithIcon
         type="bodyBold"
         color="shade-3"
         label="Runz details"
-        actionRight={() => <SvgSort />}
+        actionRight={() => (
+          <Button
+            title={isFilter}
+            onClick={() => {
+              if (isFilter === "") {
+                sortByNameAscending();
+              } else if (isFilter === "Ascending") {
+                sortByNameDescending();
+              } else if (isFilter === "Descending") {
+                setFilter("");
+                setData(data);
+              }
+            }}
+            types="link"
+          >
+            <SvgSort />
+          </Button>
+        )}
         containerClassName={styles.sortTitleFlex}
       />
 
@@ -79,9 +122,36 @@ export const RunzDetailsHeader = ({
 
 export const RunzCreatedOnHeader = ({
   formikFilter,
+  setData,
+  isData,
+  data,
 }: {
   formikFilter: FormikProps<formFilterType>;
+  setData: (a: any) => void;
+  isData: any;
+  data: any;
 }) => {
+  const [isFilter, setFilter] = useState("");
+
+  const sortByNameAscending = () => {
+    setFilter("Ascending");
+    const sortedData = [...isData].sort((a, b) =>
+      moment(a.createdAt)
+        .format("DD/MM/YYYY hh:mm A")
+        .localeCompare(moment(b.createdAt).format("DD/MM/YYYY hh:mm A"))
+    );
+    setData(sortedData);
+  };
+
+  const sortByNameDescending = () => {
+    setFilter("Descending");
+    const sortedData = [...isData].sort((a, b) =>
+      moment(b.createdAt)
+        .format("DD/MM/YYYY hh:mm A")
+        .localeCompare(moment(a.createdAt).format("DD/MM/YYYY hh:mm A"))
+    );
+    setData(sortedData);
+  };
   return (
     <Flex flex={1}>
       <LableWithIcon
@@ -89,7 +159,24 @@ export const RunzCreatedOnHeader = ({
         label="Created on"
         type="bodyBold"
         color="shade-3"
-        actionRight={() => <SvgSort />}
+        actionRight={() => (
+          <Button
+            title={isFilter}
+            onClick={() => {
+              if (isFilter === "") {
+                sortByNameAscending();
+              } else if (isFilter === "Ascending") {
+                sortByNameDescending();
+              } else if (isFilter === "Descending") {
+                setFilter("");
+                setData(data);
+              }
+            }}
+            types="link"
+          >
+            <SvgSort />
+          </Button>
+        )}
       />
       <Flex flex={1}>
         <InputText
@@ -105,9 +192,36 @@ export const RunzCreatedOnHeader = ({
 };
 export const RunzDueDateHeader = ({
   formikFilter,
+  setData,
+  isData,
+  data,
 }: {
   formikFilter: FormikProps<formFilterType>;
+  setData: (a: any) => void;
+  isData: any;
+  data: any;
 }) => {
+  const [isFilter, setFilter] = useState("");
+
+  const sortByNameAscending = () => {
+    setFilter("Ascending");
+    const sortedData = [...isData].sort((a, b) =>
+      moment(a.dueDate)
+        .format("DD/MM/YYYY hh:mm A")
+        .localeCompare(moment(b.dueDate).format("DD/MM/YYYY hh:mm A"))
+    );
+    setData(sortedData);
+  };
+
+  const sortByNameDescending = () => {
+    setFilter("Descending");
+    const sortedData = [...isData].sort((a, b) =>
+      moment(b.dueDate)
+        .format("DD/MM/YYYY hh:mm A")
+        .localeCompare(moment(a.dueDate).format("DD/MM/YYYY hh:mm A"))
+    );
+    setData(sortedData);
+  };
   return (
     <Flex flex={1}>
       <LableWithIcon
@@ -115,7 +229,24 @@ export const RunzDueDateHeader = ({
         label="Due date"
         type="bodyBold"
         color="shade-3"
-        actionRight={() => <SvgSort />}
+        actionRight={() => (
+          <Button
+            title={isFilter}
+            onClick={() => {
+              if (isFilter === "") {
+                sortByNameAscending();
+              } else if (isFilter === "Ascending") {
+                sortByNameDescending();
+              } else if (isFilter === "Descending") {
+                setFilter("");
+                setData(data);
+              }
+            }}
+            types="link"
+          >
+            <SvgSort />
+          </Button>
+        )}
       />
       <Flex flex={1}>
         <InputText
@@ -132,9 +263,33 @@ export const RunzDueDateHeader = ({
 
 export const RunzStatusHeader = ({
   formikFilter,
+  setData,
+  isData,
+  data,
 }: {
   formikFilter: FormikProps<formFilterType>;
+  setData: (a: any) => void;
+  isData: any;
+  data: any;
 }) => {
+  const [isFilter, setFilter] = useState("");
+
+  const sortByNameAscending = () => {
+    setFilter("Ascending");
+    const sortedData = [...isData].sort((a, b) =>
+      a.status.localeCompare(b.status)
+    );
+    setData(sortedData);
+  };
+
+  const sortByNameDescending = () => {
+    setFilter("Descending");
+    const sortedData = [...isData].sort((a, b) =>
+      b.status.localeCompare(a.status)
+    );
+    setData(sortedData);
+  };
+
   return (
     <Flex flex={1}>
       <LableWithIcon
@@ -142,7 +297,24 @@ export const RunzStatusHeader = ({
         label="Status"
         type="bodyBold"
         color="shade-3"
-        actionRight={() => <SvgSort />}
+        actionRight={() => (
+          <Button
+            title={isFilter}
+            onClick={() => {
+              if (isFilter === "") {
+                sortByNameAscending();
+              } else if (isFilter === "Ascending") {
+                sortByNameDescending();
+              } else if (isFilter === "Descending") {
+                setFilter("");
+                setData(data);
+              }
+            }}
+            types="link"
+          >
+            <SvgSort />
+          </Button>
+        )}
       />
       <div style={{ flex: 1 }}>
         <SelectTag
@@ -165,9 +337,32 @@ export const RunzStatusHeader = ({
 
 export const RunzAssignedHeader = ({
   formikFilter,
+  setData,
+  isData,
+  data,
 }: {
   formikFilter: FormikProps<formFilterType>;
+  setData: (a: any) => void;
+  isData: any;
+  data: any;
 }) => {
+  const [isFilter, setFilter] = useState("");
+
+  const sortByNameAscending = () => {
+    setFilter("Ascending");
+    const sortedData = [...isData].sort((a, b) =>
+      a.createdBy.localeCompare(b.createdBy)
+    );
+    setData(sortedData);
+  };
+
+  const sortByNameDescending = () => {
+    setFilter("Descending");
+    const sortedData = [...isData].sort((a, b) =>
+      b.createdBy.localeCompare(a.createdBy)
+    );
+    setData(sortedData);
+  };
   return (
     <Flex flex={1}>
       <LableWithIcon
@@ -175,7 +370,24 @@ export const RunzAssignedHeader = ({
         label="Assigned by"
         type="bodyBold"
         color="shade-3"
-        actionRight={() => <SvgSort />}
+        actionRight={() => (
+          <Button
+            title={isFilter}
+            onClick={() => {
+              if (isFilter === "") {
+                sortByNameAscending();
+              } else if (isFilter === "Ascending") {
+                sortByNameDescending();
+              } else if (isFilter === "Descending") {
+                setFilter("");
+                setData(data);
+              }
+            }}
+            types="link"
+          >
+            <SvgSort />
+          </Button>
+        )}
       />
 
       <div style={{ flex: 1 }}>

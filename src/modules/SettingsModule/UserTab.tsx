@@ -246,6 +246,11 @@ const UserTab = () => {
       };
     }
   );
+  const [isData, setData] = useState<any>(data);
+
+  useEffect(() => {
+    setData(data);
+  }, [data]);
 
   const formikFilter = useFormik({
     initialValues: filterFormTypeInitialValues,
@@ -258,7 +263,13 @@ const UserTab = () => {
       dataIndex: "name",
       key: "name",
       renderTitle: () => (
-        <UserDetailsHeader moreInfoList={moreInfoList} formik={formikFilter} />
+        <UserDetailsHeader
+          isData={isData}
+          setData={setData}
+          data={data}
+          moreInfoList={moreInfoList}
+          formik={formikFilter}
+        />
       ),
       flex: 6,
       render: (value: string, row: any) => {
@@ -286,14 +297,21 @@ const UserTab = () => {
     },
     {
       title: "Time Remaining",
-      dataIndex: "time",
-      key: "time",
+      dataIndex: "createdAt",
+      key: "createdAt",
       align: "center",
-      flex: 2,
-      renderTitle: () => <AddOnHeader formik={formikFilter} />,
+      flex: 2.5,
+      renderTitle: () => (
+        <AddOnHeader
+          formik={formikFilter}
+          isData={isData}
+          setData={setData}
+          data={data}
+        />
+      ),
       render: (value: string) => (
         <Text type="bodyBold" align="center">
-          {moment(value).format("DD/MM/YYYY")}
+          {moment(value).format("DD/MM/YYYY hh:mm A")}
         </Text>
       ),
     },
@@ -303,7 +321,14 @@ const UserTab = () => {
       key: "role",
       align: "center",
       flex: 2,
-      renderTitle: () => <RoleHeader formik={formikFilter} />,
+      renderTitle: () => (
+        <RoleHeader
+          formik={formikFilter}
+          isData={isData}
+          setData={setData}
+          data={data}
+        />
+      ),
       render: (value: string) => (
         <Text type="bodyBold" align="center" transform="capitalize">
           {value}
@@ -316,12 +341,51 @@ const UserTab = () => {
       key: "activeStatus",
       align: "center",
       flex: 2,
-      renderTitle: () => <StatusHeader formik={formikFilter} />,
+      renderTitle: () => (
+        <StatusHeader
+          data={data}
+          formik={formikFilter}
+          isData={isData}
+          setData={setData}
+        />
+      ),
       render: (value: string, row: any) => (
         <Status value={value} row={row} formikFilter={formikFilter} />
       ),
     },
   ];
+
+  const filterData = useMemo(() => {
+    const result = isData?.filter(
+      (list: any) =>
+        list?.name
+          ?.toLocaleLowerCase()
+          .includes(isSearch?.toLocaleLowerCase()) ||
+        list?.role
+          ?.toLocaleLowerCase()
+          .includes(isSearch?.toLocaleLowerCase()) ||
+        list?.userCounter
+          ?.toLocaleLowerCase()
+          .includes(isSearch?.toLocaleLowerCase()) ||
+        list?.department
+          ?.toString()
+          ?.toLocaleLowerCase()
+          .includes(isSearch?.toLocaleLowerCase()) ||
+        list.labtype
+          ?.toString()
+          ?.toLocaleLowerCase()
+          .includes(isSearch?.toLocaleLowerCase()) ||
+        list.activeStatus
+          ?.toString()
+          ?.toLocaleLowerCase()
+          .includes(isSearch?.toLocaleLowerCase()) ||
+        moment(list.createdAt)
+          .format("DD/MM/YYYY HH:mm")
+          ?.toLocaleLowerCase()
+          .includes(isSearch?.toLocaleLowerCase())
+    );
+    return result.length > 0 ? result : isData;
+  }, [isData, isSearch]);
 
   const isAllRowChecked = (
     selected: any[],
@@ -513,22 +577,6 @@ const UserTab = () => {
     );
   }, [formikFilter.values]);
 
-  const filterData = useMemo(() => {
-    const result = data?.filter(
-      (list) =>
-        list?.name
-          ?.toLocaleLowerCase()
-          .includes(isSearch?.toLocaleLowerCase()) ||
-        list?.role
-          ?.toLocaleLowerCase()
-          .includes(isSearch?.toLocaleLowerCase()) ||
-        list?.userCounter
-          ?.toLocaleLowerCase()
-          .includes(isSearch?.toLocaleLowerCase())
-    );
-    return result.length > 0 ? result : data;
-  }, [data, isSearch]);
-
   return (
     <Flex>
       <YesOrNo
@@ -562,6 +610,7 @@ const UserTab = () => {
       />
       <Flex className={styles.tableOverall}>
         <Table
+          fixedHeight={window.innerHeight - 485}
           onPageChange={handlePage}
           currentPage={currentPage}
           hideActions={selectedRows.length === 0}

@@ -93,6 +93,12 @@ const ProceduresScreen = () => {
       }
     );
 
+  const [isData, setData] = useState<any>(dataList?.procedureIds);
+
+  useEffect(() => {
+    setData(dataList?.procedureIds);
+  }, [dataList?.procedureIds]);
+
   const handleNavigate = (row: any) =>
     navigate(`${routes.PROCEDURE_EDIT}?id=${row.id}`);
 
@@ -109,6 +115,9 @@ const ProceduresScreen = () => {
           dataList={dataList}
           moreInfoList={moreInfoList}
           formik={formikFilter}
+          isData={isData}
+          setData={setData}
+          data={dataList?.procedureIds}
         />
       ),
       dataIndex: "title",
@@ -141,13 +150,20 @@ const ProceduresScreen = () => {
     },
     {
       title: "",
-      renderTitle: () => <CreatedOnHeader formik={formikFilter} />,
+      renderTitle: () => (
+        <CreatedOnHeader
+          isData={isData}
+          setData={setData}
+          data={dataList?.procedureIds}
+          formik={formikFilter}
+        />
+      ),
       dataIndex: "createdOn",
       key: "createdOn",
       flex: 2,
       render: (value: string) => (
         <Text align="center" transform="capitalize" type="bodyBold">
-          {moment(value).format("DD/MM/YYYY")}
+          {moment(value).format("DD/MM/YYYY hh:mm A")}
         </Text>
       ),
       align: "center",
@@ -156,7 +172,13 @@ const ProceduresScreen = () => {
     {
       title: "",
       renderTitle: () => (
-        <CreatedByHeader formik={formikFilter} dataList={dataList} />
+        <CreatedByHeader
+          isData={isData}
+          setData={setData}
+          data={dataList?.procedureIds}
+          formik={formikFilter}
+          dataList={dataList}
+        />
       ),
       dataIndex: "createdBy",
       key: "createdBy",
@@ -165,6 +187,35 @@ const ProceduresScreen = () => {
       rowOnClick: handleNavigate,
     },
   ];
+
+  const filterData = useMemo(() => {
+    const result = isData?.filter(
+      (list: any) =>
+        list?.title
+          ?.toLocaleLowerCase()
+          .includes(isSearch?.toLocaleLowerCase()) ||
+        list?.id?.toLocaleLowerCase().includes(isSearch?.toLocaleLowerCase()) ||
+        list?.createdBy
+          ?.toLocaleLowerCase()
+          .includes(isSearch?.toLocaleLowerCase()) ||
+        moment(list.createdOn)
+          .format("DD/MM/YYYY HH:mm")
+          ?.toLocaleLowerCase()
+          .includes(isSearch?.toLocaleLowerCase()) ||
+        list?.createdBy
+          ?.toLocaleLowerCase()
+          .includes(isSearch?.toLocaleLowerCase()) ||
+        list?.department
+          ?.toString()
+          ?.toLocaleLowerCase()
+          .includes(isSearch?.toLocaleLowerCase()) ||
+        list.labtype
+          ?.toString()
+          ?.toLocaleLowerCase()
+          .includes(isSearch?.toLocaleLowerCase())
+    );
+    return isData?.length > 0 ? result : isData ? isData : [];
+  }, [isData, isSearch]);
 
   const isAllRowChecked = (
     selected: any[],
@@ -333,13 +384,6 @@ const ProceduresScreen = () => {
         );
         setCreateProcedure(true);
         formik.setFieldValue("title", filterRow[0].title);
-        // store
-        //   .dispatch(duplicateProcedureMiddleWare({ ids: selectedRows }))
-        //   .then(() => {
-        //     handleCloseAction();
-        //     Alert("Duplicated sucessfully.");
-        //     dispatch(procedureMiddleWare({}));
-        //   });
       } else {
         setPermission(true);
       }
@@ -369,23 +413,6 @@ const ProceduresScreen = () => {
     );
   }, [formikFilter.values]);
 
-  const filterData = useMemo(() => {
-    const result = dataList?.procedureIds?.filter(
-      (list) =>
-        list?.title
-          ?.toLocaleLowerCase()
-          .includes(isSearch?.toLocaleLowerCase()) ||
-        list?.id?.toLocaleLowerCase().includes(isSearch?.toLocaleLowerCase()) ||
-        list?.createdBy
-          ?.toLocaleLowerCase()
-          .includes(isSearch?.toLocaleLowerCase())
-    );
-    return dataList?.procedureIds?.length > 0
-      ? result
-      : dataList?.procedureIds
-      ? dataList?.procedureIds
-      : [];
-  }, [dataList?.procedureIds, isSearch]);
   return (
     <Flex
       className={styles.overAll}
@@ -442,6 +469,7 @@ const ProceduresScreen = () => {
       />
 
       <Table
+        fixedHeight={window.innerHeight - 435}
         rowPointer
         pagination
         onPageChange={handlePage}

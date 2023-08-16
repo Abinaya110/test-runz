@@ -120,12 +120,12 @@ const Status = ({ value, row }: any) => {
     }
   };
 
-  let status = "Not started";
-  let backgroundColor = success;
+  let status = "";
+  let backgroundColor;
   if (value === "not started") {
     status = "Not started";
     backgroundColor = error;
-  } else if (value === "completed") {
+  } else if (value === "success") {
     status = "Completed";
     backgroundColor = success;
   } else if (value === "opened") {
@@ -189,7 +189,7 @@ const Status = ({ value, row }: any) => {
           </Text>
           <Text
             onClick={() => {
-              handleUpdate("completed");
+              handleUpdate("success");
               setOpen(false);
             }}
             style={{ padding: 8, borderBottom: "1px solid" }}
@@ -249,6 +249,12 @@ const RunzScreen = () => {
     }
   );
 
+  const [isData, setData] = useState<any>(runzListdata);
+
+  useEffect(() => {
+    setData(runzListdata);
+  }, [runzListdata]);
+
   const formikFilter = useFormik({
     initialValues: initialValuesFilter,
     onSubmit: () => {},
@@ -259,7 +265,14 @@ const RunzScreen = () => {
       title: "",
       dataIndex: "testobjective",
       key: "testobjective",
-      renderTitle: () => <RunzDetailsHeader formikFilter={formikFilter} />,
+      renderTitle: () => (
+        <RunzDetailsHeader
+          isData={isData}
+          setData={setData}
+          data={runzListdata}
+          formikFilter={formikFilter}
+        />
+      ),
       flex: 5,
       rowOnClick: (row: any) => {
         navigate(
@@ -281,8 +294,15 @@ const RunzScreen = () => {
       title: "",
       dataIndex: "createdAt",
       key: "createdAt",
-      flex: 1.6,
-      renderTitle: () => <RunzCreatedOnHeader formikFilter={formikFilter} />,
+      flex: 2,
+      renderTitle: () => (
+        <RunzCreatedOnHeader
+          isData={isData}
+          setData={setData}
+          data={runzListdata}
+          formikFilter={formikFilter}
+        />
+      ),
       align: "center",
       rowOnClick: (row: any) => {
         navigate(
@@ -291,7 +311,7 @@ const RunzScreen = () => {
       },
       render: (value: string) => (
         <Text align="center" transform="capitalize" type="bodyBold">
-          {moment(value).format("DD/MM/YYYY")}
+          {moment(value).format("DD/MM/YYYY hh:mm A")}
         </Text>
       ),
     },
@@ -300,7 +320,14 @@ const RunzScreen = () => {
       dataIndex: "dueDate",
       key: "dueDate",
       flex: 1.6,
-      renderTitle: () => <RunzDueDateHeader formikFilter={formikFilter} />,
+      renderTitle: () => (
+        <RunzDueDateHeader
+          isData={isData}
+          setData={setData}
+          data={runzListdata}
+          formikFilter={formikFilter}
+        />
+      ),
       align: "center",
       rowOnClick: (row: any) => {
         navigate(
@@ -318,7 +345,14 @@ const RunzScreen = () => {
       dataIndex: "status",
       key: "status",
       flex: 1.6,
-      renderTitle: () => <RunzStatusHeader formikFilter={formikFilter} />,
+      renderTitle: () => (
+        <RunzStatusHeader
+          isData={isData}
+          setData={setData}
+          data={runzListdata}
+          formikFilter={formikFilter}
+        />
+      ),
       align: "center",
       render: (value: string, row: any) => (
         <Status value={value} row={row} formikFilter={formikFilter} />
@@ -329,7 +363,14 @@ const RunzScreen = () => {
       dataIndex: "createdBy",
       key: "createdBy",
       flex: 1.6,
-      renderTitle: () => <RunzAssignedHeader formikFilter={formikFilter} />,
+      renderTitle: () => (
+        <RunzAssignedHeader
+          isData={isData}
+          setData={setData}
+          data={runzListdata}
+          formikFilter={formikFilter}
+        />
+      ),
       align: "center",
       rowOnClick: (row: any) => {
         navigate(
@@ -587,6 +628,7 @@ const RunzScreen = () => {
         description="Are you sure you want to delete the runs?"
       />
       <Table
+        fixedHeight={window.innerHeight - 435}
         rowPointer
         onPageChange={handlePage}
         currentPage={currentPage}
@@ -599,7 +641,7 @@ const RunzScreen = () => {
         )}
         rowSelection={handleSelections}
         rowSelectionAll={handleAllSelections}
-        dataSource={runzListdata ? runzListdata : []}
+        dataSource={isData}
         columns={columns}
         rowUnSelectAll={handleAllUnSelections}
         rowDeleteAction={handleDeleteOpen}

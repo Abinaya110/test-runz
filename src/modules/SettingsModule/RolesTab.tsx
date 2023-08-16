@@ -300,154 +300,156 @@ const RolesTab = () => {
           </Flex>
         </Flex>
 
-        <Flex marginTop={20} marginBottom={20} row center flex={1}>
-          <Flex flex={7.5}>
-            <Text type="button-3">Procedure</Text>
-            <Text style={{ marginTop: 4 }} type="bodyMedium" color="shade-2">
-              Control the actions of users under procedure section.
-            </Text>
-          </Flex>
-          <Flex flex={1.5}>
-            <></>
-          </Flex>
-          <Flex flex={1.5}>
-            <></>
-          </Flex>
-          <Flex flex={1.5}>
-            <></>
-          </Flex>
-        </Flex>
-        {procedureList.map((list) => {
-          return (
-            <Flex
-              key={list.title}
-              row
-              center
-              flex={1}
-              className={styles.procedureListFlex}
-            >
-              <Flex flex={7.5}>
-                <Text type="bodyMedium" color="shade-2">
-                  {list.title}
-                </Text>
-              </Flex>
-              <Flex flex={1.5} center>
-                <InputRadio
-                  checked={list.isAdmin}
-                  onClick={() =>
-                    handleUpdate(
-                      list,
-                      "admin",
-                      list.isAdmin ? false : true,
-                      "procedure"
-                    )
-                  }
-                />
-              </Flex>
-              <Flex flex={1.5} center>
-                <InputRadio
-                  checked={list.isRequest}
-                  onClick={() =>
-                    handleUpdate(
-                      list,
-                      "request",
-                      list.isRequest ? false : true,
-                      "procedure"
-                    )
-                  }
-                />
-              </Flex>
-
-              <Flex flex={1.5} center>
-                <InputRadio
-                  checked={list.isTest}
-                  onClick={() =>
-                    handleUpdate(
-                      list,
-                      "test",
-                      list.isTest ? false : true,
-                      "procedure"
-                    )
-                  }
-                />
-              </Flex>
+        <Flex className={styles.overFlow} height={window.innerHeight - 425}>
+          <Flex marginTop={20} marginBottom={20} row center flex={1}>
+            <Flex flex={7.5}>
+              <Text type="button-3">Procedure</Text>
+              <Text style={{ marginTop: 4 }} type="bodyMedium" color="shade-2">
+                Control the actions of users under procedure section.
+              </Text>
             </Flex>
-          );
-        })}
-        <Flex marginTop={20} marginBottom={20} row center flex={1}>
-          <Flex flex={7.5}>
-            <Text type="button-3">Profile</Text>
-            <Text style={{ marginTop: 4 }} type="bodyMedium" color="shade-2">
-              Control the actions of users under profile section.
-            </Text>
-          </Flex>
-          <Flex flex={1.5}>
-            <></>
-          </Flex>
-          <Flex flex={1.5}>
-            <></>
-          </Flex>
-          <Flex flex={1.5}>
-            <></>
-          </Flex>
-        </Flex>
-        {profileList.map((list) => {
-          return (
-            <Flex
-              key={list.title}
-              row
-              center
-              flex={1}
-              className={styles.procedureListFlex}
-            >
-              <Flex flex={7.5}>
-                <Text type="bodyMedium" color="shade-2">
-                  {list.title}
-                </Text>
-              </Flex>
-              <Flex flex={1.5} center>
-                <InputRadio
-                  checked={list.isAdmin}
-                  onClick={() =>
-                    handleUpdate(
-                      list,
-                      "admin",
-                      list.isAdmin ? false : true,
-                      "profile"
-                    )
-                  }
-                />
-              </Flex>
-              <Flex flex={1.5} center>
-                <InputRadio
-                  checked={list.isRequest}
-                  onClick={() =>
-                    handleUpdate(
-                      list,
-                      "request",
-                      list.isRequest ? false : true,
-                      "profile"
-                    )
-                  }
-                />
-              </Flex>
-
-              <Flex flex={1.5} center>
-                <InputRadio
-                  checked={list.isTest}
-                  onClick={() =>
-                    handleUpdate(
-                      list,
-                      "test",
-                      list.isTest ? false : true,
-                      "profile"
-                    )
-                  }
-                />
-              </Flex>
+            <Flex flex={1.5}>
+              <></>
             </Flex>
-          );
-        })}
+            <Flex flex={1.5}>
+              <></>
+            </Flex>
+            <Flex flex={1.5}>
+              <></>
+            </Flex>
+          </Flex>
+          {procedureList.map((list) => {
+            return (
+              <Flex
+                key={list.title}
+                row
+                center
+                flex={1}
+                className={styles.procedureListFlex}
+              >
+                <Flex flex={7.5}>
+                  <Text type="bodyMedium" color="shade-2">
+                    {list.title}
+                  </Text>
+                </Flex>
+                <Flex flex={1.5} center>
+                  <InputRadio
+                    checked={list.isAdmin}
+                    onClick={() =>
+                      handleUpdate(
+                        list,
+                        "admin",
+                        list.isAdmin ? false : true,
+                        "procedure"
+                      )
+                    }
+                  />
+                </Flex>
+                <Flex flex={1.5} center>
+                  <InputRadio
+                    checked={list.isRequest}
+                    onClick={() =>
+                      handleUpdate(
+                        list,
+                        "request",
+                        list.isRequest ? false : true,
+                        "procedure"
+                      )
+                    }
+                  />
+                </Flex>
+
+                <Flex flex={1.5} center>
+                  <InputRadio
+                    checked={list.isTest}
+                    onClick={() =>
+                      handleUpdate(
+                        list,
+                        "test",
+                        list.isTest ? false : true,
+                        "procedure"
+                      )
+                    }
+                  />
+                </Flex>
+              </Flex>
+            );
+          })}
+          <Flex marginTop={20} marginBottom={20} row center flex={1}>
+            <Flex flex={7.5}>
+              <Text type="button-3">Profile</Text>
+              <Text style={{ marginTop: 4 }} type="bodyMedium" color="shade-2">
+                Control the actions of users under profile section.
+              </Text>
+            </Flex>
+            <Flex flex={1.5}>
+              <></>
+            </Flex>
+            <Flex flex={1.5}>
+              <></>
+            </Flex>
+            <Flex flex={1.5}>
+              <></>
+            </Flex>
+          </Flex>
+          {profileList.map((list) => {
+            return (
+              <Flex
+                key={list.title}
+                row
+                center
+                flex={1}
+                className={styles.procedureListFlex}
+              >
+                <Flex flex={7.5}>
+                  <Text type="bodyMedium" color="shade-2">
+                    {list.title}
+                  </Text>
+                </Flex>
+                <Flex flex={1.5} center>
+                  <InputRadio
+                    checked={list.isAdmin}
+                    onClick={() =>
+                      handleUpdate(
+                        list,
+                        "admin",
+                        list.isAdmin ? false : true,
+                        "profile"
+                      )
+                    }
+                  />
+                </Flex>
+                <Flex flex={1.5} center>
+                  <InputRadio
+                    checked={list.isRequest}
+                    onClick={() =>
+                      handleUpdate(
+                        list,
+                        "request",
+                        list.isRequest ? false : true,
+                        "profile"
+                      )
+                    }
+                  />
+                </Flex>
+
+                <Flex flex={1.5} center>
+                  <InputRadio
+                    checked={list.isTest}
+                    onClick={() =>
+                      handleUpdate(
+                        list,
+                        "test",
+                        list.isTest ? false : true,
+                        "profile"
+                      )
+                    }
+                  />
+                </Flex>
+              </Flex>
+            );
+          })}
+        </Flex>
       </Flex>
 
       <Flex end className={styles.footer}>

@@ -124,7 +124,7 @@ const SettingsScreen = () => {
           })}
         </Flex>
 
-        <Flex className={styles.rightOverall}>
+        <Flex className={styles.rightOverall} height={window.innerHeight - 82}>
           {getType === "notification" && <NotificationTab />}
           {getType === "profile" && <ProfileTab />}
           {getType === "user" && <UserTab />}

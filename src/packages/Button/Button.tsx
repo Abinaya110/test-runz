@@ -21,6 +21,7 @@ type Props = {
   height?: "small" | "medium" | "large";
   textColors?: textColorsType;
   ref?: any;
+  title?: string;
 };
 
 const Button = ({
@@ -37,6 +38,7 @@ const Button = ({
   height,
   textColors,
   ref,
+  title,
 }: Props) => {
   const buttonClassName = cx(
     {
@@ -60,6 +62,7 @@ const Button = ({
 
   return (
     <button
+      title={title}
       ref={ref}
       id={id}
       type={type}

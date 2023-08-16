@@ -1,5 +1,5 @@
 import { FormikProps } from "formik";
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import LableWithIcon from "../../common/LableWithIcon";
 import SvgSort from "../../icons/SvgSort";
 import Flex from "../../packages/Flex/Flex";
@@ -9,16 +9,26 @@ import { MoreInfoList } from "../MyPageModule/store/mypage.types";
 import { filterFormType } from "./ProceduresScreen";
 import styles from "./procedurecustomheader.module.css";
 import { Procedures } from "./store/procedures.types";
+import moment from "moment";
+import Button from "../../packages/Button/Button";
 
 export const ProcedureHeader = ({
   moreInfoList,
   formik,
   dataList,
+  setData,
+  isData,
+  data,
 }: {
   moreInfoList: MoreInfoList[];
   formik: FormikProps<filterFormType>;
   dataList: Procedures;
+  setData: (a: any) => void;
+  isData: any;
+  data: any;
 }) => {
+  const [isFilter, setFilter] = useState("");
+
   const getDepartmentOption: any = useMemo(() => {
     const result = moreInfoList.filter(
       (list) => list._id === dataList?.organization
@@ -29,13 +39,47 @@ export const ProcedureHeader = ({
   const getIdOptions: any = dataList?.procedureIds?.map((list) => {
     return { label: list.id, value: list.id };
   });
+
+  const sortByNameAscending = () => {
+    setFilter("Ascending");
+    const sortedData = [...isData].sort((a, b) =>
+      a.title.localeCompare(b.title)
+    );
+    setData(sortedData);
+  };
+
+  const sortByNameDescending = () => {
+    setFilter("Descending");
+    const sortedData = [...isData].sort((a, b) =>
+      b.title.localeCompare(a.title)
+    );
+    setData(sortedData);
+  };
+
   return (
     <Flex flex={1}>
       <LableWithIcon
         type="bodyBold"
         color="shade-3"
         label="Runz details"
-        actionRight={() => <SvgSort />}
+        actionRight={() => (
+          <Button
+            title={isFilter}
+            onClick={() => {
+              if (isFilter === "") {
+                sortByNameAscending();
+              } else if (isFilter === "Ascending") {
+                sortByNameDescending();
+              } else if (isFilter === "Descending") {
+                setFilter("");
+                setData(data);
+              }
+            }}
+            types="link"
+          >
+            <SvgSort />
+          </Button>
+        )}
         containerClassName={styles.sortTitleFlex}
       />
 
@@ -106,9 +150,37 @@ export const ProcedureHeader = ({
 
 export const CreatedOnHeader = ({
   formik,
+  setData,
+  isData,
+  data,
 }: {
   formik: FormikProps<filterFormType>;
+  setData: (a: any) => void;
+  isData: any;
+  data: any;
 }) => {
+  const [isFilter, setFilter] = useState("");
+
+  const sortByNameAscending = () => {
+    setFilter("Ascending");
+    const sortedData = [...isData].sort((a, b) =>
+      moment(a.createdOn)
+        .format("DD/MM/YYYY hh:mm A")
+        .localeCompare(moment(b.createdOn).format("DD/MM/YYYY hh:mm A"))
+    );
+    setData(sortedData);
+  };
+
+  const sortByNameDescending = () => {
+    setFilter("Descending");
+    const sortedData = [...isData].sort((a, b) =>
+      moment(b.createdOn)
+        .format("DD/MM/YYYY hh:mm A")
+        .localeCompare(moment(a.createdOn).format("DD/MM/YYYY hh:mm A"))
+    );
+    setData(sortedData);
+  };
+
   return (
     <Flex flex={1}>
       <LableWithIcon
@@ -116,7 +188,24 @@ export const CreatedOnHeader = ({
         label="Created on"
         type="bodyBold"
         color="shade-3"
-        actionRight={() => <SvgSort />}
+        actionRight={() => (
+          <Button
+            title={isFilter}
+            onClick={() => {
+              if (isFilter === "") {
+                sortByNameAscending();
+              } else if (isFilter === "Ascending") {
+                sortByNameDescending();
+              } else if (isFilter === "Descending") {
+                setFilter("");
+                setData(data);
+              }
+            }}
+            types="link"
+          >
+            <SvgSort />
+          </Button>
+        )}
       />
 
       <Flex flex={1}>
@@ -136,10 +225,18 @@ export const CreatedOnHeader = ({
 export const CreatedByHeader = ({
   formik,
   dataList,
+  setData,
+  isData,
+  data,
 }: {
   formik: FormikProps<filterFormType>;
   dataList: Procedures;
+  setData: (a: any) => void;
+  isData: any;
+  data: any;
 }) => {
+  const [isFilter, setFilter] = useState("");
+
   const getNameOptions: any = dataList?.procedureIds?.map((list) => {
     return { label: list.createdBy, value: list.createdBy };
   });
@@ -154,6 +251,21 @@ export const CreatedByHeader = ({
     }
   );
 
+  const sortByNameAscending = () => {
+    setFilter("Ascending");
+    const sortedData = [...isData].sort((a, b) =>
+      a.createdBy.localeCompare(b.createdBy)
+    );
+    setData(sortedData);
+  };
+
+  const sortByNameDescending = () => {
+    setFilter("Descending");
+    const sortedData = [...isData].sort((a, b) =>
+      b.createdBy.localeCompare(a.createdBy)
+    );
+    setData(sortedData);
+  };
   return (
     <Flex flex={1}>
       <LableWithIcon
@@ -161,7 +273,24 @@ export const CreatedByHeader = ({
         label="Created By"
         type="bodyBold"
         color="shade-3"
-        actionRight={() => <SvgSort />}
+        actionRight={() => (
+          <Button
+            title={isFilter}
+            onClick={() => {
+              if (isFilter === "") {
+                sortByNameAscending();
+              } else if (isFilter === "Ascending") {
+                sortByNameDescending();
+              } else if (isFilter === "Descending") {
+                setFilter("");
+                setData(data);
+              }
+            }}
+            types="link"
+          >
+            <SvgSort />
+          </Button>
+        )}
       />
       <Flex flex={1}>
         <SelectTag
