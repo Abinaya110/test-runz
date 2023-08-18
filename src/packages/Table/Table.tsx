@@ -165,6 +165,7 @@ const Table = ({
         {pagination && (
           <div className={styles.pagination}>
             <Pagination
+              totalItems={totalRows}
               currentPage={currentPage}
               totalPages={totalPages}
               onPageChange={onPageChange}

@@ -14,12 +14,14 @@ type Props = {
   currentPage: number;
   totalPages: number;
   onPageChange: (a: any) => void;
+  totalItems: number;
 };
 const Pagination = ({
   currentPage,
   totalPages,
   onPageChange,
   maxPages,
+  totalItems,
 }: Props) => {
   // Calculate the range of page numbers to display
   const range = [];
@@ -102,6 +104,8 @@ const Pagination = ({
   const rangeStart = currentPage;
   const rangeEnd = currentPage * pageSize;
 
+  const endItem = Math.min(currentPage * pageSize, totalItems);
+
   if (totalPages === 0) {
     return <></>;
   }
@@ -109,7 +113,7 @@ const Pagination = ({
     <Flex row center between>
       <Flex>
         <Text type="captionBold" color="shade-3">
-          Showing {rangeStart} - {rangeEnd} out of {totalPages}
+          Showing {rangeStart} - {endItem} out of {totalPages}
         </Text>
       </Flex>
       <Flex row center>
