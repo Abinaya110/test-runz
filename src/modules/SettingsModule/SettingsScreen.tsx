@@ -49,8 +49,8 @@ const SettingsScreen = () => {
     );
 
   useEffect(() => {
-    if (!isEmpty(moreInfoData?.organization?._id)) {
-      dispatch(getSettingMiddleWare({ id: moreInfoData?.organization?._id }));
+    if (!isEmpty(moreInfoData?.organization)) {
+      dispatch(getSettingMiddleWare({ id: moreInfoData?.organization }));
     }
   }, [moreInfoData?.organization]);
 

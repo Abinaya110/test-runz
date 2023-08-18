@@ -10,7 +10,6 @@ import {
   getSettingMiddleWare,
   updateSettingMiddleWare,
 } from "./store/settingsMiddleware";
-import Button from "../../packages/Button/Button";
 import { NOTIFICATION_LIST } from "./mock";
 
 const NotificationTab = () => {
@@ -61,12 +60,13 @@ const NotificationTab = () => {
       }
     });
     setCardDetails(updated);
+    handleSave();
   };
 
   const handleSave = () => {
     dispatch(
       updateSettingMiddleWare({
-        id: moreInfoData?.organization?._id,
+        id: moreInfoData?.organization,
         notification: {
           procdure: {
             notification: cardDetails[0].isNotifyActive,
@@ -83,9 +83,10 @@ const NotificationTab = () => {
         },
       })
     ).then(() => {
-      dispatch(getSettingMiddleWare({ id: moreInfoData?.organization?._id }));
+      dispatch(getSettingMiddleWare({ id: moreInfoData?.organization }));
     });
   };
+
   return (
     <Flex between flex={1}>
       <Flex>
@@ -151,9 +152,6 @@ const NotificationTab = () => {
             </Flex>
           );
         })}
-      </Flex>
-      <Flex end className={styles.btnContainer}>
-        <Button onClick={handleSave}>Save</Button>
       </Flex>
     </Flex>
   );

@@ -441,7 +441,7 @@ const ProceduresScreen = () => {
           setDeleteModal(false);
         }}
         isLoader={isLoader}
-        description="Are you sure you want to delete the runs?"
+        description="Are you sure you want to delete the procedure?"
       />
 
       <YesOrNo

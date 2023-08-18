@@ -29,6 +29,8 @@ import {
   getUserListUpdateMiddleWare,
 } from "./store/settingsMiddleware";
 import styles from "./userstab.module.css";
+import SvgCancel from "../../icons/SvgCancel";
+import { areAllValuesEmpty } from "../../utils/helpers";
 
 export type formType = {
   firstName: string;
@@ -237,6 +239,7 @@ const UserTab = () => {
   const [createNew, setCreateNew] = useState(false);
   const [isLoader, setLoader] = useState(false);
   const [isSearch, setSearch] = useState("");
+  const [isPermission, setPermission] = useState(false);
 
   const { data, moreInfoList } = useSelector(
     ({ getUserListReducers, moreInfoListReducers }: RootState) => {
@@ -580,6 +583,31 @@ const UserTab = () => {
   return (
     <Flex>
       <YesOrNo
+        noBtnTitle="No"
+        yesBtnTitle="Yes"
+        title="Notice"
+        icon={<SvgCancel />}
+        open={isPermission}
+        yesClick={() => {
+          setPermission(false);
+          formik.resetForm();
+          setCreateNew(false);
+        }}
+        noClick={() => {
+          setPermission(false);
+        }}
+        description={
+          <Flex>
+            <Text align="center" type="bodyBold" color="shade-2">
+              Are you sure you want to close?
+            </Text>
+            <Text align="center" type="captionBold" color="shade-3">
+              The changes wil not be saved
+            </Text>
+          </Flex>
+        }
+      />
+      <YesOrNo
         title="Confirmation"
         icon={<SvgDelete1 />}
         open={deleteModal}
@@ -595,8 +623,12 @@ const UserTab = () => {
         open={createNew}
         submit={formik.handleSubmit}
         cancel={() => {
-          formik.resetForm();
-          setCreateNew(false);
+          if (areAllValuesEmpty(formik.values)) {
+            formik.resetForm();
+            setCreateNew(false);
+          } else {
+            setPermission(true);
+          }
         }}
         formik={formik}
         getDepartmentOption={getDepartmentOption}

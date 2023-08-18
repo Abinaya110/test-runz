@@ -85,3 +85,20 @@ export function isEmptyObject(obj: any) {
   }
   return true;
 }
+
+export function areAllValuesEmpty(obj: any) {
+  for (const key in obj) {
+    if (obj.hasOwnProperty(key)) {
+      const value = obj[key];
+
+      if (typeof value === "string" && value.trim() !== "") {
+        return false;
+      } else if (typeof value === "object") {
+        if (!areAllValuesEmpty(value)) {
+          return false;
+        }
+      }
+    }
+  }
+  return true;
+}

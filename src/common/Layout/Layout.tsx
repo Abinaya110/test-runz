@@ -165,7 +165,7 @@ const Layout = ({ children }: Props) => {
             })
           ).then(() => {
             setEdit(true);
-            setDrawer(false);
+            // setDrawer(false);
             dispatch(moreInfoUserMiddleWare());
           });
           dispatch(
@@ -198,7 +198,7 @@ const Layout = ({ children }: Props) => {
         })
       ).then(() => {
         setEdit(true);
-        setDrawer(false);
+        // setDrawer(false);
         dispatch(moreInfoUserMiddleWare());
       });
       dispatch(
@@ -411,7 +411,9 @@ const Layout = ({ children }: Props) => {
                     <SvgBell />
                   </Button>
 
-                  <Text className={styles.svgQuestion}>{data?.name}</Text>
+                  <Text className={styles.svgQuestion}>
+                    {data?.firstname} {data.lastname}
+                  </Text>
                   <Button
                     onClick={() => setDrawer(true)}
                     className={styles.svgProfile}
