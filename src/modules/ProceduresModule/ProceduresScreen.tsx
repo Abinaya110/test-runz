@@ -469,7 +469,7 @@ const ProceduresScreen = () => {
       />
 
       <Table
-        fixedHeight={window.innerHeight - 435}
+        // fixedHeight={window.innerHeight - 435}
         rowPointer
         pagination
         onPageChange={handlePage}
