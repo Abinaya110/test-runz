@@ -327,9 +327,10 @@ const ProceduresScreen = () => {
           formikHelpers.resetForm();
           setCreateProcedure(false);
           Alert("Procedure created successfully.");
-          navigate(
-            `${routes.PROCEDURE_EDIT}?id=${res.payload?.createdProcedure}`
-          );
+          // navigate(
+          //   `${routes.PROCEDURE_EDIT}?id=${res.payload?.createdProcedure}`
+          // );
+          dispatch(procedureMiddleWare({}));
         }
         setLoader(false);
       })
