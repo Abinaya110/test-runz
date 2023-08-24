@@ -99,7 +99,7 @@ const ProceduresEditScreen = () => {
   const resultLab = myLabArray?.join(",");
 
   return (
-    <Flex id="idOfYourDiv" height={window.innerHeight - HEADER_HEIGHT}>
+    <Flex id="idOfYourDiv">
       {(procedureByIDisLoading || isLoader) && <Loader />}
       <CreateOrEditProcedure
         formik={formik}
@@ -139,44 +139,49 @@ const ProceduresEditScreen = () => {
             />
           </Button>
         </Flex>
-        <Flex row className={styles.dateFlex}>
-          <Flex className={styles.createFlex}>
-            <Text
-              className={styles.createText}
-              type="captionBold"
-              color="shade-3"
-            >
-              Created by
-            </Text>
-            <Text type="button-3" color="shade-3">
-              {procedureByIDData?.procedure?.createdBy}
-            </Text>
+        <Flex height={window.innerHeight - 268} className={styles.scroll}>
+          <Flex row className={styles.dateFlex}>
+            <Flex className={styles.createFlex}>
+              <Text
+                className={styles.createText}
+                type="captionBold"
+                color="shade-3"
+              >
+                Created by
+              </Text>
+              <Text type="button-3" color="shade-3">
+                {procedureByIDData?.procedure?.createdBy}
+              </Text>
+            </Flex>
+            <Flex>
+              <Text
+                className={styles.createText}
+                type="captionBold"
+                color="shade-3"
+              >
+                Created on
+              </Text>
+              <Text type="button-3" color="shade-3">
+                {moment(procedureByIDData?.procedure?.createdAt).format(
+                  "DD/MM/YYYY (ddd)"
+                )}
+              </Text>
+            </Flex>
           </Flex>
-          <Flex>
-            <Text
-              className={styles.createText}
-              type="captionBold"
-              color="shade-3"
-            >
-              Created on
-            </Text>
-            <Text type="button-3" color="shade-3">
-              {moment(procedureByIDData?.procedure?.createdAt).format(
-                "DD/MM/YYYY (ddd)"
-              )}
-            </Text>
-          </Flex>
+          <Text className={styles.fullText} type="captionBold">
+            Full procedure
+          </Text>
+          <div>
+            <ProceduresRichText
+              value={formik.values.html}
+              onEditorChange={(event: any) =>
+                formik.setFieldValue("html", event)
+              }
+            />
+          </div>
         </Flex>
-        <Text className={styles.fullText} type="captionBold">
-          Full procedure
-        </Text>
-        <div>
-          <ProceduresRichText
-            value={formik.values.html}
-            onEditorChange={(event: any) => formik.setFieldValue("html", event)}
-          />
-        </div>
       </Flex>
+
       <Flex row center between className={styles.footerContainer}>
         <Button onClick={() => navigate(routes.PROCEDURES)} types="tertiary-1">
           Back
