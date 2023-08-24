@@ -270,11 +270,15 @@ const ProfileDrawer = ({
             <Text type="captionBold" size={14}>
               Labs assigned
             </Text>
-            <Flex row>
-              {formik.values?.lab?.map((list: any) => {
-                return <Text className={styles.labsAssign}>{list.label}</Text>;
-              })}
-            </Flex>
+            {Array.isArray(formik.values?.lab) && (
+              <Flex row>
+                {formik.values?.lab?.map((list: any) => {
+                  return (
+                    <Text className={styles.labsAssign}>{list.label}</Text>
+                  );
+                })}
+              </Flex>
+            )}
           </Flex>
         }
         <Flex end marginTop={20}>
