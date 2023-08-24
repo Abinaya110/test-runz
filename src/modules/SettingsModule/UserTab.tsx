@@ -642,7 +642,7 @@ const UserTab = () => {
       />
       <Flex className={styles.tableOverall}>
         <Table
-          fixedHeight={window.innerHeight - 485}
+          // fixedHeight={window.innerHeight - 485}
           onPageChange={handlePage}
           currentPage={currentPage}
           hideActions={selectedRows.length === 0}

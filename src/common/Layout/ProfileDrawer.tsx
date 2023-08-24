@@ -265,6 +265,18 @@ const ProfileDrawer = ({
             />
           </Flex>
         </Flex>
+        {
+          <Flex marginTop={30}>
+            <Text type="captionBold" size={14}>
+              Labs assigned
+            </Text>
+            <Flex row>
+              {formik.values?.lab?.map((list: any) => {
+                return <Text className={styles.labsAssign}>{list.label}</Text>;
+              })}
+            </Flex>
+          </Flex>
+        }
         <Flex end marginTop={20}>
           <Button disabled={isEdit} onClick={formik.handleSubmit}>
             Save
