@@ -61,7 +61,7 @@ export const ProcedureHeader = ({
       <LableWithIcon
         type="bodyBold"
         color="shade-3"
-        label="Runz details"
+        label="Procedure details"
         actionRight={() => (
           <Button
             title={isFilter}
