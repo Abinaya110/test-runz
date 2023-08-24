@@ -70,8 +70,6 @@ const LoginScreen = () => {
           localStorage.setItem(AUTH_TOKEN, res.user?._delegate?.accessToken);
           if (!isEmpty(formik.values.remember)) {
             localStorage.setItem(REMEMBER_ME, JSON.stringify(formik.values));
-          } else {
-            localStorage.removeItem(REMEMBER_ME);
           }
           setTimeout(() => {
             store
