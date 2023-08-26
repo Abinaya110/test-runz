@@ -632,7 +632,7 @@ const RunzEditScreen = () => {
             <Flex row center between className={styles.footer}>
               <Button types="tertiary-1">Back</Button>
               <Flex row center>
-                <SvgPrint />
+                {/* <SvgPrint /> */}
                 <Button onClick={handleSave} style={{ marginLeft: 8 }}>
                   Save
                 </Button>
