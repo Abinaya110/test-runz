@@ -12,15 +12,24 @@ import HelpAndTerms from "./HelpAndTerms";
 import { isEmpty, isValidEmail } from "../../utils/validators";
 import { useVisibilityIcon } from "../../utils/helpers";
 import { AUTH_TOKEN, REMEMBER_ME } from "../../utils/localStoreConst";
-import { auth } from "../../utils/firebase";
+import { auth, microProvider, provider } from "../../utils/firebase";
 import { useEffect, useState } from "react";
 import Loader from "../../packages/Loader/Loader";
 import { setAuthorization } from "../../utils/apiConfig";
 import Alert from "../../packages/Alert/Alert";
-import store from "../../redux/store";
-import { authMeMiddleWare } from "./store/loginMiddleware";
+import store, { AppDispatch } from "../../redux/store";
+import {
+  authMeMiddleWare,
+  googleLoginMiddleWare,
+  microsoftLoginMiddleWare,
+} from "./store/loginMiddleware";
 import { moreInfoUserMiddleWare } from "../MyPageModule/store/mypageMiddleware";
 import axios from "axios";
+import GoogleSignIn from "../../packages/GoogleSignIn/GoogleSignIn";
+import MicrosoftSignIn from "../../packages/MicrosoftSignIn/MicrosoftSignIn";
+import Toast from "../../packages/Toast/Toast";
+import { getAuth, signInWithPopup } from "firebase/auth";
+import { useDispatch } from "react-redux";
 
 type formType = {
   email: string;
@@ -50,10 +59,10 @@ const validate = (values: formType) => {
 const LoginScreen = () => {
   const navigate = useNavigate();
   const [isLoader, setLoader] = useState(false);
-
   const { visibleIcon, isVisible } = useVisibilityIcon();
   const handleSignUp = () => navigate(routes.SIGNUP);
   const handleForgot = () => navigate(routes.FORGOT_PASSWORD);
+  const dispatch: AppDispatch = useDispatch();
 
   const handleSubmit = (
     values: formType,
@@ -122,6 +131,105 @@ const LoginScreen = () => {
       formik.setFieldValue("password", getRember.password);
     }
   }, []);
+
+  const handlerGoogleSignIn = (e: any) => {
+    e.preventDefault();
+    auth
+      .signInWithPopup(provider)
+      .then((result: any) => {
+        setLoader(true);
+        dispatch(
+          googleLoginMiddleWare({
+            email: result.user?._delegate?.email,
+            name: result.user?._delegate?.displayName,
+            uid: result.user?._delegate?.uid,
+            timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+          })
+        )
+          .then((res: any) => {
+            if (res?.payload?.success) {
+              axios.defaults.headers.common["Authorization"] =
+                "Bearer " + result.user?._delegate?.accessToken;
+              setAuthorization(result.user?._delegate?.accessToken);
+              Toast("Google account logged successfully.");
+              localStorage.setItem(
+                AUTH_TOKEN,
+                result.user?._delegate?.accessToken
+              );
+              setTimeout(() => {
+                dispatch(authMeMiddleWare())
+                  .then(() => {
+                    dispatch(moreInfoUserMiddleWare())
+                      .then(() => {
+                        setLoader(false);
+                        navigate(routes.MY_PAGE);
+                      })
+                      .catch(() => setLoader(false));
+                  })
+                  .catch(() => setLoader(false));
+              }, 1000);
+            } else {
+              Toast(res.payload.error, "LONG", "error");
+              setLoader(false);
+            }
+          })
+          .catch(() => setLoader(false));
+      })
+      .then((error: any) => {
+        if (error?.code === "auth/popup-closed-by-user") {
+          console.log("Authentication popup closed by user.");
+          // Display a message to the user or handle the cancellation gracefully.
+        } else {
+          console?.error("Authentication failed:", error);
+        }
+      });
+  };
+
+  const handlerMicroSoftSignIn = (e: any) => {
+    e.preventDefault();
+    const auth = getAuth();
+    signInWithPopup(auth, microProvider)
+      .then((result: any) => {
+        setLoader(true);
+        dispatch(
+          microsoftLoginMiddleWare({
+            email: result.user.email,
+            name: result.user.displayName,
+            uid: result.user.uid,
+            timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+          })
+        )
+          .then((res: any) => {
+            if (res?.payload?.success) {
+              axios.defaults.headers.common["Authorization"] =
+                "Bearer " + result.user.accessToken;
+              setAuthorization(result.user.accessToken);
+              Toast("Microsoft account logged successfully.");
+              localStorage.setItem(AUTH_TOKEN, result.user.accessToken);
+              setTimeout(() => {
+                dispatch(authMeMiddleWare())
+                  .then(() => {
+                    dispatch(moreInfoUserMiddleWare())
+                      .then(() => {
+                        setLoader(false);
+                        navigate(routes.MY_PAGE);
+                      })
+                      .catch(() => setLoader(false));
+                  })
+                  .catch(() => setLoader(false));
+              }, 1000);
+            } else {
+              Toast(res.payload.error, "LONG", "error");
+              setLoader(false);
+            }
+          })
+          .catch(() => setLoader(false));
+      })
+      .catch(() => {
+        setLoader(false);
+      });
+  };
+
   return (
     <>
       {isLoader && <Loader />}
@@ -131,6 +239,14 @@ const LoginScreen = () => {
             <Flex>
               <Text type={"h4"}>Welcome to</Text>
               <Text type={"h2"}>Test Runz</Text>
+              <Flex className={styles.signUpVia}>
+                <Text type="title" color={"tertiary-shade-2"}>
+                  Login up via
+                </Text>
+                <GoogleSignIn onClick={handlerGoogleSignIn} />
+                <MicrosoftSignIn onClick={handlerMicroSoftSignIn} />
+                {/* <LinkedinSignIn /> */}
+              </Flex>
             </Flex>
 
             <HelpAndTerms />
