@@ -9,13 +9,13 @@ const ProceduresRichText = ({ onEditorChange, value }) => {
       init={{
         selector: "textarea",
         menubar: true,
-        height: 600,
+        resize: false,
         image_advtab: true,
         image_title: true,
         automatic_uploads: true,
         file_picker_types: "image",
         table_advtab: "true",
-        content_style: `body { font-family:'Poppins-Medium'; font-size:14px;color:#1a1a1a }`,
+        content_style: `body { font-family:'Poppins-Medium'; font-size:14px;color:#1a1a1a}`,
 
         file_picker_callback: function (cb, value, meta) {
           var input = document.createElement("input");
@@ -86,6 +86,7 @@ const ProceduresRichText = ({ onEditorChange, value }) => {
         "undo redo | formatselect | styles | bold italic underline strikethrough | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image code table customInsertButton customDateButton template tiny_mce_wiris_formulaEditor tiny_mce_wiris_formulaEditorChemistry"
       }
       plugins={[
+        "autoresize",
         "advlist",
         "anchor",
         "autolink",
