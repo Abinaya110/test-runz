@@ -20,7 +20,7 @@ import { FormikHelpers, useFormik } from "formik";
 import YesOrNo from "../../common/YesOrNo";
 import SvgDelete1 from "../../icons/SvgDelete1";
 import Alert from "../../packages/Alert/Alert";
-import { error, success, white } from "../../theme/colors";
+import { error, primaryShade3, success, white } from "../../theme/colors";
 import SvgArrowDown from "../../icons/SvgArrowDown";
 import {
   authCreateMiddleWare,
@@ -202,10 +202,11 @@ const Status = ({ value, row, formikFilter }: any) => {
             flexDirection: "column",
             background: white,
             zIndex: 99,
-            border: "1px solid",
+            border: "1px solid #dfdfdf",
             borderRadius: 4,
             cursor: "pointer",
             right: 20,
+            width: 100,
           }}
         >
           <Text
@@ -213,7 +214,11 @@ const Status = ({ value, row, formikFilter }: any) => {
               handleUpdate(true);
               setOpen(false);
             }}
-            style={{ padding: 8, borderBottom: "1px solid" }}
+            style={{
+              padding: 8,
+              borderBottom: "1px solid #dfdfdf",
+              backgroundColor: value ? primaryShade3 : "transparent",
+            }}
           >
             Active
           </Text>
@@ -222,7 +227,10 @@ const Status = ({ value, row, formikFilter }: any) => {
               handleUpdate(false);
               setOpen(false);
             }}
-            style={{ padding: 8 }}
+            style={{
+              padding: 8,
+              backgroundColor: !value ? primaryShade3 : "transparent",
+            }}
           >
             InActive
           </Text>

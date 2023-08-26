@@ -36,7 +36,13 @@ import { getUserListMiddleWare } from "../SettingsModule/store/settingsMiddlewar
 import moment from "moment";
 import AddPeopleModal from "./AddPeopleModal";
 import SvgArrowDown from "../../icons/SvgArrowDown";
-import { error, primaryShade1, success, white } from "../../theme/colors";
+import {
+  error,
+  primaryShade1,
+  primaryShade3,
+  success,
+  white,
+} from "../../theme/colors";
 
 export type formType = {
   procedureName: any;
@@ -172,10 +178,12 @@ const Status = ({ value, row }: any) => {
             flexDirection: "column",
             background: white,
             zIndex: 99,
-            border: "1px solid",
+            border: "1px solid #dfdfdf",
             borderRadius: 4,
             cursor: "pointer",
             right: 20,
+            width: 100,
+            top: 30,
           }}
         >
           <Text
@@ -183,7 +191,12 @@ const Status = ({ value, row }: any) => {
               handleUpdate("not started");
               setOpen(false);
             }}
-            style={{ padding: 8, borderBottom: "1px solid" }}
+            style={{
+              padding: 8,
+              borderBottom: "1px solid #dfdfdf",
+              backgroundColor:
+                value === "not started" ? primaryShade3 : "transparent",
+            }}
           >
             Not started
           </Text>
@@ -192,7 +205,12 @@ const Status = ({ value, row }: any) => {
               handleUpdate("success");
               setOpen(false);
             }}
-            style={{ padding: 8, borderBottom: "1px solid" }}
+            style={{
+              padding: 8,
+              borderBottom: "1px solid #dfdfdf",
+              backgroundColor:
+                value === "success" ? primaryShade3 : "transparent",
+            }}
           >
             Completed
           </Text>
@@ -201,7 +219,11 @@ const Status = ({ value, row }: any) => {
               handleUpdate("opened");
               setOpen(false);
             }}
-            style={{ padding: 8 }}
+            style={{
+              padding: 8,
+              backgroundColor:
+                value === "opened" ? primaryShade3 : "transparent",
+            }}
           >
             Working
           </Text>
