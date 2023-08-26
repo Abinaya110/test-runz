@@ -6,8 +6,9 @@ import Text from "../Text/Text";
 
 type Props = {
   onClick: (a: any) => void;
+  isLogin?: boolean;
 };
-const MicrosoftSignIn = ({ onClick }: Props) => {
+const MicrosoftSignIn = ({ onClick, isLogin }: Props) => {
   return (
     <Button
       onClick={onClick}
@@ -17,7 +18,7 @@ const MicrosoftSignIn = ({ onClick }: Props) => {
       <Flex row center>
         <SvgMicrosoft />
         <Text type="bodyBold" className={styles.marginLeft}>
-          Sign up with Microsoft
+          {isLogin ? "Login" : "Sign up"} with Microsoft
         </Text>
       </Flex>
     </Button>

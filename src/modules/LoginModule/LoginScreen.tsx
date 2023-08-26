@@ -243,9 +243,8 @@ const LoginScreen = () => {
                 <Text type="title" color={"tertiary-shade-2"}>
                   Login up via
                 </Text>
-                <GoogleSignIn onClick={handlerGoogleSignIn} />
-                <MicrosoftSignIn onClick={handlerMicroSoftSignIn} />
-                {/* <LinkedinSignIn /> */}
+                <GoogleSignIn isLogin onClick={handlerGoogleSignIn} />
+                <MicrosoftSignIn isLogin onClick={handlerMicroSoftSignIn} />
               </Flex>
             </Flex>
 
