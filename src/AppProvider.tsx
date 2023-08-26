@@ -20,18 +20,22 @@ import { useInterceptors } from "./utils/interceptors";
 import { RootState } from "./redux/store";
 import Loader from "./packages/Loader/Loader";
 import { Fragment } from "react";
+import { ROLE_ADMIN } from "./utils/constants";
 
 const AppProvider = () => {
   useInterceptors();
 
-  const { authLoader, moreInfoUserLoader } = useSelector(
+  const { authLoader, moreInfoUserLoader, data } = useSelector(
     ({ authMeReducers, moreInfoUserReducers }: RootState) => {
       return {
         authLoader: authMeReducers.isLoading,
         moreInfoUserLoader: moreInfoUserReducers.isLoading,
+        data: authMeReducers.data,
       };
     }
   );
+
+  const roleAdmin = data.role === ROLE_ADMIN;
 
   return (
     <Fragment>
@@ -55,10 +59,14 @@ const AppProvider = () => {
                 path={routes.PROCEDURE_EDIT}
                 element={<ProceduresEditScreen />}
               />
-              <Route path={routes.PROJECTS} element={<ProjectsScreen />} />
-              <Route path={routes.ASSETS} element={<AssetsScreen />} />
-              <Route path={routes.SETTINGS} element={<SettingsScreen />} />
-              <Route path={routes.BILLING} element={<BillingScreen />} />
+              {roleAdmin && (
+                <>
+                  <Route path={routes.PROJECTS} element={<ProjectsScreen />} />
+                  <Route path={routes.ASSETS} element={<AssetsScreen />} />
+                  <Route path={routes.SETTINGS} element={<SettingsScreen />} />
+                  <Route path={routes.BILLING} element={<BillingScreen />} />
+                </>
+              )}
 
               <Route path="*" element={<PageNotFound />} />
             </Route>

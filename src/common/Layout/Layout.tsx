@@ -43,6 +43,7 @@ import {
 import { useFormik } from "formik";
 import Loader from "../../packages/Loader/Loader";
 import { useAuth } from "../../utils/ProtectedRoutes";
+import { ROLE_REQUESTER, ROLE_TESTER } from "../../utils/constants";
 
 const cx = classNames.bind(styles);
 
@@ -142,6 +143,9 @@ const Layout = ({ children }: Props) => {
       }
     );
 
+  const roleTester = data.role === ROLE_TESTER;
+  const roleRequester = data.role === ROLE_REQUESTER;
+
   const handleSubmit = (values: formType) => {
     const getDepartment = values.department.map((list: any) => list.value);
     const getLab = values.lab.map((list: any) => list.value);
@@ -165,7 +169,6 @@ const Layout = ({ children }: Props) => {
             })
           ).then(() => {
             setEdit(true);
-            // setDrawer(false);
             dispatch(moreInfoUserMiddleWare());
           });
           dispatch(
@@ -300,6 +303,84 @@ const Layout = ({ children }: Props) => {
     setDrawer(false);
   };
 
+  let items: any = [];
+
+  if (roleTester) {
+    items = [
+      {
+        key: "1",
+        icon: <SvgMypage fill={svgFill(myPage)} />,
+        label: collapsed ? "" : "My page",
+      },
+      {
+        key: "2",
+        icon: <SvgRunz fill={svgFill(runz)} />,
+        label: collapsed ? "" : "Runs",
+      },
+      {
+        key: "3",
+        icon: <SvgProcedures fill={svgFill(procedures)} />,
+        label: collapsed ? "" : "Procedures",
+      },
+    ];
+  } else if (roleRequester) {
+    items = [
+      {
+        key: "1",
+        icon: <SvgMypage fill={svgFill(myPage)} />,
+        label: collapsed ? "" : "My page",
+      },
+      {
+        key: "2",
+        icon: <SvgRunz fill={svgFill(runz)} />,
+        label: collapsed ? "" : "Runs",
+      },
+      {
+        key: "3",
+        icon: <SvgProcedures fill={svgFill(procedures)} />,
+        label: collapsed ? "" : "Procedures",
+      },
+    ];
+  } else {
+    items = [
+      {
+        key: "1",
+        icon: <SvgMypage fill={svgFill(myPage)} />,
+        label: collapsed ? "" : "My page",
+      },
+      {
+        key: "2",
+        icon: <SvgRunz fill={svgFill(runz)} />,
+        label: collapsed ? "" : "Runs",
+      },
+      {
+        key: "3",
+        icon: <SvgProcedures fill={svgFill(procedures)} />,
+        label: collapsed ? "" : "Procedures",
+      },
+      {
+        key: "4",
+        icon: <SvgProjects fill={svgFill(projects)} />,
+        label: collapsed ? "" : "Projects",
+      },
+      {
+        key: "5",
+        icon: <SvgAssets fill={svgFill(assets)} />,
+        label: collapsed ? "" : "Assets",
+      },
+      {
+        key: "6",
+        icon: <SvgSettings fill={svgFill(settings)} />,
+        label: collapsed ? "" : "Settings",
+      },
+      {
+        key: "7",
+        icon: <SvgDoller fill={svgFill(billing)} />,
+        label: collapsed ? "" : "Billing and subscriptions",
+      },
+    ];
+  }
+
   if (hideLayout) {
     return <>{children}</>;
   }
@@ -336,43 +417,7 @@ const Layout = ({ children }: Props) => {
               menuNavigate(a.key);
             }}
             mode="inline"
-            items={[
-              {
-                key: "1",
-                icon: <SvgMypage fill={svgFill(myPage)} />,
-                label: collapsed ? "" : "My page",
-              },
-              {
-                key: "2",
-                icon: <SvgRunz fill={svgFill(runz)} />,
-                label: collapsed ? "" : "Runs",
-              },
-              {
-                key: "3",
-                icon: <SvgProcedures fill={svgFill(procedures)} />,
-                label: collapsed ? "" : "Procedures",
-              },
-              {
-                key: "4",
-                icon: <SvgProjects fill={svgFill(projects)} />,
-                label: collapsed ? "" : "Projects",
-              },
-              {
-                key: "5",
-                icon: <SvgAssets fill={svgFill(assets)} />,
-                label: collapsed ? "" : "Assets",
-              },
-              {
-                key: "6",
-                icon: <SvgSettings fill={svgFill(settings)} />,
-                label: collapsed ? "" : "Settings",
-              },
-              {
-                key: "7",
-                icon: <SvgDoller fill={svgFill(billing)} />,
-                label: collapsed ? "" : "Billing and subscriptions",
-              },
-            ]}
+            items={items}
           />
           {!collapsed && (
             <Flex center className={styles.seePlansDiv}>

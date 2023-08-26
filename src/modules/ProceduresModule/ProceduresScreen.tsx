@@ -30,7 +30,7 @@ import {
   procedureMiddleWare,
 } from "./store/proceduresMiddleware";
 import Loader from "../../packages/Loader/Loader";
-import { HEADER_HEIGHT, ROLE_STUDENT } from "../../utils/constants";
+import { HEADER_HEIGHT, ROLE_TESTER } from "../../utils/constants";
 import NotAuthorizedModal from "../../common/NotAuthorizedModal";
 
 export type formType = {
@@ -91,15 +91,22 @@ const ProceduresScreen = () => {
         };
       }
     );
-
   const [isData, setData] = useState<any>(dataList?.procedureIds);
+  const [isNotAuthorized, setNotAuthorized] = useState(false);
+
+  const roleTester = authMeData.role === "tester";
 
   useEffect(() => {
     setData(dataList?.procedureIds);
   }, [dataList?.procedureIds]);
 
-  const handleNavigate = (row: any) =>
-    navigate(`${routes.PROCEDURE_EDIT}?id=${row.id}`);
+  const handleNavigate = (row: any) => {
+    if (roleTester) {
+      setNotAuthorized(true);
+    } else {
+      navigate(`${routes.PROCEDURE_EDIT}?id=${row.id}`);
+    }
+  };
 
   const formikFilter = useFormik({
     initialValues: filterFormTypeInitialValues,
@@ -416,7 +423,12 @@ const ProceduresScreen = () => {
       height={window.innerHeight - HEADER_HEIGHT}
     >
       {(isLoading || duplicateLoader) && <Loader />}
-      {/* <NotAuthorizedModal open onClick={() => {}} /> */}
+      <NotAuthorizedModal
+        open={isNotAuthorized}
+        onClick={() => {
+          setNotAuthorized(false);
+        }}
+      />
       <CreateOrEditProcedure
         formik={formik}
         title="Create new procedure"
@@ -472,12 +484,12 @@ const ProceduresScreen = () => {
         onPageChange={handlePage}
         currentPage={currentPage}
         hideActions={
-          selectedRows.length === 0 || authMeData.role === ROLE_STUDENT
+          selectedRows.length === 0 || authMeData.role === ROLE_TESTER
         }
         actionTitle="Procedure"
         actionTitleBtn={() => (
           <Button
-            disabled={authMeData.role === ROLE_STUDENT}
+            disabled={authMeData.role === ROLE_TESTER}
             onClick={handleCreateAndDuplicate}
           >
             <LableWithIcon
