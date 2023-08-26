@@ -411,9 +411,7 @@ const Layout = ({ children }: Props) => {
                     <SvgBell />
                   </Button>
 
-                  <Text className={styles.svgQuestion}>
-                    {data?.firstname} {data.lastname}
-                  </Text>
+                  <Text className={styles.svgQuestion}>{data?.name}</Text>
                   <Button
                     onClick={() => setDrawer(true)}
                     className={styles.svgProfile}
@@ -438,12 +436,7 @@ const Layout = ({ children }: Props) => {
             </Flex>
           </Header>
           <InsideClickHandler onInsideClick={() => setCollapsed(true)}>
-            <Content
-              className={styles.content}
-              // style={{ height: window.innerHeight - 82 }}
-            >
-              {children}
-            </Content>
+            <Content className={styles.content}>{children}</Content>
           </InsideClickHandler>
         </LayoutAntd>
       </LayoutAntd>
