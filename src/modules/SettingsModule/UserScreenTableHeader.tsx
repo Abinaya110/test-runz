@@ -89,8 +89,8 @@ export const UserDetailsHeader = ({
             placeholder="Select organisation"
             value={formik.values.organisation}
             onChange={(event) => {
-              formik.setFieldValue("department", "");
-              formik.setFieldValue("lab", "");
+              formik.setFieldValue("department", []);
+              formik.setFieldValue("lab", []);
               if (event) {
                 formik.setFieldValue("organisation", {
                   organization: event.organization,
