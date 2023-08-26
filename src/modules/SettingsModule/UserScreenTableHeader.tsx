@@ -13,6 +13,11 @@ import { filterFormType } from "./UserTab";
 import { STATUS_OPTIONS } from "./mock";
 import Button from "../../packages/Button/Button";
 import moment from "moment";
+import { MultiSelect } from "react-multi-select-component";
+import {
+  valueDepartmentRenderer,
+  valueLabRenderer,
+} from "../RunzModule/RunzCustomHeader";
 
 export const UserDetailsHeader = ({
   moreInfoList,
@@ -102,47 +107,34 @@ export const UserDetailsHeader = ({
         </div>
 
         <Flex flex={1} marginRight={8} marginLeft={8}>
-          <SelectTag
-            isClearable
-            isSearchable
-            isDisabled={isEmpty(formik.values.organisation)}
-            inputHeight={35}
-            placeholder="Select department"
-            required
-            value={formik.values.department}
-            onChange={(event) => {
-              if (event) {
-                formik.setFieldValue("department", event);
-              } else {
-                formik.setFieldValue("department", "");
-              }
-            }}
+          <MultiSelect
+            disabled={isEmpty(formik.values.organisation)}
             options={
               getDepartmentOption?.department
                 ? getDepartmentOption?.department
                 : []
             }
+            value={formik.values.department}
+            onChange={(event: any) => {
+              formik.setFieldValue("department", event);
+            }}
+            valueRenderer={valueDepartmentRenderer}
+            labelledBy="Department"
           />
         </Flex>
 
         <Flex flex={1}>
-          <SelectTag
-            isClearable
-            isSearchable
-            isDisabled={isEmpty(formik.values.organisation)}
-            inputHeight={35}
-            placeholder="Select lab"
-            value={formik.values.lab}
-            onChange={(event) => {
-              if (event) {
-                formik.setFieldValue("lab", event);
-              } else {
-                formik.setFieldValue("lab", "");
-              }
-            }}
+          <MultiSelect
+            disabled={isEmpty(formik.values.organisation)}
             options={
               getDepartmentOption?.labtype ? getDepartmentOption?.labtype : []
             }
+            value={formik.values.lab}
+            onChange={(event: any) => {
+              formik.setFieldValue("lab", event);
+            }}
+            valueRenderer={valueLabRenderer}
+            labelledBy="Lab"
           />
         </Flex>
       </Flex>

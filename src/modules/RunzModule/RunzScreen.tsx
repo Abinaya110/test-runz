@@ -64,8 +64,8 @@ export type formFilterType = {
 
 const initialValuesFilter: formFilterType = {
   id: "",
-  department: "",
-  lab: "",
+  department: [],
+  lab: [],
   createdOn: "",
   dueDate: "",
   status: "",

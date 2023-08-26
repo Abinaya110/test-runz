@@ -97,8 +97,8 @@ export type filterFormType = {
 
 const filterFormTypeInitialValues: filterFormType = {
   organisation: "",
-  department: "",
-  lab: "",
+  department: [],
+  lab: [],
   addOn: "",
   role: "",
   status: "",
@@ -558,14 +558,16 @@ const UserTab = () => {
     const datePicker = formikFilter.values.addOn
       ? moment(formikFilter.values.addOn).startOf("day").toISOString()
       : "";
+
+    const filterDepart = formikFilter.values.department?.map(
+      (list: any) => list.label
+    );
+    const filterLab = formikFilter.values.lab?.map((list: any) => list.label);
+
     store.dispatch(
       getUserListMiddleWare({
-        department: formikFilter.values.department?.label
-          ? formikFilter.values.department.label
-          : "",
-        labtype: formikFilter.values.lab?.label
-          ? formikFilter.values.lab.label
-          : "",
+        department: filterDepart ? filterDepart?.toString() : "",
+        labtype: filterLab ? filterLab?.toString() : "",
         organization: formikFilter.values.organisation?._id
           ? formikFilter.values.organisation?._id
           : "",

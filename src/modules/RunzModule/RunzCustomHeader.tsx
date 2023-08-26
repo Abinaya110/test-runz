@@ -9,6 +9,25 @@ import { formFilterType } from "./RunzScreen";
 import { useState } from "react";
 import Button from "../../packages/Button/Button";
 import moment from "moment";
+import { MultiSelect } from "react-multi-select-component";
+
+export const valueLabRenderer = (selected: any) => {
+  if (selected.length === 0) {
+    return "Lab";
+  }
+  return selected.length === 1
+    ? `${selected[0].label}`
+    : `Selected ${selected.length} lab`;
+};
+
+export const valueDepartmentRenderer = (selected: any) => {
+  if (selected.length === 0) {
+    return "Department";
+  }
+  return selected.length === 1
+    ? `${selected[0].label}`
+    : `Selected ${selected.length} department`;
+};
 
 export const RunzDetailsHeader = ({
   formikFilter,
@@ -22,6 +41,7 @@ export const RunzDetailsHeader = ({
   data: any;
 }) => {
   const [isFilter, setFilter] = useState("");
+  const [selected, setSelected] = useState([]);
 
   const sortByNameAscending = () => {
     setFilter("Ascending");
@@ -38,6 +58,7 @@ export const RunzDetailsHeader = ({
     );
     setData(sortedData);
   };
+
   return (
     <Flex flex={1}>
       <LableWithIcon
@@ -83,36 +104,36 @@ export const RunzDetailsHeader = ({
           />
         </div>
 
-        <div className={styles.inputMargin}>
-          <SelectTag
-            options={[{ label: "ss", value: "11" }]}
-            inputHeight={35}
-            placeholder="Department"
+        <div style={{ flex: 1 }} className={styles.inputMargin}>
+          <MultiSelect
+            options={[
+              { label: "Grapes 🍇", value: "grapes" },
+              { label: "Mango 🥭", value: "mango" },
+              { label: "Strawberry 🍓", value: "strawberry" },
+              { label: "Strawberry1 🍓", value: "strawberry1" },
+            ]}
             value={formikFilter.values.department}
-            isClearable
-            onChange={(event) => {
-              if (event) {
-                formikFilter.setFieldValue("department", event);
-              } else {
-                formikFilter.setFieldValue("department", "");
-              }
+            onChange={(event: any) => {
+              formikFilter.setFieldValue("department", event);
             }}
+            valueRenderer={valueDepartmentRenderer}
+            labelledBy="Department"
           />
         </div>
         <div style={{ flex: 1 }}>
-          <SelectTag
-            options={[{ label: "ss", value: "11" }]}
-            inputHeight={35}
-            placeholder="Lab"
+          <MultiSelect
+            options={[
+              { label: "Grapes 🍇", value: "grapes" },
+              { label: "Mango 🥭", value: "mango" },
+              { label: "Strawberry 🍓", value: "strawberry" },
+              { label: "Strawberry1 🍓", value: "strawberry1" },
+            ]}
             value={formikFilter.values.lab}
-            isClearable
-            onChange={(event) => {
-              if (event) {
-                formikFilter.setFieldValue("lab", event);
-              } else {
-                formikFilter.setFieldValue("lab", "");
-              }
+            onChange={(event: any) => {
+              formikFilter.setFieldValue("lab", event);
             }}
+            valueRenderer={valueLabRenderer}
+            labelledBy="Lab"
           />
         </div>
       </Flex>

@@ -11,6 +11,11 @@ import styles from "./procedurecustomheader.module.css";
 import { Procedures } from "./store/procedures.types";
 import moment from "moment";
 import Button from "../../packages/Button/Button";
+import { MultiSelect } from "react-multi-select-component";
+import {
+  valueDepartmentRenderer,
+  valueLabRenderer,
+} from "../RunzModule/RunzCustomHeader";
 
 export const ProcedureHeader = ({
   moreInfoList,
@@ -31,7 +36,7 @@ export const ProcedureHeader = ({
 
   const getDepartmentOption: any = useMemo(() => {
     const result = moreInfoList.filter(
-      (list) => list._id === dataList?.organization
+      (list) => list._id?.toString() === dataList?.organization?.toString()
     );
     return result ? result[0] : { department: [], labtype: [] };
   }, [dataList?.organization]);
@@ -103,44 +108,31 @@ export const ProcedureHeader = ({
         </div>
 
         <div className={styles.inputMargin}>
-          <SelectTag
-            isClearable
-            isSearchable
-            inputHeight={35}
-            placeholder="Department"
-            required
-            value={formik.values.department}
-            onChange={(event) => {
-              if (event) {
-                formik.setFieldValue("department", event);
-              } else {
-                formik.setFieldValue("department", "");
-              }
-            }}
+          <MultiSelect
             options={
               getDepartmentOption?.department
                 ? getDepartmentOption?.department
                 : []
             }
+            value={formik.values.department}
+            onChange={(event: any) => {
+              formik.setFieldValue("department", event);
+            }}
+            valueRenderer={valueDepartmentRenderer}
+            labelledBy="Department"
           />
         </div>
         <div style={{ flex: 1 }}>
-          <SelectTag
-            isClearable
-            isSearchable
-            inputHeight={35}
-            placeholder="Lab"
-            value={formik.values.lab}
-            onChange={(event) => {
-              if (event) {
-                formik.setFieldValue("lab", event);
-              } else {
-                formik.setFieldValue("lab", "");
-              }
-            }}
+          <MultiSelect
             options={
               getDepartmentOption?.labtype ? getDepartmentOption?.labtype : []
             }
+            value={formik.values.lab}
+            onChange={(event: any) => {
+              formik.setFieldValue("lab", event);
+            }}
+            valueRenderer={valueLabRenderer}
+            labelledBy="Lab"
           />
         </div>
       </Flex>

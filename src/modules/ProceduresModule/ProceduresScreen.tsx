@@ -25,7 +25,6 @@ import SvgCancel from "../../icons/SvgCancel";
 import { routes } from "../../routes/routesPath";
 import store, { AppDispatch, RootState } from "../../redux/store";
 import {
-  duplicateProcedureMiddleWare,
   procedureCreateMiddleWare,
   procedureDeleteMiddleWare,
   procedureMiddleWare,
@@ -53,8 +52,8 @@ export type filterFormType = {
 };
 
 const filterFormTypeInitialValues: filterFormType = {
-  department: "",
-  lab: "",
+  department: [],
+  lab: [],
   createdOn: "",
   createdBy: "",
   id: "",
@@ -327,9 +326,6 @@ const ProceduresScreen = () => {
           formikHelpers.resetForm();
           setCreateProcedure(false);
           Alert("Procedure created successfully.");
-          // navigate(
-          //   `${routes.PROCEDURE_EDIT}?id=${res.payload?.createdProcedure}`
-          // );
           dispatch(procedureMiddleWare({}));
         }
         setLoader(false);
@@ -394,17 +390,17 @@ const ProceduresScreen = () => {
   };
 
   useEffect(() => {
+    const filterDepart = formikFilter.values.department?.map(
+      (list: any) => list.label
+    );
+    const filterLab = formikFilter.values.lab?.map((list: any) => list.label);
     const datePicker = formikFilter.values.createdOn
       ? moment(formikFilter.values.createdOn).startOf("day").toISOString()
       : "";
     store.dispatch(
       procedureMiddleWare({
-        department: formikFilter.values.department?.label
-          ? formikFilter.values.department.label
-          : "",
-        labtype: formikFilter.values.lab?.label
-          ? formikFilter.values.lab.label
-          : "",
+        department: filterDepart ? filterDepart?.toString() : "",
+        labtype: filterLab ? filterLab?.toString() : "",
         createdOn: datePicker,
         createdBy: formikFilter.values.createdBy?.label
           ? formikFilter.values.createdBy.label

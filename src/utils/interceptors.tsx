@@ -12,9 +12,10 @@ export const useInterceptors = () => {
     },
     (error) => {
       if (error.response.status === 401) {
-        // localStorage.removeItem(AUTH_TOKEN);
-        // window.location.reload();
-        // dispatch(resetStore());
+        alert("Your session is expired please login again");
+        window.location.reload();
+        localStorage.removeItem(AUTH_TOKEN);
+        dispatch(resetStore());
       }
       return error;
     }
