@@ -42,6 +42,7 @@ const ProceduresEditScreen = () => {
   const [isLoader, setLoader] = useState(false);
   const navigate = useNavigate();
   let [searchParams] = useSearchParams();
+  const [isPrint, setPrint] = useState(false);
 
   useEffect(() => {
     store.dispatch(procedureByIdMiddleWare({ id: searchParams.get("id") }));
@@ -139,7 +140,10 @@ const ProceduresEditScreen = () => {
             />
           </Button>
         </Flex>
-        <Flex height={window.innerHeight - 268} className={styles.scroll}>
+        <Flex
+          height={!isPrint && window.innerHeight - 268}
+          className={styles.scroll}
+        >
           <Flex row className={styles.dateFlex}>
             <Flex className={styles.createFlex}>
               <Text
@@ -190,7 +194,13 @@ const ProceduresEditScreen = () => {
           <Button
             types="link"
             onClick={() => {
-              window.print();
+              setPrint(true);
+              setTimeout(() => {
+                window.print();
+                setTimeout(() => {
+                  setPrint(false);
+                }, 100);
+              }, 100);
             }}
           >
             <SvgPrint />

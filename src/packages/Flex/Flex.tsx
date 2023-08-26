@@ -26,7 +26,7 @@ type Props = {
   wrapReverse?: boolean;
   wrap?: boolean;
   className?: string;
-  height?: number | string;
+  height?: number | string | any;
   backgroundImage?: any;
   width?: number | string;
   id?: string;
