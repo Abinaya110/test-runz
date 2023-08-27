@@ -270,11 +270,11 @@ input:-webkit-autofill:focus {
 
 .rmsc {
   --rmsc-main: var(--color-primary-shade-1) !important;
-  --rmsc-hover: var(--color-primary-shade-3);
-  --rmsc-border: var(--color-text-shade-3);
-  --rmsc-gray: var(--color-text-shade-3);
-  --rmsc-bg: var(--color-white);
+  --rmsc-hover: var(--color-primary-shade-3) !important;
+  --rmsc-border: var(--color-text-shade-3) !important;
+  --rmsc-gray: var(--color-text-shade-3) !important;
+  --rmsc-bg: var(--color-white) !important;
   --rmsc-p: 10px; /* Spacing */
   --rmsc-radius: 4px; /* Radius */
-  --rmsc-h: 38px; /* Height */
+  --rmsc-h: 36px !important; /* Height */
 }
