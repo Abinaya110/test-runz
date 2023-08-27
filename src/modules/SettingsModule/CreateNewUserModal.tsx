@@ -21,6 +21,7 @@ type Props = {
   getDepartmentOption: any;
   moreInfoList: MoreInfoList[];
   isLoader: boolean;
+  isEdit?: boolean;
 };
 const CreateNewUserModal = ({
   open,
@@ -30,12 +31,13 @@ const CreateNewUserModal = ({
   getDepartmentOption,
   moreInfoList,
   isLoader,
+  isEdit,
 }: Props) => {
   return (
     <Modal
       width={900}
       onCancel={cancel}
-      title={<Text type="title">Create new user</Text>}
+      title={<Text type="title">{isEdit ? "Edit" : "Create new"} user</Text>}
       closeIcon={<SvgClose />}
       centered
       open={open}

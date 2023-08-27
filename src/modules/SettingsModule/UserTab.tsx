@@ -31,6 +31,7 @@ import {
 import styles from "./userstab.module.css";
 import SvgCancel from "../../icons/SvgCancel";
 import { areAllValuesEmpty } from "../../utils/helpers";
+import { designationOptions } from "../LoginModule/mock";
 
 export type formType = {
   firstName: string;
@@ -248,6 +249,8 @@ const UserTab = () => {
   const [isLoader, setLoader] = useState(false);
   const [isSearch, setSearch] = useState("");
   const [isPermission, setPermission] = useState(false);
+  const [isEditUser, setEditUser] = useState(false);
+  const [isEditUserId, setEditUserId] = useState("");
 
   const { data, moreInfoList } = useSelector(
     ({ getUserListReducers, moreInfoListReducers }: RootState) => {
@@ -268,6 +271,110 @@ const UserTab = () => {
     onSubmit: () => {},
   });
 
+  const handleSubmitUser = (
+    values: formType,
+    formikHelpers: FormikHelpers<formType>
+  ) => {
+    setLoader(true);
+    const getDepartment = values.department.map((list: any) => list.value);
+    const getLab = values.lab.map((list: any) => list.value);
+    if (isEditUser) {
+      store
+        .dispatch(
+          getUserListUpdateMiddleWare({
+            id: isEditUserId,
+            firstname: values.firstName,
+            lastname: values.lastName,
+            email: values.email,
+            organization: values.organization._id,
+            department: getDepartment,
+            labtype: getLab,
+            role: values.role.value,
+            activeStatus: values.status.value === "Active" ? true : false,
+          })
+        )
+        .then((res) => {
+          setLoader(false);
+          if (!isEmpty(res.payload?.error)) {
+            Toast(res.payload?.error, "LONG", "error");
+          } else if (res.payload) {
+            Alert("User saved successfully.");
+            formikHelpers.resetForm();
+            setEditUser(false);
+            store.dispatch(getUserListMiddleWare({}));
+          }
+        })
+        .catch(() => {
+          setLoader(false);
+        });
+    } else {
+      store
+        .dispatch(
+          authCreateMiddleWare({
+            firstname: values.firstName,
+            lastname: values.lastName,
+            email: values.email,
+            organization: values.organization._id,
+            department: getDepartment,
+            labtype: getLab,
+            role: values.role.value,
+            activeStatus: values.status.value === "Active" ? true : false,
+          })
+        )
+        .then((res) => {
+          setLoader(false);
+          if (!isEmpty(res.payload?.error)) {
+            Toast(res.payload?.error, "LONG", "error");
+          } else if (res.payload) {
+            Alert("User created successfully.");
+            formikHelpers.resetForm();
+            setCreateNew(false);
+            store.dispatch(getUserListMiddleWare({}));
+          }
+        })
+        .catch((error) => {
+          setLoader(false);
+        });
+    }
+  };
+
+  const formik = useFormik({
+    initialValues,
+    onSubmit: handleSubmitUser,
+    validate,
+  });
+
+  const handleEditUser = (row: any) => {
+    setEditUser(true);
+    setEditUserId(row.userId);
+    const organizationList = moreInfoList.filter((list) => {
+      return list._id === row.organization;
+    });
+    const departList = row.department?.map((list: any) => {
+      return { value: list, label: list };
+    });
+    const labList = row.labtype?.map((list: any) => {
+      return { value: list, label: list };
+    });
+    const roleList = designationOptions.filter((list) => {
+      return list.value === row.role;
+    });
+    let statusList;
+    if (row.activeStatus) {
+      statusList = { label: "Active", value: "Active" };
+    } else {
+      statusList = { label: "InActive", value: "InActive" };
+    }
+    formik.setFieldValue("firstName", row?.firstname);
+    formik.setFieldValue("lastName", row?.lastname);
+    formik.setFieldValue("email", row?.email);
+    formik.setFieldValue("organization", organizationList[0]);
+    formik.setFieldValue("department", departList);
+    formik.setFieldValue("lab", labList);
+    formik.setFieldValue("role", roleList);
+    formik.setFieldValue("status", statusList);
+  };
+
   const columns = [
     {
       title: "Name",
@@ -282,11 +389,12 @@ const UserTab = () => {
           formik={formikFilter}
         />
       ),
+      rowOnClick: handleEditUser,
       flex: 6,
       render: (value: string, row: any) => {
-        const getOrganization = moreInfoList?.filter(
-          (list) => list._id === row?.organization
-        );
+        const getOrganization = moreInfoList?.filter((list) => {
+          return list._id === row?.organization;
+        });
         const myDepartmentArray = row?.department;
         const resultDepartment = myDepartmentArray?.join(",");
         const myLabArray = row?.labtype;
@@ -312,6 +420,8 @@ const UserTab = () => {
       key: "createdAt",
       align: "center",
       flex: 2.5,
+      rowOnClick: handleEditUser,
+
       renderTitle: () => (
         <AddOnHeader
           formik={formikFilter}
@@ -332,6 +442,8 @@ const UserTab = () => {
       key: "role",
       align: "center",
       flex: 2,
+      rowOnClick: handleEditUser,
+
       renderTitle: () => (
         <RoleHeader
           formik={formikFilter}
@@ -418,7 +530,9 @@ const UserTab = () => {
   const handleChecked = (row: any) => {
     if (!Array.isArray(row)) {
       if (selectedRows.includes(row.userId)) {
-        const updatedRow = selectedRows.filter((s) => s !== row.userId);
+        const updatedRow = selectedRows.filter((s) => {
+          return s !== row.userId;
+        });
         setSelectedRows(updatedRow);
       } else {
         setSelectedRows([...selectedRows, row.userId]);
@@ -495,54 +609,12 @@ const UserTab = () => {
 
   const handleDeleteOpen = () => setDeleteModal(true);
 
-  const handleSubmitUser = (
-    values: formType,
-    formikHelpers: FormikHelpers<formType>
-  ) => {
-    setLoader(true);
-    const getDepartment = values.department.map((list: any) => list.value);
-    const getLab = values.lab.map((list: any) => list.value);
-    store
-      .dispatch(
-        authCreateMiddleWare({
-          firstname: values.firstName,
-          lastname: values.lastName,
-          email: values.email,
-          organization: values.organization._id,
-          department: getDepartment,
-          labtype: getLab,
-          role: values.role.value,
-          activeStatus: values.status.value === "Active" ? true : false,
-        })
-      )
-      .then((res) => {
-        setLoader(false);
-        if (!isEmpty(res.payload?.error)) {
-          Toast(res.payload?.error, "LONG", "error");
-        } else if (res.payload) {
-          Alert("User created successfully.");
-          formikHelpers.resetForm();
-          setCreateNew(false);
-          store.dispatch(getUserListMiddleWare({}));
-        }
-      })
-      .catch((error) => {
-        setLoader(false);
-      });
-  };
-
-  const formik = useFormik({
-    initialValues,
-    onSubmit: handleSubmitUser,
-    validate,
-  });
-
   const getDepartmentOption: any = useMemo(() => {
-    const result = moreInfoList.filter(
-      (list) => list.organization === formik.values.organization?.organization
-    );
+    const result = moreInfoList.filter((list) => {
+      return list._id === formik.values?.organization?._id;
+    });
     return result ? result[0] : { department: [], labtype: [] };
-  }, [formik.values.organization]);
+  }, [formik.values.organization, isEditUser]);
 
   const handleDelete = () => {
     setLoader(true);
@@ -600,6 +672,7 @@ const UserTab = () => {
         open={isPermission}
         yesClick={() => {
           setPermission(false);
+          setEditUser(false);
           formik.resetForm();
           setCreateNew(false);
         }}
@@ -636,6 +709,24 @@ const UserTab = () => {
           if (areAllValuesEmpty(formik.values)) {
             formik.resetForm();
             setCreateNew(false);
+          } else {
+            setPermission(true);
+          }
+        }}
+        formik={formik}
+        getDepartmentOption={getDepartmentOption}
+        moreInfoList={moreInfoList}
+        isLoader={isLoader}
+      />
+
+      <CreateNewUserModal
+        isEdit
+        open={isEditUser}
+        submit={formik.handleSubmit}
+        cancel={() => {
+          if (areAllValuesEmpty(formik.values)) {
+            formik.resetForm();
+            setEditUser(false);
           } else {
             setPermission(true);
           }

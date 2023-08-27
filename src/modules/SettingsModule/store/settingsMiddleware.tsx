@@ -109,11 +109,38 @@ export const getUserListMiddleWare = createAsyncThunk(
 export const getUserListUpdateMiddleWare = createAsyncThunk(
   GET_USER_LIST_UPDATE,
   async (
-    { id, activeStatus }: { id: string; activeStatus: boolean },
+    {
+      id,
+      activeStatus,
+      firstname,
+      lastname,
+      email,
+      organization,
+      department,
+      labtype,
+      role,
+    }: {
+      id: string;
+      activeStatus?: boolean;
+      firstname?: any;
+      lastname?: any;
+      email?: any;
+      organization?: any;
+      department?: any;
+      labtype?: any;
+      role?: any;
+    },
     { rejectWithValue }
   ) => {
     try {
       const { data } = await axios.patch(getUserListUpdateApi(id), {
+        firstname,
+        lastname,
+        email,
+        organization,
+        department,
+        labtype,
+        role,
         activeStatus,
       });
       return data;

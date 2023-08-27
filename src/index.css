@@ -267,3 +267,14 @@ input:-webkit-autofill:focus {
   padding: 0 !important;
   border-radius: 8px !important;
 }
+
+.rmsc {
+  --rmsc-main: var(--color-primary-shade-1) !important;
+  --rmsc-hover: var(--color-primary-shade-3);
+  --rmsc-border: var(--color-text-shade-3);
+  --rmsc-gray: var(--color-text-shade-3);
+  --rmsc-bg: var(--color-white);
+  --rmsc-p: 10px; /* Spacing */
+  --rmsc-radius: 4px; /* Radius */
+  --rmsc-h: 38px; /* Height */
+}
