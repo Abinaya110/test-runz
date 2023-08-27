@@ -15,7 +15,7 @@ const ProceduresRichText = ({ onEditorChange, value }) => {
         automatic_uploads: true,
         file_picker_types: "image",
         table_advtab: "true",
-        content_style: `body { font-family:'Poppins-Medium'; font-size:14px;color:#1a1a1a}`,
+        content_style: `body { font-family:'Poppins-Medium'; font-size:14px;color:#1a1a1a }`,
 
         file_picker_callback: function (cb, value, meta) {
           var input = document.createElement("input");
@@ -60,6 +60,7 @@ const ProceduresRichText = ({ onEditorChange, value }) => {
               "</time>"
             );
           };
+
           editor.ui.registry.addButton("customDateButton", {
             icon: "insert-time",
             tooltip: "Insert Current Date",
@@ -74,20 +75,34 @@ const ProceduresRichText = ({ onEditorChange, value }) => {
                 );
               };
               editor.on("NodeChange", editorEventCallback);
-              /* onSetup should always return the unbind handlers */
               return function (buttonApi) {
                 editor.off("NodeChange", editorEventCallback);
               };
             },
           });
+
+          editor.ui.registry.addButton("customDataAttrButton", {
+            icon: "fas fa-cog",
+            tooltip: "Assign Data Attribute",
+            onAction: function (_) {
+              const selectedNode = editor.selection.getNode();
+              const key = window.prompt("Enter data attribute key:");
+              if (key) {
+                const value = window.prompt("Enter data attribute value:");
+                if (value) {
+                  selectedNode.setAttribute(`data-${key}`, value);
+                }
+              }
+            },
+          });
         },
       }}
       toolbar={
-        "undo redo | formatselect | styles | bold italic underline strikethrough | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image code table customInsertButton customDateButton template tiny_mce_wiris_formulaEditor tiny_mce_wiris_formulaEditorChemistry"
+        "undo redo | formatselect | styles | bold italic underline strikethrough | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image code table customInsertButton customDateButton customDataAttrButton tiny_mce_wiris_formulaEditor tiny_mce_wiris_formulaEditorChemistry"
       }
       plugins={[
-        "autoresize",
         "advlist",
+        "autoresize",
         "anchor",
         "autolink",
         "charmap",
@@ -104,12 +119,12 @@ const ProceduresRichText = ({ onEditorChange, value }) => {
         "table",
         "visualblocks",
         "textpattern",
-        "template",
         "print",
         "advtablesort",
         "paste",
         "wordcount",
         "save",
+        "customDataAttrButton",
         // "powerpaste",
       ]}
       onEditorChange={onEditorChange}
