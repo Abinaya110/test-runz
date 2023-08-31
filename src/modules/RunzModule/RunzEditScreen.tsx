@@ -18,7 +18,7 @@ import {
 } from "../../theme/colors";
 import styles from "./raunzeditscreen.module.css";
 import Badge from "../../packages/Badge/Badge";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import SvgNewWindow from "../../icons/SvgNewWindow";
 import SvgUnWindow from "../../icons/SvgUnWindow";
 import ButtonGroup from "../../packages/ButtonGroup/ButtonGroup";
@@ -157,6 +157,7 @@ const RunzEditScreen = () => {
   const getRunzId: any = searchParams.get("id");
   const [expResult, setResult] = useState<any>("");
   const [expRemarks, setRemarks] = useState<any>("");
+  const formRef: any = useRef(null);
 
   useEffect(() => {
     dispatch(getRunzListDetailsMiddleWare({ id: getRunzId }));
@@ -366,13 +367,17 @@ const RunzEditScreen = () => {
     : "";
 
   const htmlToJSON: any = html2json.html2json(htmlData);
+
   const uses = htmlToJSON?.child.map((ele: any) => ele);
 
   const handleHtmlInput = () => {
     let objects = {};
     // @ts-ignore
-    let inputEl = document.getElementById("content").querySelectorAll("input");
-    inputEl.forEach((ele) => {
+    let inputEl: any = document
+      ?.getElementById("content")
+      ?.querySelectorAll("input");
+
+    inputEl?.forEach((ele: any) => {
       const { id, value } = ele;
       let temp = { [id]: value };
       objects = { ...objects, temp };
@@ -384,34 +389,66 @@ const RunzEditScreen = () => {
       };
     });
   };
+  useEffect(() => {
+    handleHtmlInput();
+  }, [isLoading, !isLoading, procedureData.procedure]);
 
   const handleSave = () => {
     handleHtmlInput();
-    let vals = Object.values(htmlInput);
-    const empty = vals.filter((item) => item === "");
-    if (empty.length > 0) {
-      Toast("Must fill all Required Readings", "LONG", "error");
-    } else if (empty.length === 0) {
-      handleHtmlInput();
+    const tablesEles = document
+      ?.getElementById("content")
+      ?.querySelectorAll("table");
 
-      store
-        .dispatch(
-          getRunzUpdatesMiddleWare({
-            id: getRunzId,
-            datas: JSON.stringify(htmlInput),
-            remark: expRemarks,
-            expresult: expResult,
-          })
-        )
-        .then(() => {
-          Alert("Your work has been saved");
-          dispatch(getRunzListDetailsMiddleWare({ id: getRunzId }));
-          setEditNewRunz(false);
-        })
-        .catch(() => {
-          Toast("Something went wrong! Try again", "LONG", "error");
+    tablesEles?.forEach((tablesInstance) => {
+      const headerCells = tablesInstance.querySelectorAll(
+        "thead strong[data-column]"
+      );
+      const headerNames = Array.from(headerCells).map((header: any) => ({
+        key: header.getAttribute("data-column"),
+        value: header.textContent.trim(),
+      }));
+      console.log(headerNames);
+      const tableDataRows = tablesInstance.querySelectorAll("tbody tr");
+      tableDataRows.forEach((tableDataRow) => {
+        const tableCells = tableDataRow.querySelectorAll("td[data-column]");
+        tableCells.forEach((cell) => {
+          const inputCntext = cell.querySelector("input[type='text']");
+          if (inputCntext) {
+            console.log({
+              key: cell.getAttribute("data-column"),
+              value: htmlInput[inputCntext.id],
+            });
+          }
         });
-    }
+      });
+    });
+
+    let vals = Object.values(htmlInput);
+
+    // const empty = vals.filter((item) => item === "");
+    // if (empty.length > 0) {
+    //   Toast("Must fill all Required Readings", "LONG", "error");
+    // } else if (empty.length === 0) {
+    //   handleHtmlInput();
+
+    //   store
+    //     .dispatch(
+    //       getRunzUpdatesMiddleWare({
+    //         id: getRunzId,
+    //         datas: JSON.stringify(htmlInput),
+    //         remark: expRemarks,
+    //         expresult: expResult,
+    //       })
+    //     )
+    //     .then(() => {
+    //       Alert("Your work has been saved");
+    //       dispatch(getRunzListDetailsMiddleWare({ id: getRunzId }));
+    //       setEditNewRunz(false);
+    //     })
+    //     .catch(() => {
+    //       Toast("Something went wrong! Try again", "LONG", "error");
+    //     });
+    // }
   };
 
   useEffect(() => {
@@ -574,7 +611,7 @@ const RunzEditScreen = () => {
 
             {procedureData.procedure?.html && (
               <div id="content">
-                <form onChange={handleHtmlInput}>
+                <form ref={formRef} onChange={handleHtmlInput}>
                   {uses.map((el: any) =>
                     parse(htmlToJSON && html2json.json2html(el))
                   )}
@@ -633,7 +670,11 @@ const RunzEditScreen = () => {
               <Button types="tertiary-1">Back</Button>
               <Flex row center>
                 {/* <SvgPrint /> */}
-                <Button onClick={handleSave} style={{ marginLeft: 8 }}>
+                <Button
+                  type="submit"
+                  onClick={handleSave}
+                  style={{ marginLeft: 8 }}
+                >
                   Save
                 </Button>
               </Flex>
