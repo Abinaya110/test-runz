@@ -12,7 +12,7 @@ export const useInterceptors = () => {
     },
     (error) => {
       if (error.response.status === 401) {
-        alert("Your session is expired please login again");
+        // alert("Your session is expired please login again");
         window.location.reload();
         localStorage.removeItem(AUTH_TOKEN);
         dispatch(resetStore());

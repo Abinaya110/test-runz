@@ -395,11 +395,11 @@ const RunzEditScreen = () => {
 
   const handleSave = () => {
     handleHtmlInput();
-    const tablesEles = document
+
+    const tablesEles: any = document
       ?.getElementById("content")
       ?.querySelectorAll("table");
-
-    tablesEles?.forEach((tablesInstance) => {
+    const result = Array.from(tablesEles)?.map((tablesInstance: any) => {
       const headerCells = tablesInstance.querySelectorAll(
         "thead strong[data-column]"
       );
@@ -407,21 +407,43 @@ const RunzEditScreen = () => {
         key: header.getAttribute("data-column"),
         value: header.textContent.trim(),
       }));
-      console.log(headerNames);
-      const tableDataRows = tablesInstance.querySelectorAll("tbody tr");
-      tableDataRows.forEach((tableDataRow) => {
+      const tableDataRows: any = tablesInstance.querySelectorAll("tbody tr");
+      const rowData = Array.from(tableDataRows)?.map((tableDataRow: any) => {
         const tableCells = tableDataRow.querySelectorAll("td[data-column]");
-        tableCells.forEach((cell) => {
+        return Array.from(tableCells).map((cell: any) => {
           const inputCntext = cell.querySelector("input[type='text']");
           if (inputCntext) {
-            console.log({
+            return {
               key: cell.getAttribute("data-column"),
               value: htmlInput[inputCntext.id],
-            });
+            };
           }
         });
       });
+      return {
+        headerNames: headerNames,
+        rowData: rowData,
+      };
     });
+
+    const mergedDatasets = result.map((dataset) => {
+      const mergedData: any = {
+        mergedData: [],
+      };
+      for (let i = 0; i < dataset.rowData.length; i++) {
+        const rowData = dataset.rowData[i];
+        const mergedRow: any = {};
+        for (let j = 0; j < rowData.length; j++) {
+          const header = dataset.headerNames[j];
+          const value: any = rowData[j];
+          mergedRow[header.value] = value.value;
+        }
+        mergedData.mergedData.push(mergedRow);
+      }
+      return mergedData;
+    });
+
+    console.log(mergedDatasets);
 
     let vals = Object.values(htmlInput);
 
