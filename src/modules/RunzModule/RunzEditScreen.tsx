@@ -18,7 +18,7 @@ import {
 } from "../../theme/colors";
 import styles from "./raunzeditscreen.module.css";
 import Badge from "../../packages/Badge/Badge";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import SvgNewWindow from "../../icons/SvgNewWindow";
 import SvgUnWindow from "../../icons/SvgUnWindow";
 import ButtonGroup from "../../packages/ButtonGroup/ButtonGroup";
@@ -157,6 +157,7 @@ const RunzEditScreen = () => {
   const getRunzId: any = searchParams.get("id");
   const [expResult, setResult] = useState<any>("");
   const [expRemarks, setRemarks] = useState<any>("");
+  const formRef: any = useRef(null);
 
   useEffect(() => {
     dispatch(getRunzListDetailsMiddleWare({ id: getRunzId }));
@@ -366,13 +367,17 @@ const RunzEditScreen = () => {
     : "";
 
   const htmlToJSON: any = html2json.html2json(htmlData);
+
   const uses = htmlToJSON?.child.map((ele: any) => ele);
 
   const handleHtmlInput = () => {
     let objects = {};
     // @ts-ignore
-    let inputEl = document.getElementById("content").querySelectorAll("input");
-    inputEl.forEach((ele) => {
+    let inputEl: any = document
+      ?.getElementById("content")
+      ?.querySelectorAll("input");
+
+    inputEl?.forEach((ele: any) => {
       const { id, value } = ele;
       let temp = { [id]: value };
       objects = { ...objects, temp };
@@ -384,9 +389,76 @@ const RunzEditScreen = () => {
       };
     });
   };
+  useEffect(() => {
+    handleHtmlInput();
+  }, [isLoading, !isLoading, procedureData.procedure]);
 
   const handleSave = () => {
     handleHtmlInput();
+
+    const tablesEles: any = document
+      ?.getElementById("content")
+      ?.querySelectorAll("table");
+    const result = Array.from(tablesEles)?.map((tablesInstance: any) => {
+      const headerCells = tablesInstance.querySelectorAll(
+        "thead strong[data-column]"
+      );
+      const headerNames = Array.from(headerCells).map((header: any) => ({
+        key: header.getAttribute("data-column"),
+        value: header.textContent.trim(),
+      }));
+      const tableDataRows: any = tablesInstance.querySelectorAll("tbody tr");
+      const rowData = Array.from(tableDataRows)?.map((tableDataRow: any) => {
+        const tableCells = tableDataRow.querySelectorAll("td[data-column]");
+        return Array.from(tableCells).map((cell: any) => {
+          const inputCntext = cell.querySelector("input[type='text']");
+          if (inputCntext) {
+            return {
+              key: cell.getAttribute("data-column"),
+              value: htmlInput[inputCntext.id],
+            };
+          }
+        });
+      });
+      return {
+        headerNames: headerNames,
+        rowData: rowData,
+      };
+    });
+
+    const mergedDatasets = result.map((dataset) => {
+      const mergedData: any = [];
+      for (let i = 0; i < dataset.rowData.length; i++) {
+        const rowData = dataset.rowData[i];
+        const mergedRow: any = {};
+        for (let j = 0; j < rowData.length; j++) {
+          const header = dataset.headerNames[j];
+          const value: any = rowData[j];
+          mergedRow[header.value] = value.value;
+        }
+        mergedData.push(mergedRow);
+      }
+      return mergedData;
+    });
+
+    const results = mergedDatasets.map((dataset) => {
+      const subResult = [];
+      const firstDataItem = dataset[0];
+      for (const key in firstDataItem) {
+        const label = key;
+        const values: any = [];
+        dataset.forEach((item: any) => {
+          if (item[key]) {
+            values.push(parseInt(item[key]));
+          }
+        });
+        subResult.push({ label, values });
+      }
+      return subResult;
+    });
+
+    // console.log(results);
+
     let vals = Object.values(htmlInput);
     const empty = vals.filter((item) => item === "");
     if (empty.length > 0) {
@@ -552,6 +624,16 @@ const RunzEditScreen = () => {
           </Flex>
         )}
       </Flex>
+
+      {/* {procedureData.procedure?.html && (
+        <div id="content" style={{ height: 100, overflow: "scroll" }}>
+          <form ref={formRef} onChange={handleHtmlInput}>
+            {uses.map((el: any) =>
+              parse(htmlToJSON && html2json.json2html(el))
+            )}
+          </form>
+        </div>
+      )} */}
       <div className={styles.borderBottom} />
       <Flex row height={window.innerHeight - 179}>
         <ResizePanel
@@ -574,7 +656,7 @@ const RunzEditScreen = () => {
 
             {procedureData.procedure?.html && (
               <div id="content">
-                <form onChange={handleHtmlInput}>
+                <form ref={formRef} onChange={handleHtmlInput}>
                   {uses.map((el: any) =>
                     parse(htmlToJSON && html2json.json2html(el))
                   )}
@@ -632,8 +714,11 @@ const RunzEditScreen = () => {
             <Flex row center between className={styles.footer}>
               <Button types="tertiary-1">Back</Button>
               <Flex row center>
-                {/* <SvgPrint /> */}
-                <Button onClick={handleSave} style={{ marginLeft: 8 }}>
+                <Button
+                  type="submit"
+                  onClick={handleSave}
+                  style={{ marginLeft: 8 }}
+                >
                   Save
                 </Button>
               </Flex>
@@ -641,6 +726,9 @@ const RunzEditScreen = () => {
           </Flex>
         </ResizePanel>
       </Flex>
+      {/* <div style={{ padding: 10 }}>
+        <LineCharts />
+      </div> */}
     </Flex>
   );
 };
