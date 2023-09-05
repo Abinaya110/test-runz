@@ -427,9 +427,7 @@ const RunzEditScreen = () => {
     });
 
     const mergedDatasets = result.map((dataset) => {
-      const mergedData: any = {
-        mergedData: [],
-      };
+      const mergedData: any = [];
       for (let i = 0; i < dataset.rowData.length; i++) {
         const rowData = dataset.rowData[i];
         const mergedRow: any = {};
@@ -438,39 +436,54 @@ const RunzEditScreen = () => {
           const value: any = rowData[j];
           mergedRow[header.value] = value.value;
         }
-        mergedData.mergedData.push(mergedRow);
+        mergedData.push(mergedRow);
       }
       return mergedData;
     });
 
-    console.log(mergedDatasets);
+    const results = mergedDatasets.map((dataset) => {
+      const subResult = [];
+      const firstDataItem = dataset[0];
+      for (const key in firstDataItem) {
+        const label = key;
+        const values: any = [];
+        dataset.forEach((item: any) => {
+          if (item[key]) {
+            values.push(parseInt(item[key]));
+          }
+        });
+        subResult.push({ label, values });
+      }
+      return subResult;
+    });
+
+    // console.log(results);
 
     let vals = Object.values(htmlInput);
+    const empty = vals.filter((item) => item === "");
+    if (empty.length > 0) {
+      Toast("Must fill all Required Readings", "LONG", "error");
+    } else if (empty.length === 0) {
+      handleHtmlInput();
 
-    // const empty = vals.filter((item) => item === "");
-    // if (empty.length > 0) {
-    //   Toast("Must fill all Required Readings", "LONG", "error");
-    // } else if (empty.length === 0) {
-    //   handleHtmlInput();
-
-    //   store
-    //     .dispatch(
-    //       getRunzUpdatesMiddleWare({
-    //         id: getRunzId,
-    //         datas: JSON.stringify(htmlInput),
-    //         remark: expRemarks,
-    //         expresult: expResult,
-    //       })
-    //     )
-    //     .then(() => {
-    //       Alert("Your work has been saved");
-    //       dispatch(getRunzListDetailsMiddleWare({ id: getRunzId }));
-    //       setEditNewRunz(false);
-    //     })
-    //     .catch(() => {
-    //       Toast("Something went wrong! Try again", "LONG", "error");
-    //     });
-    // }
+      store
+        .dispatch(
+          getRunzUpdatesMiddleWare({
+            id: getRunzId,
+            datas: JSON.stringify(htmlInput),
+            remark: expRemarks,
+            expresult: expResult,
+          })
+        )
+        .then(() => {
+          Alert("Your work has been saved");
+          dispatch(getRunzListDetailsMiddleWare({ id: getRunzId }));
+          setEditNewRunz(false);
+        })
+        .catch(() => {
+          Toast("Something went wrong! Try again", "LONG", "error");
+        });
+    }
   };
 
   useEffect(() => {
@@ -611,6 +624,16 @@ const RunzEditScreen = () => {
           </Flex>
         )}
       </Flex>
+
+      {/* {procedureData.procedure?.html && (
+        <div id="content" style={{ height: 100, overflow: "scroll" }}>
+          <form ref={formRef} onChange={handleHtmlInput}>
+            {uses.map((el: any) =>
+              parse(htmlToJSON && html2json.json2html(el))
+            )}
+          </form>
+        </div>
+      )} */}
       <div className={styles.borderBottom} />
       <Flex row height={window.innerHeight - 179}>
         <ResizePanel
@@ -691,7 +714,6 @@ const RunzEditScreen = () => {
             <Flex row center between className={styles.footer}>
               <Button types="tertiary-1">Back</Button>
               <Flex row center>
-                {/* <SvgPrint /> */}
                 <Button
                   type="submit"
                   onClick={handleSave}
@@ -704,6 +726,9 @@ const RunzEditScreen = () => {
           </Flex>
         </ResizePanel>
       </Flex>
+      {/* <div style={{ padding: 10 }}>
+        <LineCharts />
+      </div> */}
     </Flex>
   );
 };

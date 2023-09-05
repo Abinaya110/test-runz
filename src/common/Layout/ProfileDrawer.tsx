@@ -274,7 +274,9 @@ const ProfileDrawer = ({
               <Flex row>
                 {formik.values?.lab?.map((list: any) => {
                   return (
-                    <Text className={styles.labsAssign}>{list.label}</Text>
+                    <Text key={list.label} className={styles.labsAssign}>
+                      {list.label}
+                    </Text>
                   );
                 })}
               </Flex>
